@@ -14,13 +14,23 @@ class HuizenController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input('query'); // Ophalen van de zoekterm, zoals 'Haarlem'
+        // Zoekopdracht ophalen
+        $query = $request->input('query'); // Ophalen van de zoekterm, bijvoorbeeld 'Haarlem'
 
+        // Simuleer huizen of vervang dit met een echte database query
+        $huizen = [
+            (object) ['name' => 'Vakantiehuis in Haarlem', 'location' => 'Haarlem', 'price' => '€ 500.000', 'image' => 'huis1.jpg'],
+            (object) ['name' => 'Appartement in Haarlem', 'location' => 'Haarlem', 'price' => '€ 350.000', 'image' => 'huis2.jpg'],
+            // Meer huizen toevoegen...
+        ];
 
-        // $huizen = Huizen::where('location', 'LIKE', '%' . $query . '%')->get();
+        // Filter huizen op basis van de zoekopdracht
+        $huizen = array_filter($huizen, function ($huis) use ($query) {
+            return stripos($huis->location, $query) !== false;
+        });
 
-        // Voor nu geven we gewoon de zoekterm door aan de view.
-        return view('huizen.search-results', compact('query'));
+        // Return de zoekresultaten view met de gevonden huizen
+        return view('huizen.search-results', ['huizen' => $huizen, 'query' => $query]);
     }
 
     /**
