@@ -1,7 +1,7 @@
 <header class="bg-green-600 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
         <div class="text-xl font-bold">
-            <a href="/" class="text-white">My Green Website</a>
+            <a href="/" class="text-white">Vakantiehuistracker Website</a>
         </div>
 
         <nav class="space-x-4">
