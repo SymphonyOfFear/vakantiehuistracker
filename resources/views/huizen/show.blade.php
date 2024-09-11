@@ -1,3 +1,12 @@
-<div>
-    <!-- If you do not have a consistent goal in life, you can not live it in a consistent way. - Marcus Aurelius -->
-</div>
+<x-app-layout>
+    <!-- Header Component -->
+    <x-header />
+
+    <!-- Main Content of the Page -->
+    <div>
+        <!-- Your page content goes here -->
+    </div>
+
+    <!-- Footer Component -->
+    <x-footer />
+</x-app-layout>

@@ -1,3 +1,12 @@
-<div>
-    <!-- Very little is needed to make a happy life. - Marcus Aurelius -->
-</div>
+<x-app-layout>
+    <!-- Header Component -->
+    <x-header />
+
+    <!-- Main Content of the Page -->
+    <div>
+        <!-- Your page content goes here -->
+    </div>
+
+    <!-- Footer Component -->
+    <x-footer />
+</x-app-layout>

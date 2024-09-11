@@ -9,9 +9,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/contact', [ContactController::class, 'contact'])->name('contact');
+
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
 Route::get('/huizen/{huizen}', [HuizenController::class, 'show'])->name('huizen.show');
+Route::get('/huizen/search', [HuizenController::class, 'search'])->name('huizen.search');
 Route::get('/reserveringen/boeken', [HuizenController::class, 'show'])->name('reserveringen.boeken');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

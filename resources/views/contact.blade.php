@@ -1,3 +1,12 @@
-<div>
-    <!-- I begin to speak only when I am certain what I will say is not better left unsaid. - Cato the Younger -->
-</div>
+<x-app-layout>
+    <!-- Header Component -->
+    <x-header />
+
+    <!-- Main Content of the Page -->
+    <div>
+        <!-- Your page content goes here -->
+    </div>
+
+    <!-- Footer Component -->
+    <x-footer />
+</x-app-layout>

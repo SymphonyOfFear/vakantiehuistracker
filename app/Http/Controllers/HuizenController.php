@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 
 class HuizenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        // Dit toont de standaard huizenlijst, zonder filter.
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function search(Request $request)
     {
-        //
+        $query = $request->input('query'); // Ophalen van de zoekterm, zoals 'Haarlem'
+
+
+        // $huizen = Huizen::where('location', 'LIKE', '%' . $query . '%')->get();
+
+        // Voor nu geven we gewoon de zoekterm door aan de view.
+        return view('huizen.search-results', compact('query'));
     }
 
     /**
