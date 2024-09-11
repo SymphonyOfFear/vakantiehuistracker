@@ -1,7 +1,7 @@
 <footer class="bg-green-700 text-white py-4">
     <div class="container mx-auto flex justify-between items-center">
         <div>
-            <p class="text-sm">&copy; {{ date('Y') }} My Green Website. All rights reserved.</p>
+            <p class="text-sm">&copy; {{ date('Y') }} Vakantiehuistracker Website. All rights reserved.</p>
         </div>
 
         <div class="space-x-4">
