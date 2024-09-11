@@ -7,10 +7,9 @@
 
         <!-- Navigation Links -->
         <nav class="space-x-4 flex items-center">
-            <a href="/" class="hover:text-green-300">Home</a>
             <a href="{{ route('huizen.index') }}" class="hover:text-green-300">Huizen</a>
 
-            <!-- Verhuurder Sectie: Alleen zichtbaar als de gebruiker een verhuurder is -->
+
             @auth
                 @if (Auth::user()->is_verhuurder)
                     <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
@@ -22,7 +21,7 @@
             <a href="{{ route('contact') }}" class="hover:text-green-300">Contact</a>
         </nav>
 
-        <!-- User Authentication Links -->
+
         <div>
             @auth
                 <!-- Dropdown voor ingelogde gebruiker -->
