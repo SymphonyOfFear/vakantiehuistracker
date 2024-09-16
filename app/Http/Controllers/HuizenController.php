@@ -4,42 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HuizenController extends Controller
 {
+    // Index function to display vakantiehuizen with optional filters
     public function index()
     {
+        // Fetch the locations from the database
+        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
+
+        // Fetch vakantiehuizen from the database (replace this with your actual query)
         $huizen = Vakantiehuis::all();
-        // Zorg ervoor dat de juiste view wordt geladen
-        return view('huizen.index', compact('huizen'));
+
+        // Pass both locations and huizen to the view
+        return view('huizen.index', [
+            'locations' => $locations,
+            'huizen' => $huizen
+        ]);
     }
 
 
+    // Search results
     public function search(Request $request)
     {
-        $searchQuery = $request->get('query');
-        $minPrijs = $request->get('min_prijs');
-        $maxPrijs = $request->get('max_prijs');
+        $query = $request->input('query');
+        $huizen = Vakantiehuis::where('locatie', 'LIKE', '%' . $query . '%')->get()->toArray();  // Ensure it's always an array
 
-        // Query for search results
-        $huizen = Vakantiehuis::query()
-            ->where('locatie', 'LIKE', "%{$searchQuery}%")
-            ->when($minPrijs, function ($query, $minPrijs) {
-                return $query->where('prijs', '>=', $minPrijs);
-            })
-            ->when($maxPrijs, function ($query, $maxPrijs) {
-                return $query->where('prijs', '<=', $maxPrijs);
-            })
-            ->get();
+        // Fetch locations from the JSON file for filters
+        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
 
-        return view('huizen/search-results', compact('huizen', 'searchQuery'));
+        return view('huizen.search-results', [
+            'huizen' => $huizen,
+            'locations' => $locations,
+            'query' => $query,
+        ]);
     }
 
-    // Detailpagina voor een vakantiehuis
+    // Show single vakantiehuis
     public function show($id)
     {
-        $huis = Vakantiehuis::findOrFail($id);  // Haalt een specifiek huis op
-
+        $huis = Vakantiehuis::findOrFail($id);
         return view('huizen.show', compact('huis'));
     }
 }
