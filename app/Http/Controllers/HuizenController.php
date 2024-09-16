@@ -2,74 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 
 class HuizenController extends Controller
 {
     public function index()
     {
-        // Dit toont de standaard huizenlijst, zonder filter.
+        $huizen = Vakantiehuis::all();
+        // Zorg ervoor dat de juiste view wordt geladen
+        return view('huizen.index', compact('huizen'));
     }
+
 
     public function search(Request $request)
     {
-        // Haal de zoekterm op uit de querystring
-        $query = $request->input('query');
+        $searchQuery = $request->get('query');
+        $minPrijs = $request->get('min_prijs');
+        $maxPrijs = $request->get('max_prijs');
 
-        // Gesimuleerde dataset van huizen
-        $huizen = [
-            (object) ['name' => 'Vakantiehuis in Haarlem', 'location' => 'Haarlem', 'price' => '€ 500.000', 'image' => 'huis1.jpg'],
-            (object) ['name' => 'Appartement in Amsterdam', 'location' => 'Amsterdam', 'price' => '€ 350.000', 'image' => 'huis2.jpg'],
-            (object) ['name' => 'Vakantiehuis in Rotterdam', 'location' => 'Rotterdam', 'price' => '€ 600.000', 'image' => 'huis3.jpg'],
-        ];
+        // Query for search results
+        $huizen = Vakantiehuis::query()
+            ->where('locatie', 'LIKE', "%{$searchQuery}%")
+            ->when($minPrijs, function ($query, $minPrijs) {
+                return $query->where('prijs', '>=', $minPrijs);
+            })
+            ->when($maxPrijs, function ($query, $maxPrijs) {
+                return $query->where('prijs', '<=', $maxPrijs);
+            })
+            ->get();
 
-        // Filter huizen op basis van de zoekopdracht
-        $filteredHuizen = array_filter($huizen, function ($huis) use ($query) {
-            return stripos($huis->location, $query) !== false;
-        });
-
-        // Stuur de zoekterm en de gefilterde huizen naar de view
-        return view('huizen.search-results', ['huizen' => $filteredHuizen, 'query' => $query]);
+        return view('huizen/search-results', compact('huizen', 'searchQuery'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // Detailpagina voor een vakantiehuis
+    public function show($id)
     {
-        //
-    }
+        $huis = Vakantiehuis::findOrFail($id);  // Haalt een specifiek huis op
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('huizen.show', compact('huis'));
     }
 }

@@ -18,7 +18,8 @@
             @endauth
 
             <!-- Algemene pagina's -->
-            <a href="{{ route('contact') }}" class="hover:text-green-300">Contact</a>
+            <a href="{{ route('contact.index') }}" class="hover:text-green-300">Contact</a>
+
         </nav>
 
 

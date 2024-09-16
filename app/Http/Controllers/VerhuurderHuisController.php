@@ -2,64 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VerhuurderHuisController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $huisjes = Vakantiehuis::where('verhuurder_id', Auth::id())->get();
+        return view('verhuurder.huis.index', compact('huisjes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('verhuurder.huis.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Vakantiehuis::create([
+            'verhuurder_id' => Auth::id(),
+            'prijs' => $request->prijs,
+            'locatie' => $request->locatie,
+            'beschikbaarheid' => $request->has('beschikbaarheid'),
+            'slaapkamers' => $request->slaapkamers,
+            'wifi' => $request->has('wifi'),
+            'zwembad' => $request->has('zwembad'),
+            'spa' => $request->has('spa'),
+            'speeltuin' => $request->has('speeltuin'),
+            'fotos' => json_encode($request->fotos),
+        ]);
+
+        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol toegevoegd!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $huisje = Vakantiehuis::findOrFail($id);
+        return view('verhuurder.huis.edit', compact('huisje'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $huisje = Vakantiehuis::findOrFail($id);
+
+        $huisje->update([
+            'prijs' => $request->prijs,
+            'locatie' => $request->locatie,
+            'beschikbaarheid' => $request->has('beschikbaarheid'),
+            'slaapkamers' => $request->slaapkamers,
+            'wifi' => $request->has('wifi'),
+            'zwembad' => $request->has('zwembad'),
+            'spa' => $request->has('spa'),
+            'speeltuin' => $request->has('speeltuin'),
+            'fotos' => json_encode($request->fotos),
+        ]);
+
+        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol bijgewerkt!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
+        $huisje = Vakantiehuis::findOrFail($id);
+        $huisje->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol verwijderd!');
     }
 }

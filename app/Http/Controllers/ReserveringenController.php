@@ -2,64 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Reservering;
+use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 
 class ReserveringenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $reserveringen = Reservering::all();
+        return view('reserveringen.index', compact('reserveringen'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $huizen = Vakantiehuis::all();
+        return view('reserveringen.create', compact('huizen'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        Reservering::create($request->all());
+        return redirect()->route('reserveringen.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Reservering $reservering)
     {
-        //
+        return view('reserveringen.show', compact('reservering'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Reservering $reservering)
     {
-        //
+        $huizen = Vakantiehuis::all();
+        return view('reserveringen.edit', compact('reservering', 'huizen'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Reservering $reservering)
     {
-        //
+        $reservering->update($request->all());
+        return redirect()->route('reserveringen.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Reservering $reservering)
     {
-        //
+        $reservering->delete();
+        return redirect()->route('reserveringen.index');
     }
 }
