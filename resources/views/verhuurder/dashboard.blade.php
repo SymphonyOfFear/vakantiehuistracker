@@ -7,7 +7,7 @@
             <p>Welkom bij het verhuurdersdashboard. Hier kun je je vakantiehuizen beheren, reserveringen bekijken en
                 meer.</p>
 
-            <!-- Add landlord-specific content here (e.g., quick stats or navigation links) -->
+
         </div>
     </div>
 
