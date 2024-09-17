@@ -16,7 +16,7 @@
                 <!-- Search Bar Section -->
                 <div class="bg-white p-6 rounded-lg inline-block w-full max-w-2xl">
                     <form action="{{ route('huizen.index') }}" method="GET" class="flex items-center space-x-2">
-                        <input type="text" name="search" placeholder="Zoek op plaats, buurt of postcode"
+                        <input type="text" name="query" placeholder="Zoek op plaats, buurt of postcode"
                             class="w-full px-6 py-4 border border-gray-300 rounded-l-md focus:outline-none focus:border-green-500">
                         <button type="submit"
                             class="px-8 py-4 bg-green-600 text-white rounded-r-md hover:bg-green-700 transition ease-in-out duration-300">
@@ -28,8 +28,8 @@
                         </button>
                     </form>
                     <p class="mt-2 text-sm text-gray-500">Laatste zoekopdracht:
-                        <!-- Dynamische link naar de laatste zoekopdracht -->
-                        <a href="{{ route('huizen.search', ['query' => 'Haarlem']) }}"
+                        <!-- Dynamic link to last search -->
+                        <a href="{{ route('huizen.index', ['query' => 'Haarlem']) }}"
                             class="text-green-600 hover:underline">
                             Haarlem + 0 filter
                         </a>
