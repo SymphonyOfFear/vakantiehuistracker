@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HuizenController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\favorietenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\VerhuurderHuisController;
@@ -23,7 +24,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index
 
 // Verhuurder Routes (Dashboard en Huizenbeheer)
 Route::middleware('auth')->group(function () {
-    Route::get('/verhuurder/dashboard', [VerhuurderDashboardController::class, 'index'])->name('verhuurder.dashboard'); // Verhuurder Dashboard
+    Route::get('/verhuurder/dashboard', [VerhuurderDashboardController::class, 'dashboard'])->name('verhuurder.dashboard'); // Verhuurder Dashboard
     Route::get('/verhuurder/huizen', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index'); // Beheer huizen
     Route::get('/verhuurder/huizen/toevoegen', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create'); // Voeg nieuw huis toe
     Route::post('/verhuurder/huizen', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store'); // Sla nieuw huis op
@@ -46,9 +47,9 @@ Route::middleware('auth')->group(function () {
 
 // Favorieten Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/favorieten', [HuizenController::class, 'favorites'])->name('favorieten.index'); // Toon favorieten
-    Route::post('/favorieten/add', [HuizenController::class, 'addFavorite'])->name('favorieten.toevoegen'); // Voeg huis toe aan favorieten
-    Route::delete('/favorieten/remove/{id}', [HuizenController::class, 'removeFavorite'])->name('favorieten.verwijderen'); // Verwijder huis uit favorieten
+    Route::get('/favorieten', [favorietenController::class, 'index'])->name('favorieten.index'); // Toon alle favorieten
+    Route::post('/favorieten/toevoegen/{vakantiehuisId}', [favorietenController::class, 'toevoegen'])->name('favorieten.toevoegen'); // Voeg een vakantiehuis toe aan favorieten
+    Route::delete('/favorieten/verwijderen/{vakantiehuisId}', [favorietenController::class, 'verwijderen'])->name('favorieten.verwijderen'); // Verwijder een vakantiehuis van favorieten
 });
 
 // Profile Routes
