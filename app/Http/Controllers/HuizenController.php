@@ -7,39 +7,54 @@ use Illuminate\Http\Request;
 
 class HuizenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $huizen = Vakantiehuis::all();
-        // Zorg ervoor dat de juiste view wordt geladen
-        return view('huizen.index', compact('huizen'));
-    }
+        // Locatie JSON bestand ophalen
+        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
 
+        // Begin query voor huizen zoeken
+        $query = Vakantiehuis::query();
 
-    public function search(Request $request)
-    {
-        $searchQuery = $request->get('query');
-        $minPrijs = $request->get('min_prijs');
-        $maxPrijs = $request->get('max_prijs');
+        // Query aan filter koppelen
+        if ($request->filled('query')) {
+            $query->where('locatie', 'LIKE', '%' . $request->input('query') . '%'); // Locatie naam in database zoeken
+        }
 
-        // Query for search results
-        $huizen = Vakantiehuis::query()
-            ->where('locatie', 'LIKE', "%{$searchQuery}%")
-            ->when($minPrijs, function ($query, $minPrijs) {
-                return $query->where('prijs', '>=', $minPrijs);
-            })
-            ->when($maxPrijs, function ($query, $maxPrijs) {
-                return $query->where('prijs', '<=', $maxPrijs);
-            })
-            ->get();
+        // Query laten checken voor locaties
+        if ($request->filled('locatie')) {
+            $query->where('locatie', $request->input('locatie')); // Locatie 
+        }
 
-        return view('huizen/search-results', compact('huizen', 'searchQuery'));
-    }
+        //  Query laten checken voor minimale prijs
+        if ($request->filled('min_prijs')) {
+            $query->where('prijs', '>=', $request->input('min_prijs')); // Minimale Prijs
+        }
+        //  Query laten checken voor Maximale prijs
+        if ($request->filled('max_prijs')) {
+            $query->where('prijs', '<=', $request->input('max_prijs')); // Maximale Prijs 
+        }
 
-    // Detailpagina voor een vakantiehuis
-    public function show($id)
-    {
-        $huis = Vakantiehuis::findOrFail($id);  // Haalt een specifiek huis op
+        //  Query laten checken voor toevoegingen zoals zwembadden etc
+        if ($request->filled('zwembad')) {
+            $query->where('zwembad', true); // Heeft een zwembad checker
+        }
+        if ($request->filled('wifi')) {
+            $query->where('wifi', true); // Heeft wifi checker
+        }
+        if ($request->filled('spa')) {
+            $query->where('spa', true); // Heeft een spa checker
+        }
+        if ($request->filled('speeltuin')) {
+            $query->where('speeltuin', true); // Heeft een speeltuin checker
+        }
 
-        return view('huizen.show', compact('huis'));
+        // Resultaten ophalen van query
+        $huizen = $query->get();
+
+        // Locaties en huizen naar de index sturen
+        return view('huizen.index', [
+            'locations' => $locations,
+            'huizen' => $huizen
+        ]);
     }
 }

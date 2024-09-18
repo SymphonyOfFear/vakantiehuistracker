@@ -31,4 +31,8 @@ class Vakantiehuis extends Model
     protected $casts = [
         'fotos' => 'array',
     ];
+    public function favorieten()
+    {
+        return $this->hasMany(Favorieten::class);
+    }
 }
