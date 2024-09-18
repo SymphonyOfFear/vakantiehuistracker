@@ -1,3 +1,4 @@
-<div>
-    <!-- He who is contented is rich. - Laozi -->
-</div>
+<x-app-layout>
+    <x-header />
+    <x-footer />
+</x-app-layout>

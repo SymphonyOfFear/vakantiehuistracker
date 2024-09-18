@@ -12,9 +12,12 @@ class VerhuurderDashboardController extends Controller
      */
     public function index()
     {
-        //
+        return view('verhuurder.dashboard.index');
     }
-
+    public function dashboard()
+    {
+        return view('verhuurder.dashboard');
+    }
     /**
      * Show the form for creating a new resource.
      */

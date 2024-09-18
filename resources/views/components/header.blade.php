@@ -2,66 +2,47 @@
     <div class="container mx-auto flex justify-between items-center">
         <!-- Logo -->
         <div class="text-xl font-bold">
-            <a href="/" class="text-white">Vakantiehuistracker</a>
+            <a href="{{ route('welcome') }}" class="text-white">Vakantiehuistracker</a>
         </div>
 
         <!-- Navigation Links -->
-        <nav class="space-x-4 flex items-center">
+        <nav class="space-x-4">
+            <a href="{{ route('welcome') }}" class="hover:text-green-300">Home</a>
             <a href="{{ route('huizen.index') }}" class="hover:text-green-300">Huizen</a>
-
-
-            @auth
-                @if (Auth::user()->is_verhuurder)
-                    <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
-                    <a href="{{ route('verhuurder.huis.toevoegen') }}" class="hover:text-green-300">Huis Toevoegen</a>
-                @endif
-            @endauth
-
-            <!-- Algemene pagina's -->
             <a href="{{ route('contact.index') }}" class="hover:text-green-300">Contact</a>
 
-        </nav>
-
-
-        <div>
             @auth
-                <!-- Dropdown voor ingelogde gebruiker -->
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:text-green-300">
-                            <div>{{ Auth::user()->name }}</div>
+                <!-- Links for logged-in users -->
+                <a href="{{ route('favorieten.index') }}" class="hover:text-green-300">Favorieten</a>
+                <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Verhuurder Dashboard</a>
+                <a href="{{ route('reserveringen.index') }}" class="hover:text-green-300">Reserveringen</a>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Log Out -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+                <!-- Profile Dropdown -->
+                <div class="relative inline-block">
+                    <button aria-haspopup="true" class="inline-flex items-center focus:outline-none hover:text-green-300">
+                        {{ Auth::user()->name }}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M5.121 12l4.243 4.243a1 1 0 001.415 0l4.243-4.243" />
+                        </svg>
+                    </button>
+                    <ul class="absolute hidden bg-white text-gray-800 shadow-md rounded-lg mt-2 right-0 w-48">
+                        <li><a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Profiel</a></li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="block w-full text-left px-4 py-2 hover:bg-gray-100">Uitloggen</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             @else
-                <!-- Login en Registratie links -->
-                <a href="{{ route('login') }}" class="text-white hover:text-green-300">Inloggen</a>
-                <a href="{{ route('register') }}" class="text-white hover:text-green-300">Registreren</a>
+                <!-- Links for guests -->
+                <a href="{{ route('login') }}" class="hover:text-green-300">Login</a>
+                <a href="{{ route('register') }}" class="hover:text-green-300">Registreren</a>
             @endauth
-        </div>
+        </nav>
     </div>
 </header>
