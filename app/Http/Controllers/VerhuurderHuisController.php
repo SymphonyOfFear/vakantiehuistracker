@@ -11,12 +11,12 @@ class VerhuurderHuisController extends Controller
     public function index()
     {
         $huisjes = Vakantiehuis::where('verhuurder_id', Auth::id())->get();
-        return view('verhuurder.huis.index', compact('huisjes'));
+        return view('verhuurder.huizen.index', compact('huisjes'));
     }
 
     public function create()
     {
-        return view('verhuurder.huis.create');
+        return view('verhuurder.huizen.create');
     }
 
     public function store(Request $request)
