@@ -35,4 +35,40 @@ class Vakantiehuis extends Model
     {
         return $this->hasMany(Favorieten::class);
     }
+    public function scopeFilter($query, $filters)
+    {
+        // Verwerk de locatie filter alleen als het een string is
+        if (isset($filters['locatie']) && is_string($filters['locatie'])) {
+            $locatie = trim($filters['locatie']);
+            $query->where('locatie', 'LIKE', '%' . $locatie . '%');
+        }
+
+        // Verwerk de prijsfilters
+        if (isset($filters['min_prijs'])) {
+            $query->where('prijs', '>=', $filters['min_prijs']);
+        }
+
+        if (isset($filters['max_prijs'])) {
+            $query->where('prijs', '<=', $filters['max_prijs']);
+        }
+
+        // Voeg filters toe voor voorzieningen
+        if (isset($filters['zwembad'])) {
+            $query->where('zwembad', true);
+        }
+
+        if (isset($filters['wifi'])) {
+            $query->where('wifi', true);
+        }
+
+        if (isset($filters['spa'])) {
+            $query->where('spa', true);
+        }
+
+        if (isset($filters['speeltuin'])) {
+            $query->where('speeltuin', true);
+        }
+
+        return $query;
+    }
 }

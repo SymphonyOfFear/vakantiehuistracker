@@ -1,4 +1,3 @@
-<!-- resources/views/verhuurder/huizen/index.blade.php -->
 <x-app-layout>
     <x-header />
 
@@ -7,7 +6,7 @@
         <x-sidebar title="Huizenbeheer">
             <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
                     Huizen</a></li>
-            <li><a href="{{ route('verhuurder.huizen.toevoegen') }}" class="text-gray-700 hover:text-green-600">Voeg Huis
+            <li><a href="{{ route('verhuurder.huizen.create') }}" class="text-gray-700 hover:text-green-600">Voeg Huis
                     Toe</a></li>
         </x-sidebar>
 

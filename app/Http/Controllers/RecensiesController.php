@@ -5,19 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class VerhuurderDashboardController extends Controller
+class RecensiesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('verhuurder.dashboard.index');
+        //
     }
-    public function dashboard()
-    {
-        return view('verhuurder.dashboard');
-    }
+
     /**
      * Show the form for creating a new resource.
      */

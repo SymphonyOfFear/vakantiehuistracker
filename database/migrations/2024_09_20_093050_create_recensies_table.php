@@ -13,11 +13,8 @@ return new class extends Migration
     {
         Schema::create('recensies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reservering_id')->constrained('reserveringen')->onDelete('cascade'); // Koppeling met reservering
-            $table->foreignId('user_id')->constrained('users');
-            $table->text('recensie'); // Tekst van de recensie
-            $table->unsignedTinyInteger('beoordeling')->default(0); // Beoordeling op een schaal van 1-5
-            $table->boolean('zichtbaar')->default(true); // Optie om de recensie te verbergen
+            $table->foreignId('reservering_id')->constrained('reserveringen')->onDelete('cascade');
+            $table->text('recensie');
             $table->timestamps();
         });
     }

@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HuizenController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\favorietenController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReserveringenController;
+use App\Http\Controllers\RecensiesController;
 use App\Http\Controllers\VerhuurderHuisController;
 use App\Http\Controllers\VerhuurderDashboardController;
+use App\Http\Controllers\FavorietenController;
 
 // Homepage Route
 Route::get('/', function () {
@@ -15,44 +16,53 @@ Route::get('/', function () {
 })->name('welcome');
 
 // Huizen Routes
-Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index'); // Overzicht van huizen
-Route::get('/huizen/search', [HuizenController::class, 'search'])->name('huizen.search'); // Zoekfunctie
-Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show'); // Details van een huis
+Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
+Route::get('/huizen/create', [HuizenController::class, 'create'])->name('huizen.create');
+Route::post('/huizen', [HuizenController::class, 'store'])->name('huizen.store');
+Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');
+Route::get('/huizen/{id}/edit', [HuizenController::class, 'edit'])->name('huizen.edit');
+Route::put('/huizen/{id}', [HuizenController::class, 'update'])->name('huizen.update');
+Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huizen.destroy');
 
 // Contact Routes
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index'); // Contactpagina
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
 // Verhuurder Routes (Dashboard en Huizenbeheer)
-Route::middleware('auth')->group(function () {
-    Route::get('/verhuurder/dashboard', [VerhuurderDashboardController::class, 'dashboard'])->name('verhuurder.dashboard'); // Verhuurder Dashboard
-    Route::get('/verhuurder/huizen', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index'); // Beheer huizen
-    Route::get('/verhuurder/huizen/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.toevoegen'); // Voeg nieuw huis toe
-    Route::post('/verhuurder/huizen', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store'); // Sla nieuw huis op
-    Route::get('/verhuurder/huizen/{id}', [VerhuurderHuisController::class, 'show'])->name('verhuurder.huizen.show'); // Toon details van een huis
-    Route::get('/verhuurder/huizen/{id}/create', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit'); // Bewerk een huis
-    Route::put('/verhuurder/huizen/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update'); // Update een huis
-    Route::delete('/verhuurder/huizen/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy'); // Verwijder een huis
+
+// Routes for Verhuurder Huizen
+Route::prefix('verhuurder/huizen')->group(function () {
+    Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
+    Route::get('/', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index');
+    Route::get('/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
+    Route::post('/', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
+    Route::get('/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
+    Route::put('/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
+    Route::delete('/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy');
 });
 
+
 // Reserveringen Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/reserveringen', [ReserveringenController::class, 'index'])->name('reserveringen.index'); // Overzicht van reserveringen
-    Route::get('/reserveringen/nieuw', [ReserveringenController::class, 'create'])->name('reserveringen.create'); // Maak nieuwe reservering
-    Route::post('/reserveringen', [ReserveringenController::class, 'store'])->name('reserveringen.store'); // Sla reservering op
-    Route::get('/reserveringen/{id}', [ReserveringenController::class, 'show'])->name('reserveringen.show'); // Toon details van reservering
-    Route::get('/reserveringen/{id}/bewerken', [ReserveringenController::class, 'edit'])->name('reserveringen.edit'); // Bewerk reservering
-    Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->name('reserveringen.update'); // Update reservering
-    Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy'); // Verwijder reservering
-});
+Route::get('/reserveringen', [ReserveringenController::class, 'index'])->name('reserveringen.index');
+Route::get('/reserveringen/create', [ReserveringenController::class, 'create'])->name('reserveringen.create');
+Route::post('/reserveringen', [ReserveringenController::class, 'store'])->name('reserveringen.store');
+Route::get('/reserveringen/{id}', [ReserveringenController::class, 'show'])->name('reserveringen.show');
+Route::get('/reserveringen/{id}/edit', [ReserveringenController::class, 'edit'])->name('reserveringen.edit');
+Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->name('reserveringen.update');
+Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
+
+// Recensies Routes
+// Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
+// Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
+// Route::get('/recensies/respond', [RecensiesController::class, 'respond'])->name('recensies.respond');
 
 // Favorieten Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/favorieten', [favorietenController::class, 'index'])->name('favorieten.index'); // Toon alle favorieten
-    Route::post('/favorieten/toevoegen/{vakantiehuisId}', [favorietenController::class, 'toevoegen'])->name('favorieten.toevoegen'); // Voeg een vakantiehuis toe aan favorieten
-    Route::delete('/favorieten/verwijderen/{vakantiehuisId}', [favorietenController::class, 'verwijderen'])->name('favorieten.verwijderen'); // Verwijder een vakantiehuis van favorieten
+    Route::get('/favorieten', [FavorietenController::class, 'index'])->name('favorieten.index');
+    Route::post('/favorieten', [FavorietenController::class, 'store'])->name('favorieten.store');
+    Route::delete('/favorieten/{id}', [FavorietenController::class, 'destroy'])->name('favorieten.destroy');
 });
 
-// Profile Routes
+// Profile Routes (In English, default Laravel)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -60,11 +70,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Recensies (Feedback) Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/recensies', [VerhuurderHuisController::class, 'recensies'])->name('recensies.index'); // Toon recensies
-    Route::post('/recensies/beantwoorden', [VerhuurderHuisController::class, 'respond'])->name('recensies.beantwoorden'); // Beantwoord recensie
-});
-
-// Authentication Routes (Default Laravel Auth)
 require __DIR__ . '/auth.php';
