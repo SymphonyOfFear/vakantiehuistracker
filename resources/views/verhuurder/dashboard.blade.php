@@ -1,50 +1,39 @@
 <x-app-layout>
     <x-header />
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <div id="sidebar" class="w-1/4 bg-gray-100 h-screen shadow-lg">
-            <!-- Sidebar Title -->
-            <div class="text-lg font-semibold text-gray-800 mb-4 p-4">
-                Menu
-            </div>
-
-            <!-- Sidebar Items -->
-            <ul class="space-y-4 px-4">
-                <li>
-                    <a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">
-                        Mijn Huizen
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('reserveringen.index') }}" class="text-gray-700 hover:text-green-600">
-                        Reserveringen
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Main Content -->
-        <div class="w-full p-6 bg-white">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Welkom bij het Verhuurder Dashboard</h1>
-
-                <!-- Toggle Sidebar Button (shown when sidebar is visible) -->
-                <button id="toggleSidebarButton" class="bg-green-500 text-white px-4 py-2 rounded">
+    <div class="flex flex-col min-h-screen">
+        <!-- Sidebar Toggle Button -->
+        <div class="flex justify-between items-center p-6 bg-green-500">
+            <h1 class="text-2xl font-bold text-white">Welkom bij het Verhuurder Dashboard</h1>
+            <div>
+                <button id="toggleSidebarButton" class="bg-green-600 text-white px-4 py-2 rounded"
+                    onclick="toggleSidebar()">
                     Verberg Sidebar
                 </button>
-
-                <!-- Show Sidebar Button (hidden when sidebar is visible) -->
-                <button id="showSidebarButton" class="bg-green-500 text-white px-4 py-2 rounded hidden">
+                <button id="showSidebarButton" class="hidden bg-green-600 text-white px-4 py-2 rounded"
+                    onclick="toggleSidebar()">
                     Toon Sidebar
                 </button>
             </div>
-
-            <p class="mt-4">
-                Hier kunt u uw vakantiehuizen beheren en reserveringen bekijken.
-            </p>
         </div>
-    </div>
 
-    <x-footer />
+        <div class="flex flex-grow">
+            <!-- Sidebar Component -->
+            <x-sidebar id="sidebar" class="w-64 h-full">
+                <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
+                        Huizen</a></li>
+                <li><a href="{{ route('reserveringen.index') }}"
+                        class="text-gray-700 hover:text-green-600">Reserveringen</a></li>
+            </x-sidebar>
+
+            <!-- Main Content -->
+            <div id="mainContent" class="flex-grow p-6 bg-white">
+                <h1 class="text-2xl font-bold">Beheer Uw Vakantiehuizen</h1>
+                <p>Hier kunt u uw vakantiehuizen beheren en reserveringen bekijken.</p>
+            </div>
+        </div>
+
+        <!-- Footer Component -->
+        <x-footer class="bg-gray-900 text-white p-4" />
+    </div>
 </x-app-layout>
