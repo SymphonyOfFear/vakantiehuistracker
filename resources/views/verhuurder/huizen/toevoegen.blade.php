@@ -29,6 +29,11 @@
                     <input type="number" name="prijs" id="prijs" class="w-full px-4 py-2 border rounded-md"
                         required>
                 </div>
+                <div class="mb-4">
+                    <label for="slaapkamers" class="block text-gray-700">Aantal slaapkamer:</label>
+                    <input type="number" name="slaapkamers" id="slaapkamers" class="w-full px-4 py-2 border rounded-md"
+                        required>
+                </div>
 
                 <!-- Amenities (Checkboxes) -->
                 <div class="mb-4">

@@ -10,19 +10,19 @@ class VerhuurderHuisController extends Controller
 {
     public function index()
     {
-        $huisjes = Vakantiehuis::where('verhuurder_id', Auth::id())->get();
+        $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();
         return view('verhuurder.huizen.index', compact('huisjes'));
     }
 
     public function create()
     {
-        return view('verhuurder.huizen.create');
+        return view('verhuurder.huizen.toevoegen');
     }
 
     public function store(Request $request)
     {
         Vakantiehuis::create([
-            'verhuurder_id' => Auth::id(),
+            'user_id' => Auth::id(),
             'prijs' => $request->prijs,
             'locatie' => $request->locatie,
             'beschikbaarheid' => $request->has('beschikbaarheid'),
@@ -34,13 +34,13 @@ class VerhuurderHuisController extends Controller
             'fotos' => json_encode($request->fotos),
         ]);
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol toegevoegd!');
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol toegevoegd!');
     }
 
     public function edit($id)
     {
         $huisje = Vakantiehuis::findOrFail($id);
-        return view('verhuurder.huis.edit', compact('huisje'));
+        return view('verhuurder.huizen.bewerken', compact('huisje'));
     }
 
     public function update(Request $request, $id)
@@ -59,7 +59,7 @@ class VerhuurderHuisController extends Controller
             'fotos' => json_encode($request->fotos),
         ]);
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol bijgewerkt!');
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol bijgewerkt!');
     }
 
     public function destroy($id)
@@ -67,6 +67,6 @@ class VerhuurderHuisController extends Controller
         $huisje = Vakantiehuis::findOrFail($id);
         $huisje->delete();
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol verwijderd!');
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol verwijderd!');
     }
 }
