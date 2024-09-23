@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback', function (Blueprint $table) {
+        Schema::create('recensies', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservering_id')->constrained('reserveringen')->onDelete('cascade');
-            $table->text('feedback');
+            $table->text('recensie');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('recensies');
     }
 };

@@ -1,40 +1,20 @@
 <x-app-layout>
     <x-header />
 
-    <div class="min-h-screen bg-green-100 py-16">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-semibold text-gray-700 mb-6">{{ $huis->naam }}</h1>
+    <div class="flex">
+        <!-- Sidebar Component for Verhuurder Huizen -->
+        <x-sidebar title="Huizenbeheer">
+            <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
+                    Huizen</a></li>
+            <li><a href="{{ route('verhuurder.huizen.create') }}" class="text-gray-700 hover:text-green-600">Voeg Huis
+                    Toe</a></li>
+        </x-sidebar>
 
-            <!-- House details -->
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <img src="{{ $huis->afbeelding ?? 'https://placehold.co/600x400' }}" alt="{{ $huis->naam }}"
-                    class="w-full h-96 object-cover rounded-lg mb-4">
-                <p><strong>Locatie:</strong> {{ $huis->locatie }}</p>
-                <p><strong>Prijs:</strong> € {{ $huis->prijs }}</p>
-                <p><strong>Beschrijving:</strong> {{ $huis->beschrijving }}</p>
-
-                <!-- Amenities -->
-                <h3 class="mt-6 text-xl font-semibold">Voorzieningen</h3>
-                <ul class="list-disc list-inside">
-                    @if ($huis->zwembad)
-                        <li>Zwembad</li>
-                    @endif
-                    @if ($huis->wifi)
-                        <li>Wi-Fi</li>
-                    @endif
-                    @if ($huis->spa)
-                        <li>Spa</li>
-                    @endif
-                    @if ($huis->speeltuin)
-                        <li>Speeltuin</li>
-                    @endif
-                </ul>
-
-                <a href="{{ route('verhuurder.huizen.bewerken', $huis->id) }}"
-                    class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
-                    Bewerk Vakantiehuis
-                </a>
-            </div>
+        <div class="w-full lg:w-3/4 p-6 bg-white">
+            <h1 class="text-2xl font-bold">Vakantiehuis Details</h1>
+            <p>{{ $vakantiehuis->naam }}</p>
+            <p>{{ $vakantiehuis->beschrijving }}</p>
+            <p>{{ $vakantiehuis->locatie }}</p>
         </div>
     </div>
 

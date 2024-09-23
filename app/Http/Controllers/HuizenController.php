@@ -9,52 +9,51 @@ class HuizenController extends Controller
 {
     public function index(Request $request)
     {
-        // Locatie JSON bestand ophalen
+        // Lees de locaties uit de JSON
         $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
 
-        // Begin query voor huizen zoeken
+        // Maak een query voor de vakantiehuizen
         $query = Vakantiehuis::query();
 
-        // Query aan filter koppelen
-        if ($request->filled('query')) {
-            $query->where('locatie', 'LIKE', '%' . $request->input('query') . '%'); // Locatie naam in database zoeken
+        // Verwerk de locatie filter alleen als het een string is
+        if ($request->has('locatie') && is_string($request->input('locatie'))) {
+            $locatie = trim($request->input('locatie'));
+            $query->where('locatie', 'LIKE', '%' . $locatie . '%');
         }
 
-        // Query laten checken voor locaties
-        if ($request->filled('locatie')) {
-            $query->where('locatie', $request->input('locatie')); // Locatie 
+        // Verwerk de prijsfilters
+        if ($request->has('min_prijs')) {
+            $query->where('prijs', '>=', $request->input('min_prijs'));
         }
 
-        //  Query laten checken voor minimale prijs
-        if ($request->filled('min_prijs')) {
-            $query->where('prijs', '>=', $request->input('min_prijs')); // Minimale Prijs
-        }
-        //  Query laten checken voor Maximale prijs
-        if ($request->filled('max_prijs')) {
-            $query->where('prijs', '<=', $request->input('max_prijs')); // Maximale Prijs 
+        if ($request->has('max_prijs')) {
+            $query->where('prijs', '<=', $request->input('max_prijs'));
         }
 
-        //  Query laten checken voor toevoegingen zoals zwembadden etc
-        if ($request->filled('zwembad')) {
-            $query->where('zwembad', true); // Heeft een zwembad checker
-        }
-        if ($request->filled('wifi')) {
-            $query->where('wifi', true); // Heeft wifi checker
-        }
-        if ($request->filled('spa')) {
-            $query->where('spa', true); // Heeft een spa checker
-        }
-        if ($request->filled('speeltuin')) {
-            $query->where('speeltuin', true); // Heeft een speeltuin checker
+        // Voeg filters toe voor voorzieningen
+        if ($request->has('zwembad')) {
+            $query->where('zwembad', true);
         }
 
-        // Resultaten ophalen van query
+        if ($request->has('wifi')) {
+            $query->where('wifi', true);
+        }
+
+        if ($request->has('spa')) {
+            $query->where('spa', true);
+        }
+
+        if ($request->has('speeltuin')) {
+            $query->where('speeltuin', true);
+        }
+
+        // Haal de gefilterde huizen op
         $huizen = $query->get();
 
-        // Locaties en huizen naar de index sturen
+        // Geef de locaties en huizen door aan de view
         return view('huizen.index', [
             'locations' => $locations,
-            'huizen' => $huizen
+            'huizen' => $huizen,
         ]);
     }
 }

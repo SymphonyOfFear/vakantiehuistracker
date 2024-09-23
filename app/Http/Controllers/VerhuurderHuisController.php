@@ -4,69 +4,108 @@ namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class VerhuurderHuisController extends Controller
 {
+    // Display a listing of vakantiehuizen for the verhuurder
+    public function dashboard()
+    {
+        return view('verhuurder.dashboard');
+    }
     public function index()
     {
-        $huisjes = Vakantiehuis::where('verhuurder_id', Auth::id())->get();
-        return view('verhuurder.huis.index', compact('huisjes'));
+        // Assuming you have a locations.json file to load locations from
+        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
+
+        // Fetch all vacation houses associated with the current user/verhuurder
+        $huizen = Vakantiehuis::all();
+
+        return view('verhuurder.huizen.index', [
+            'locations' => $locations,
+            'huizen' => $huizen,
+        ]);
     }
 
+
+    // Show the form for creating a new vakantiehuis
     public function create()
     {
-        return view('verhuurder.huis.create');
+        return view('verhuurder.huizen.create');
     }
 
+    // Store a newly created vakantiehuis in storage
     public function store(Request $request)
     {
-        Vakantiehuis::create([
-            'verhuurder_id' => Auth::id(),
-            'prijs' => $request->prijs,
-            'locatie' => $request->locatie,
-            'beschikbaarheid' => $request->has('beschikbaarheid'),
-            'slaapkamers' => $request->slaapkamers,
-            'wifi' => $request->has('wifi'),
-            'zwembad' => $request->has('zwembad'),
-            'spa' => $request->has('spa'),
-            'speeltuin' => $request->has('speeltuin'),
-            'fotos' => json_encode($request->fotos),
+        // Validate the request data
+        $validated = $request->validate([
+            'naam' => 'required|string|max:255',
+            'prijs' => 'required|numeric',
+            'beschrijving' => 'nullable|string',
+            'locatie' => 'required|string|max:255',
+            'slaapkamers' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol toegevoegd!');
+        // Create a new Vakantiehuis instance and save to database
+        $vakantiehuis = new Vakantiehuis($validated);
+
+        // Handle the file upload if a file was provided
+        if ($request->hasFile('foto')) {
+            $vakantiehuis->foto = $request->file('foto')->store('vakantiehuizen', 'public');
+        }
+
+        $vakantiehuis->save();
+
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd');
     }
 
+    // Show a specific vakantiehuis
+    public function show($id)
+    {
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        return view('verhuurder.huizen.show', compact('vakantiehuis'));
+    }
+
+    // Show the form for editing the specified vakantiehuis
     public function edit($id)
     {
-        $huisje = Vakantiehuis::findOrFail($id);
-        return view('verhuurder.huis.edit', compact('huisje'));
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        return view('verhuurder.huizen.edit', compact('vakantiehuis'));
     }
 
+    // Update the specified vakantiehuis in storage
     public function update(Request $request, $id)
     {
-        $huisje = Vakantiehuis::findOrFail($id);
-
-        $huisje->update([
-            'prijs' => $request->prijs,
-            'locatie' => $request->locatie,
-            'beschikbaarheid' => $request->has('beschikbaarheid'),
-            'slaapkamers' => $request->slaapkamers,
-            'wifi' => $request->has('wifi'),
-            'zwembad' => $request->has('zwembad'),
-            'spa' => $request->has('spa'),
-            'speeltuin' => $request->has('speeltuin'),
-            'fotos' => json_encode($request->fotos),
+        // Validate the request data
+        $validated = $request->validate([
+            'naam' => 'required|string|max:255',
+            'prijs' => 'required|numeric',
+            'beschrijving' => 'nullable|string',
+            'locatie' => 'required|string|max:255',
+            'slaapkamers' => 'required|integer',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol bijgewerkt!');
+        // Fetch the existing Vakantiehuis model
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        $vakantiehuis->fill($validated);
+
+        // Handle file upload if a new image was provided
+        if ($request->hasFile('foto')) {
+            $vakantiehuis->foto = $request->file('foto')->store('vakantiehuizen', 'public');
+        }
+
+        $vakantiehuis->save();
+
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt');
     }
 
+    // Remove the specified vakantiehuis from storage
     public function destroy($id)
     {
-        $huisje = Vakantiehuis::findOrFail($id);
-        $huisje->delete();
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        $vakantiehuis->delete();
 
-        return redirect()->route('verhuurder.huis.index')->with('success', 'Huisje succesvol verwijderd!');
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol verwijderd');
     }
 }
