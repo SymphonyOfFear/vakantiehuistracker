@@ -10,7 +10,8 @@ class HuizenController extends Controller
     public function index(Request $request)
     {
         // Lees de locaties uit de JSON
-        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
+        $locations = json_decode(file_get_contents(resource_path('locations.json')), true);
+
 
         // Maak een query voor de vakantiehuizen
         $query = Vakantiehuis::query();

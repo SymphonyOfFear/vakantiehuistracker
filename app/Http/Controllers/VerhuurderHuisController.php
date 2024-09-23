@@ -15,7 +15,8 @@ class VerhuurderHuisController extends Controller
     public function index()
     {
         // Assuming you have a locations.json file to load locations from
-        $locations = json_decode(file_get_contents(storage_path('app/public/locations.json')), true);
+        $locations = json_decode(file_get_contents(resource_path('locations.json')), true);
+
 
         // Fetch all vacation houses associated with the current user/verhuurder
         $huizen = Vakantiehuis::all();

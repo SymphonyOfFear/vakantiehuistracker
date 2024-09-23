@@ -1,9 +1,7 @@
 import './bootstrap';
-
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
-
 Alpine.start();
 
 // TomSelect initialization with a check
@@ -18,21 +16,28 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+});
 
-    // Toggle Sidebar Functionality
+// Toggle Sidebar Functionality
+function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    const toggleSidebarButton = document.getElementById('toggleSidebarButton');
+    const mainContent = document.getElementById('mainContent');
+    const toggleButton = document.getElementById('toggleSidebarButton');
     const showSidebarButton = document.getElementById('showSidebarButton');
 
-    toggleSidebarButton.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
-        toggleSidebarButton.classList.toggle('hidden');
-        showSidebarButton.classList.toggle('hidden');
-    });
+    if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        mainContent.classList.remove('w-full');
+        toggleButton.classList.remove('hidden');
+        showSidebarButton.classList.add('hidden');
+    } else {
+        sidebar.classList.add('hidden');
+        mainContent.classList.add('w-full');
+        toggleButton.classList.add('hidden');
+        showSidebarButton.classList.remove('hidden');
+    }
+}
 
-    showSidebarButton.addEventListener('click', () => {
-        sidebar.classList.toggle('hidden');
-        toggleSidebarButton.classList.toggle('hidden');
-        showSidebarButton.classList.toggle('hidden');
-    });
-});
+// Add event listeners for toggle buttons
+document.getElementById('toggleSidebarButton').addEventListener('click', toggleSidebar);
+document.getElementById('showSidebarButton').addEventListener('click', toggleSidebar);
