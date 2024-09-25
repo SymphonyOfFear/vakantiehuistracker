@@ -64,9 +64,14 @@ class VerhuurderHuisController extends Controller
 
     public function destroy($id)
     {
+        
         $huisje = Vakantiehuis::findOrFail($id);
         $huisje->delete();
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol verwijderd!');
+    }
+    public function show(Vakantiehuis $huisje)
+    {
+        return view('verhuurder.huizen.show', compact('huisje'));
     }
 }
