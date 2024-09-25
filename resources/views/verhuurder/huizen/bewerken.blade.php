@@ -6,28 +6,34 @@
             <h1 class="text-3xl font-semibold text-gray-700 mb-6">Bewerk Vakantiehuis</h1>
 
             <!-- Edit House Form -->
-            <form action="{{ route('verhuurder.huizen.update', $huis->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('verhuurder.huizen.update', $huisje->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <!-- House Name -->
                 <div class="mb-4">
                     <label for="naam" class="block text-gray-700">Naam:</label>
-                    <input type="text" name="naam" id="naam" value="{{ $huis->naam }}"
+                    <input type="text" name="naam" id="naam" value="{{ $huisje->naam }}"
                         class="w-full px-4 py-2 border rounded-md" required>
                 </div>
 
                 <!-- Location -->
                 <div class="mb-4">
                     <label for="locatie" class="block text-gray-700">Locatie:</label>
-                    <input type="text" name="locatie" id="locatie" value="{{ $huis->locatie }}"
+                    <input type="text" name="locatie" id="locatie" value="{{ $huisje->locatie }}"
+                        class="w-full px-4 py-2 border rounded-md" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="prijs" class="block text-gray-700">Prijs:</label>
+                    <input type="text" name="prijs" id="prijs" value="{{ $huisje->prijs }}"
                         class="w-full px-4 py-2 border rounded-md" required>
                 </div>
 
                 <!-- Price -->
                 <div class="mb-4">
-                    <label for="prijs" class="block text-gray-700">Prijs:</label>
-                    <input type="number" name="prijs" id="prijs" value="{{ $huis->prijs }}"
+                    <label for="slaapkamers" class="block text-gray-700">Aantal slaapkamers:</label>
+                    <input type="number" name="slaapkamers" id="slaapkamers" value="{{ $huisje->slaapkamers }}"
                         class="w-full px-4 py-2 border rounded-md" required>
                 </div>
 
@@ -36,22 +42,22 @@
                     <h3 class="block text-gray-700 mb-2">Voorzieningen:</h3>
                     <div class="flex items-center mb-2">
                         <input type="checkbox" name="zwembad" id="zwembad" value="1"
-                            {{ $huis->zwembad ? 'checked' : '' }} class="mr-2">
+                            {{ $huisje->zwembad ? 'checked' : '' }} class="mr-2">
                         <label for="zwembad" class="text-gray-600">Zwembad</label>
                     </div>
                     <div class="flex items-center mb-2">
                         <input type="checkbox" name="wifi" id="wifi" value="1"
-                            {{ $huis->wifi ? 'checked' : '' }} class="mr-2">
+                            {{ $huisje->wifi ? 'checked' : '' }} class="mr-2">
                         <label for="wifi" class="text-gray-600">Wi-Fi</label>
                     </div>
                     <div class="flex items-center mb-2">
                         <input type="checkbox" name="spa" id="spa" value="1"
-                            {{ $huis->spa ? 'checked' : '' }} class="mr-2">
+                            {{ $huisje->spa ? 'checked' : '' }} class="mr-2">
                         <label for="spa" class="text-gray-600">Spa</label>
                     </div>
                     <div class="flex items-center mb-2">
                         <input type="checkbox" name="speeltuin" id="speeltuin" value="1"
-                            {{ $huis->speeltuin ? 'checked' : '' }} class="mr-2">
+                            {{ $huisje->speeltuin ? 'checked' : '' }} class="mr-2">
                         <label for="speeltuin" class="text-gray-600">Speeltuin</label>
                     </div>
                 </div>
@@ -67,8 +73,8 @@
                 <div class="mb-4">
                     <label for="beschikbaarheid" class="block text-gray-700">Beschikbaarheid:</label>
                     <select name="beschikbaarheid" id="beschikbaarheid" class="w-full px-4 py-2 border rounded-md">
-                        <option value="1" {{ $huis->beschikbaarheid ? 'selected' : '' }}>Beschikbaar</option>
-                        <option value="0" {{ !$huis->beschikbaarheid ? 'selected' : '' }}>Niet Beschikbaar</option>
+                        <option value="1" {{ $huisje->beschikbaarheid ? 'selected' : '' }}>Beschikbaar</option>
+                        <option value="0" {{ !$huisje->beschikbaarheid ? 'selected' : '' }}>Niet Beschikbaar</option>
                     </select>
                 </div>
 

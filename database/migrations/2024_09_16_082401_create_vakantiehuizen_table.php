@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('naam');
             $table->string('locatie');
             $table->decimal('prijs', 10, 2);
             $table->integer('slaapkamers');

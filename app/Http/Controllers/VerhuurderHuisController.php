@@ -23,6 +23,7 @@ class VerhuurderHuisController extends Controller
     {
         Vakantiehuis::create([
             'user_id' => Auth::id(),
+            'naam' => $request->naam,
             'prijs' => $request->prijs,
             'locatie' => $request->locatie,
             'beschikbaarheid' => $request->has('beschikbaarheid'),
@@ -49,6 +50,7 @@ class VerhuurderHuisController extends Controller
 
         $huisje->update([
             'prijs' => $request->prijs,
+            'naam' => $request->naam,
             'locatie' => $request->locatie,
             'beschikbaarheid' => $request->has('beschikbaarheid'),
             'slaapkamers' => $request->slaapkamers,
