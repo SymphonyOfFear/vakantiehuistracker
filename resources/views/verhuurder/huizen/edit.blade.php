@@ -2,76 +2,71 @@
     <x-header />
 
     <div class="flex">
-        <!-- Sidebar Component with Toggle Button -->
-        <div id="sidebar" class="bg-gray-100 w-64 h-screen shadow-lg p-4">
-            <div class="text-lg font-semibold text-gray-800 mb-4 flex justify-between">
-                <span>Menu</span>
-                <button id="toggleSidebarButton" class="text-red-500">✖</button>
-            </div>
-            <ul class="space-y-4">
-                <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
-                        Huizen</a></li>
-                <li><a href="{{ route('verhuurder.huizen.create') }}"
-                        class="text-gray-700 hover:text-green-600">Vakantiehuis Toevoegen</a></li>
-                <li><a href="{{ route('reserveringen.index') }}"
-                        class="text-gray-700 hover:text-green-600">Reserveringen</a></li>
-            </ul>
-        </div>
-
-        <!-- Show Sidebar Button -->
-        <button id="showSidebarButton"
-            class="bg-green-500 text-white px-4 py-2 rounded fixed top-4 left-4 hidden">☰</button>
+        <!-- Sidebar -->
+        <x-sidebar title="Huizenbeheer">
+            <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
+                    Huizen</a></li>
+        </x-sidebar>
 
         <!-- Main Content -->
-        <div class="w-full p-6 bg-white">
-            <h1 class="text-2xl font-bold">Vakantiehuis Bewerken</h1>
+        <div class="w-full lg:w-3/4 p-6 bg-white">
+            <h1 class="text-2xl font-bold mb-4">Bewerk vakantiehuis</h1>
 
             <form action="{{ route('verhuurder.huizen.update', $vakantiehuis->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
-                <!-- Naam -->
                 <div class="mb-4">
-                    <label for="naam" class="block text-gray-700">Naam:</label>
-                    <input type="text" id="naam" name="naam" value="{{ $vakantiehuis->naam }}"
-                        class="w-full p-2 border border-gray-300 rounded">
+                    <label class="block text-gray-700">Naam van Vakantiehuis:</label>
+                    <input type="text" name="name" value="{{ $vakantiehuis->name }}"
+                        class="w-full border rounded px-3 py-2" required>
                 </div>
 
-                <!-- Prijs -->
                 <div class="mb-4">
-                    <label for="prijs" class="block text-gray-700">Prijs:</label>
-                    <input type="number" id="prijs" name="prijs" value="{{ $vakantiehuis->prijs }}"
-                        class="w-full p-2 border border-gray-300 rounded">
+                    <label class="block text-gray-700">Locatie:</label>
+                    <select name="location" class="w-full border rounded px-3 py-2 select-search" required>
+                        <!-- Dynamic location options -->
+                        @foreach ($locations as $location)
+                            <option value="{{ $location }}"
+                                {{ $vakantiehuis->location == $location ? 'selected' : '' }}>{{ $location }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <!-- Beschrijving -->
                 <div class="mb-4">
-                    <label for="beschrijving" class="block text-gray-700">Beschrijving:</label>
-                    <textarea id="beschrijving" name="beschrijving" class="w-full p-2 border border-gray-300 rounded">{{ $vakantiehuis->beschrijving }}</textarea>
+                    <label class="block text-gray-700">Prijs per nacht:</label>
+                    <input type="number" name="price" value="{{ $vakantiehuis->price }}"
+                        class="w-full border rounded px-3 py-2" required>
                 </div>
 
-                <!-- Locatie -->
                 <div class="mb-4">
-                    <label for="locatie" class="block text-gray-700">Locatie:</label>
-                    <input type="text" id="locatie" name="locatie" value="{{ $vakantiehuis->locatie }}"
-                        class="w-full p-2 border border-gray-300 rounded">
+                    <label class="block text-gray-700">Aantal slaapkamers:</label>
+                    <input type="number" name="bedrooms" value="{{ $vakantiehuis->bedrooms }}"
+                        class="w-full border rounded px-3 py-2" required>
                 </div>
 
-                <!-- Slaapkamers -->
                 <div class="mb-4">
-                    <label for="slaapkamers" class="block text-gray-700">Slaapkamers:</label>
-                    <input type="number" id="slaapkamers" name="slaapkamers" value="{{ $vakantiehuis->slaapkamers }}"
-                        class="w-full p-2 border border-gray-300 rounded">
+                    <label class="block text-gray-700">Voorzieningen:</label>
+                    <input type="checkbox" name="amenities[]" value="Zwembad"
+                        {{ in_array('Zwembad', $vakantiehuis->amenities) ? 'checked' : '' }}> Zwembad <br>
+                    <input type="checkbox" name="amenities[]" value="Wi-Fi"
+                        {{ in_array('Wi-Fi', $vakantiehuis->amenities) ? 'checked' : '' }}> Wi-Fi <br>
+                    <input type="checkbox" name="amenities[]" value="Spa"
+                        {{ in_array('Spa', $vakantiehuis->amenities) ? 'checked' : '' }}> Spa <br>
+                    <input type="checkbox" name="amenities[]" value="Speeltuin"
+                        {{ in_array('Speeltuin', $vakantiehuis->amenities) ? 'checked' : '' }}> Speeltuin
                 </div>
 
-                <!-- Foto upload -->
                 <div class="mb-4">
-                    <label for="foto" class="block text-gray-700">Afbeelding uploaden:</label>
-                    <input type="file" id="foto" name="foto" class="w-full p-2">
+                    <label class="block text-gray-700">Afbeelding van vakantiehuis:</label>
+                    <input type="file" name="photo" class="w-full border rounded px-3 py-2">
                 </div>
 
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Vakantiehuis Bijwerken</button>
+                <div class="mb-4">
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Bijwerken</button>
+                </div>
             </form>
         </div>
     </div>

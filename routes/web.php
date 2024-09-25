@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\RecensiesController;
 use App\Http\Controllers\VerhuurderHuisController;
-use App\Http\Controllers\VerhuurderDashboardController;
 use App\Http\Controllers\FavorietenController;
 
 // Homepage Route
@@ -29,11 +28,13 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index
 
 // Verhuurder Routes (Dashboard en Huizenbeheer)
 
+Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
 // Routes for Verhuurder Huizen
 Route::prefix('verhuurder/huizen')->group(function () {
-    Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
+
     Route::get('/', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index');
     Route::get('/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
+    Route::get('/verhuurder/huizen/{id}', action: [VerhuurderHuisController::class, 'show'])->name('verhuurder.huizen.show');
     Route::post('/', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
     Route::get('/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
     Route::put('/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
@@ -51,9 +52,11 @@ Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->n
 Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
 
 // Recensies Routes
-// Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
-// Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
-// Route::get('/recensies/respond', [RecensiesController::class, 'respond'])->name('recensies.respond');
+Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
+Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
+Route::get('/recensies/respond', [RecensiesController::class, 'create'])->name('recensies.respond');
+Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
+Route::get('/recensies/{id}', [RecensiesController::class, 'show'])->name('recensies.show');
 
 // Favorieten Routes
 Route::middleware('auth')->group(function () {

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Favorieten extends Model
+class Recensie extends Model
 {
-    protected $table = 'favorieten';
+    protected $table = 'recensies';
 
     // Vakantiehuis Relationship
     public function vakantiehuis()
@@ -14,7 +14,7 @@ class Favorieten extends Model
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
     }
 
-    // User Relationship (who marked it as favorite)
+    // User Relationship (who left the review)
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

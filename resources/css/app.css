@@ -5,3 +5,8 @@
 .hidden {
     display: none;
 }
+
+html,
+:host {
+    background-color: white !important;
+}

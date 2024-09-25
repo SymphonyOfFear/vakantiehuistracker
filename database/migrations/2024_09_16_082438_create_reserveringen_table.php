@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('reserveringen', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('vakantiehuis_id')->constrained('vakantiehuizen');
             $table->foreignId('huurder_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('huisje_id')->constrained('vakantiehuizen')->onDelete('cascade');
             $table->string('reserveringsnummer')->unique();

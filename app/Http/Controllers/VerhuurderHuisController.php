@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class VerhuurderHuisController extends Controller
 {
@@ -14,24 +18,30 @@ class VerhuurderHuisController extends Controller
     }
     public function index()
     {
-        // Assuming you have a locations.json file to load locations from
-        $locations = json_decode(file_get_contents(resource_path('locations.json')), true);
+        $user = Auth::id();
+
+        // Al de huizen van de verhuurder ophalen
+        $mijnHuizen = Vakantiehuis::where('verhuurder_id', $user)->get();
 
 
-        // Fetch all vacation houses associated with the current user/verhuurder
-        $huizen = Vakantiehuis::all();
 
-        return view('verhuurder.huizen.index', [
-            'locations' => $locations,
-            'huizen' => $huizen,
-        ]);
+        return view('verhuurder.huizen.index', compact('mijnHuizen'));
     }
 
 
     // Show the form for creating a new vakantiehuis
     public function create()
     {
-        return view('verhuurder.huizen.create');
+        $response = Http::get('http://api.geonames.org/searchJSON', [
+            'formatted' => 'true',
+            'country' => 'NL',
+            'featureClass' => 'P',
+            'maxRows' => 1000,
+            'username' => 'Keiji',
+        ]);
+        $steden = $response->json()['geonames'];
+        Log::info($steden);
+        return view('verhuurder.huizen.create', compact('steden'));
     }
 
     // Store a newly created vakantiehuis in storage

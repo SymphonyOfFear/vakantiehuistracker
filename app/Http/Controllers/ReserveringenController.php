@@ -5,13 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Reservering;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReserveringenController extends Controller
 {
     public function index()
     {
-        $reserveringen = Reservering::all();
-        return view('reserveringen.index', compact('reserveringen'));
+        // Alle huizen die door deze gebruiker wordt gehuurd ophalen
+        $user = Auth::id();
+        $gehuurdeHuizen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
+            $query->where('huurder_id', $user); // Zoekt op huurder_id en vergelijkt die met onze gebruikers zijn user_id
+        })->get(); // Data ophalen
+        return view('reserveringen.index', compact('gehuurdeHuizen'));
     }
 
     public function create()
