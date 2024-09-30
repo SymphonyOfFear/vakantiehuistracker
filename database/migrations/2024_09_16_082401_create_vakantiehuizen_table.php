@@ -11,30 +11,28 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('verhuurder_id')->constrained('verhuurders')->onDelete('cascade');
+            $table->unsignedBigInteger('verhuurder_id');
             $table->string('naam');
             $table->decimal('prijs', 8, 2);
             $table->text('beschrijving')->nullable();
-
             $table->integer('slaapkamers');
-            $table->json('fotos')->nullable(); // Store multiple photos as a JSON array
-
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
+            $table->string('stad');
+            $table->string('straatnaam');
+            $table->string('postcode');
+            $table->string('huisnummer');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->boolean('wifi')->default(false);
             $table->boolean('zwembad')->default(false);
             $table->boolean('parkeren')->default(false);
             $table->boolean('speeltuin')->default(false);
-
-            // Location Details
-            $table->string('postcode');
-            $table->string('huisnummer');
-            $table->string('straatnaam');
-            $table->string('stad');
-
+            $table->boolean('beschikbaarheid')->default(true);
             $table->timestamps();
+
+            $table->foreign('verhuurder_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

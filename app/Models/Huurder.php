@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Huurder extends Model
 {
     protected $table = 'huurders';
-
+    protected $fillable = [
+        'user_id',
+        'naam',
+        'email',
+        'telefoonnummer',
+    ];
     // Reserveringen relationship
     public function reserveringen()
     {

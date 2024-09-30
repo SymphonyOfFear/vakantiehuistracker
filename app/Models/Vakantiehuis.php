@@ -2,33 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Vakantiehuis extends Model
 {
-    protected $table = 'vakantiehuizen';
+    use HasFactory;
 
-    // Verhuurder Relationship
+    protected $table = 'vakantiehuizen';
+    protected $fillable = [
+        'verhuurder_id',
+        'naam',
+        'prijs',
+        'beschrijving',
+        'slaapkamers',
+        'stad',
+        'straatnaam',
+        'postcode',
+        'huisnummer',
+        'latitude',
+        'longitude',
+        'wifi',
+        'zwembad',
+        'parkeren',
+        'speeltuin',
+        'beschikbaarheid'
+    ];
+
+    // Relatie met de verhuurder
     public function verhuurder()
     {
         return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
 
-    // Reservering Relationship
-    public function reserveringen()
+    // Relatie met afbeeldingen (images)
+    public function images()
     {
-        return $this->hasMany(Reservering::class, 'vakantiehuis_id');
-    }
-
-    // Favorieten Relationship (users who marked this house as favorite)
-    public function favorieten()
-    {
-        return $this->hasMany(Favorieten::class, 'vakantiehuis_id');
-    }
-
-    // Recensies Relationship (reviews)
-    public function recensies()
-    {
-        return $this->hasMany(Recensie::class, 'vakantiehuis_id');
+        return $this->hasMany(Image::class, 'vakantiehuis_id');
     }
 }

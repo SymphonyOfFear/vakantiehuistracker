@@ -26,20 +26,25 @@ Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huize
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
-// Verhuurder Routes (Dashboard en Huizenbeheer)
 
-Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
 // Routes for Verhuurder Huizen
-Route::prefix('verhuurder/huizen')->group(function () {
-
-    Route::get('/', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index');
-    Route::get('/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
-    Route::get('/verhuurder/huizen/{id}', action: [VerhuurderHuisController::class, 'show'])->name('verhuurder.huizen.show');
-    Route::post('/', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
-    Route::get('/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
-    Route::put('/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
-    Route::delete('/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy');
+Route::middleware(['auth'])->group(function () {
+    // Verhuurder Routes (Dashboard en Huizenbeheer)
+    Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
+    Route::resource('verhuurder/huizen', VerhuurderHuisController::class, [
+        'names' => [
+            'index' => 'verhuurder.huizen.index',
+            'create' => 'verhuurder.huizen.create',
+            'store' => 'verhuurder.huizen.store',
+            'show' => 'verhuurder.huizen.show',
+            'edit' => 'verhuurder.huizen.edit',
+            'update' => 'verhuurder.huizen.update',
+            'destroy' => 'verhuurder.huizen.destroy',
+        ]
+    ]);
 });
+
+
 
 
 // Reserveringen Routes

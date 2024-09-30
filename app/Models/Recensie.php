@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Recensie extends Model
 {
     protected $table = 'recensies';
-
+    protected $fillable = [
+        'huurder_id',
+        'vakantiehuis_id',
+        'recensie',
+    ];
     // Vakantiehuis Relationship
     public function vakantiehuis()
     {

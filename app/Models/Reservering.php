@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Reservering extends Model
 {
     protected $table = 'reserveringen';
-
+    protected $fillable = [
+        'vakantiehuis_id',
+        'huurder_id',
+        'start_datum',
+        'eind_datum',
+        'status',
+    ];
     // Vakantiehuis Relationship
     public function vakantiehuis()
     {
