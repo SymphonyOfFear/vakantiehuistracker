@@ -9,7 +9,10 @@ class Vakantiehuis extends Model
 {
     use HasFactory;
 
+    // De tabel die bij dit model hoort
     protected $table = 'vakantiehuizen';
+
+    // Toegestane velden voor mass assignment
     protected $fillable = [
         'verhuurder_id',
         'naam',
@@ -26,22 +29,16 @@ class Vakantiehuis extends Model
         'zwembad',
         'parkeren',
         'speeltuin',
-<<<<<<< HEAD
-        'fotos',
         'beschikbaarheid',
-        'user_id',
-=======
-        'beschikbaarheid'
->>>>>>> mikey-backend
     ];
 
-    // Relatie met de verhuurder
+    // Definieer de relatie met het 'Verhuurder' model
     public function verhuurder()
     {
-        return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
+        return $this->belongsTo(User::class, 'verhuurder_id');
     }
 
-    // Relatie met afbeeldingen (images)
+    // Definieer de relatie met het 'Image' model
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');
