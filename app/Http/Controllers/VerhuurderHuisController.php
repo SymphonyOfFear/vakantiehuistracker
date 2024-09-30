@@ -3,35 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Auth;
 
 class VerhuurderHuisController extends Controller
 {
-    // Display a listing of vakantiehuizen for the verhuurder
-    public function dashboard()
-    {
-        return view('verhuurder.dashboard');
-    }
     public function index()
     {
-        $huisjes = Vakantiehuis::where('user_id', FacadesAuth::id())->get();
+        $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();
         return view('verhuurder.huizen.index', compact('huisjes'));
     }
 
-
-    // Show the form for creating a new vakantiehuis
     public function create()
     {
         return view('verhuurder.huizen.toevoegen');
     }
 
-    // Store a newly created vakantiehuis in storage
     public function store(Request $request)
     {
         Vakantiehuis::create([
-            'user_id' => FacadesAuth::id(),
+            'user_id' => Auth::id(),
             'naam' => $request->naam,
             'prijs' => $request->prijs,
             'locatie' => $request->locatie,
@@ -47,21 +38,12 @@ class VerhuurderHuisController extends Controller
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol toegevoegd!');
     }
 
-    // // Show a specific vakantiehuis
-    // public function show($id)
-    // {
-    //     $vakantiehuis = Vakantiehuis::findOrFail($id);
-    //     return view('verhuurder.huizen.show', compact('vakantiehuis'));
-    // }
-
-    // Show the form for editing the specified vakantiehuis
     public function edit($id)
     {
         $huisje = Vakantiehuis::findOrFail($id);
         return view('verhuurder.huizen.bewerken', compact('huisje'));
     }
 
-    // Update the specified vakantiehuis in storage
     public function update(Request $request, $id)
     {
         $huisje = Vakantiehuis::findOrFail($id);
@@ -82,7 +64,6 @@ class VerhuurderHuisController extends Controller
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol bijgewerkt!');
     }
 
-    // Remove the specified vakantiehuis from storage
     public function destroy($id)
     {
         
