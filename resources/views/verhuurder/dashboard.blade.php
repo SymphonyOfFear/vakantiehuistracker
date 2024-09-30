@@ -1,39 +1,17 @@
 <x-app-layout>
     <x-header />
 
-    <div class="flex flex-col min-h-screen">
-        <!-- Sidebar Toggle Button -->
-        <div class="flex justify-between items-center p-6 bg-green-500">
-            <h1 class="text-2xl font-bold text-white">Welkom bij het Verhuurder Dashboard</h1>
-            <div>
-                <button id="toggleSidebarButton" class="bg-green-600 text-white px-4 py-2 rounded"
-                    onclick="toggleSidebar()">
-                    Verberg Sidebar
-                </button>
-                <button id="showSidebarButton" class="hidden bg-green-600 text-white px-4 py-2 rounded"
-                    onclick="toggleSidebar()">
-                    Toon Sidebar
-                </button>
-            </div>
+    <div class="min-h-screen bg-green-100 py-16">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-semibold text-gray-700 mb-6">Verhuurder Dashboard</h1>
+            <p>Welkom bij het verhuurdersdashboard. Hier kun je je vakantiehuizen beheren, reserveringen bekijken en
+                feedback.</p>
+            <a href="{{ route('verhuurder.huizen.index') }}"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition ease-in-out duration-150">
+                Huis Index
+            </a>
         </div>
-
-        <div class="flex flex-grow">
-            <!-- Sidebar Component -->
-            <x-sidebar id="sidebar" class="w-64 h-full">
-                <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
-                        Huizen</a></li>
-                <li><a href="{{ route('reserveringen.index') }}"
-                        class="text-gray-700 hover:text-green-600">Reserveringen</a></li>
-            </x-sidebar>
-
-            <!-- Main Content -->
-            <div id="mainContent" class="flex-grow p-6 bg-white">
-                <h1 class="text-2xl font-bold">Beheer Uw Vakantiehuizen</h1>
-                <p>Hier kunt u uw vakantiehuizen beheren en reserveringen bekijken.</p>
-            </div>
-        </div>
-
-        <!-- Footer Component -->
-        <x-footer class="bg-gray-900 text-white p-4" />
     </div>
+    <x-footer />
+
 </x-app-layout>

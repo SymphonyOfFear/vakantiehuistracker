@@ -24,7 +24,7 @@ class Vakantiehuis extends Model
         'speeltuin',
         'fotos',
         'beschikbaarheid',
-        'verhuurder_id',
+        'user_id',
     ];
 
     // Cast 'fotos' naar array (omdat het een JSON-kolom is)
