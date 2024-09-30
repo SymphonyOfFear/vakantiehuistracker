@@ -2,6 +2,7 @@
     <x-header />
 
     <div class="flex">
+        <!-- Sidebar Component -->
         <x-sidebar title="Huizenbeheer">
             <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
                     Huizen</a></li>
@@ -9,6 +10,7 @@
                     Toe</a></li>
         </x-sidebar>
 
+        <!-- Main Content -->
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Voeg nieuw vakantiehuis toe</h1>
 
@@ -113,8 +115,9 @@
                     </select>
                 </div>
 
+                <!-- Foto Upload -->
                 <div class="mb-4">
-                    <label for="foto" class="block text-sm font-medium text-gray-700">Foto</label>
+                    <label for="foto" class="block text-sm font-medium text-gray-700">Upload Foto</label>
                     <input type="file" id="foto" name="foto"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
                     @error('foto')

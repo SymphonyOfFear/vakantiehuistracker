@@ -1,3 +1,4 @@
+<!-- edit.blade.php -->
 <x-app-layout>
     <x-header />
 
@@ -6,67 +7,137 @@
         <x-sidebar title="Huizenbeheer">
             <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
                     Huizen</a></li>
+            <li><a href="{{ route('verhuurder.huizen.create') }}" class="text-gray-700 hover:text-green-600">Voeg Huis
+                    Toe</a></li>
         </x-sidebar>
 
         <!-- Main Content -->
         <div class="w-full lg:w-3/4 p-6 bg-white">
-            <h1 class="text-2xl font-bold mb-4">Bewerk vakantiehuis</h1>
+            <h1 class="text-2xl font-bold mb-4">Bewerk Vakantiehuis: {{ $vakantiehuis->naam }}</h1>
 
+            <!-- Display Validation Errors -->
+            @if ($errors->any())
+                <div class="bg-red-500 text-white p-4 rounded mb-4">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <!-- Form for editing a vacation home -->
             <form action="{{ route('verhuurder.huizen.update', $vakantiehuis->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
+                <!-- Naam -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Naam van Vakantiehuis:</label>
-                    <input type="text" name="name" value="{{ $vakantiehuis->name }}"
-                        class="w-full border rounded px-3 py-2" required>
+                    <label for="naam" class="block text-sm font-medium text-gray-700">Naam</label>
+                    <input type="text" id="naam" name="naam" value="{{ old('naam', $vakantiehuis->naam) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
+                <!-- Prijs -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Locatie:</label>
-                    <select name="location" class="w-full border rounded px-3 py-2 select-search" required>
-                        <!-- Dynamic location options -->
+                    <label for="prijs" class="block text-sm font-medium text-gray-700">Prijs (€)</label>
+                    <input type="number" step="0.01" id="prijs" name="prijs"
+                        value="{{ old('prijs', $vakantiehuis->prijs) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                </div>
+
+                <!-- Beschrijving -->
+                <div class="mb-4">
+                    <label for="beschrijving" class="block text-sm font-medium text-gray-700">Beschrijving</label>
+                    <textarea id="beschrijving" name="beschrijving" rows="4"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md">{{ old('beschrijving', $vakantiehuis->beschrijving) }}</textarea>
+                </div>
+
+                <!-- Slaapkamers -->
+                <div class="mb-4">
+                    <label for="slaapkamers" class="block text-sm font-medium text-gray-700">Aantal Slaapkamers</label>
+                    <input type="number" id="slaapkamers" name="slaapkamers"
+                        value="{{ old('slaapkamers', $vakantiehuis->slaapkamers) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                </div>
+
+                <!-- Stad -->
+                <div class="mb-4">
+                    <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
+                    <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                        required>
+                        <option value="">Kies een Stad</option>
                         @foreach ($locations as $location)
-                            <option value="{{ $location }}"
-                                {{ $vakantiehuis->location == $location ? 'selected' : '' }}>{{ $location }}
-                            </option>
+                            @if (is_array($location) && isset($location['name']))
+                                <option value="{{ $location['name'] }}"
+                                    {{ $vakantiehuis->stad == $location['name'] ? 'selected' : '' }}>
+                                    {{ $location['name'] }}
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
 
+                <!-- Straatnaam -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Prijs per nacht:</label>
-                    <input type="number" name="price" value="{{ $vakantiehuis->price }}"
-                        class="w-full border rounded px-3 py-2" required>
+                    <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
+                    <input type="text" id="straatnaam" name="straatnaam"
+                        value="{{ old('straatnaam', $vakantiehuis->straatnaam) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
+                <!-- Postcode -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Aantal slaapkamers:</label>
-                    <input type="number" name="bedrooms" value="{{ $vakantiehuis->bedrooms }}"
-                        class="w-full border rounded px-3 py-2" required>
+                    <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
+                    <input type="text" id="postcode" name="postcode"
+                        value="{{ old('postcode', $vakantiehuis->postcode) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
+                <!-- Huisnummer -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Voorzieningen:</label>
-                    <input type="checkbox" name="amenities[]" value="Zwembad"
-                        {{ in_array('Zwembad', $vakantiehuis->amenities) ? 'checked' : '' }}> Zwembad <br>
-                    <input type="checkbox" name="amenities[]" value="Wi-Fi"
-                        {{ in_array('Wi-Fi', $vakantiehuis->amenities) ? 'checked' : '' }}> Wi-Fi <br>
-                    <input type="checkbox" name="amenities[]" value="Spa"
-                        {{ in_array('Spa', $vakantiehuis->amenities) ? 'checked' : '' }}> Spa <br>
-                    <input type="checkbox" name="amenities[]" value="Speeltuin"
-                        {{ in_array('Speeltuin', $vakantiehuis->amenities) ? 'checked' : '' }}> Speeltuin
+                    <label for="huisnummer" class="block text-sm font-medium text-gray-700">Huisnummer</label>
+                    <input type="text" id="huisnummer" name="huisnummer"
+                        value="{{ old('huisnummer', $vakantiehuis->huisnummer) }}"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
+                <!-- Voorzieningen -->
                 <div class="mb-4">
-                    <label class="block text-gray-700">Afbeelding van vakantiehuis:</label>
-                    <input type="file" name="photo" class="w-full border rounded px-3 py-2">
+                    <label class="block text-sm font-medium text-gray-700">Voorzieningen</label>
+                    <div class="flex flex-wrap">
+                        <label class="mr-4 mb-2"><input type="checkbox" name="wifi" value="1"
+                                {{ $vakantiehuis->wifi ? 'checked' : '' }}> Wi-Fi</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="zwembad" value="1"
+                                {{ $vakantiehuis->zwembad ? 'checked' : '' }}> Zwembad</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="parkeren" value="1"
+                                {{ $vakantiehuis->parkeren ? 'checked' : '' }}> Parkeerplaats</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="speeltuin" value="1"
+                                {{ $vakantiehuis->speeltuin ? 'checked' : '' }}> Speeltuin</label>
+                    </div>
                 </div>
 
+                <!-- Beschikbaarheid -->
                 <div class="mb-4">
-                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Bijwerken</button>
+                    <label for="beschikbaarheid" class="block text-sm font-medium text-gray-700">Beschikbaarheid</label>
+                    <select id="beschikbaarheid" name="beschikbaarheid"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        <option value="1" {{ $vakantiehuis->beschikbaarheid ? 'selected' : '' }}>Ja</option>
+                        <option value="0" {{ !$vakantiehuis->beschikbaarheid ? 'selected' : '' }}>Nee</option>
+                    </select>
                 </div>
+
+                <!-- Foto -->
+                <div class="mb-4">
+                    <label for="foto" class="block text-sm font-medium text-gray-700">Foto</label>
+                    <input type="file" id="foto" name="foto"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Vakantiehuis
+                    Bijwerken</button>
             </form>
         </div>
     </div>

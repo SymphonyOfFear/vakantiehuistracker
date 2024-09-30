@@ -1,3 +1,4 @@
+<!-- verhuurder/huizen/index.blade.php -->
 <x-app-layout>
     <x-header />
 
@@ -22,10 +23,20 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach ($mijnHuizen as $huis)
                         <div class="bg-white p-4 rounded-lg shadow">
-                            <img src="{{ $huis->fotos[0] ?? 'https://placehold.co/400' }}" alt="{{ $huis->naam }}"
-                                class="w-full h-48 object-cover rounded-t-lg mb-4">
+                            <!-- Controleer of er afbeeldingen zijn en toon de eerste afbeelding -->
+                            @if ($huis->images->isNotEmpty())
+                                <img src="{{ $huis->images->first()->url }}" alt="{{ $huis->naam }}"
+                                    class="w-full h-48 object-cover rounded-t-lg mb-4">
+                            @else
+                                <!-- Toon een placeholder als er geen afbeeldingen zijn -->
+                                <img src="https://via.placeholder.com/400x300.png?text=Geen+Afbeelding"
+                                    alt="Geen afbeelding beschikbaar"
+                                    class="w-full h-48 object-cover rounded-t-lg mb-4">
+                            @endif
+
                             <h3 class="text-xl font-bold text-gray-800">{{ $huis->naam }}</h3>
-                            <p class="text-gray-600">{{ $huis->adres }}</p>
+                            <p class="text-gray-600">{{ $huis->straatnaam }} {{ $huis->huisnummer }},
+                                {{ $huis->stad }}</p>
                             <p class="text-green-600 font-semibold">€{{ $huis->prijs }}</p>
                             <div class="mt-4">
                                 <a href="{{ route('verhuurder.huizen.show', $huis->id) }}"
@@ -37,9 +48,6 @@
                     @endforeach
                 </div>
             @endif
-
-            <!-- Huizen die de gebruiker huurt -->
-
         </div>
     </div>
 

@@ -2,23 +2,49 @@
 
 namespace Database\Seeders;
 
-use App\Models\Image;
-use App\Models\Vakantiehuis;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Vakantiehuis;
+use App\Models\Image;
 
 class VakantiehuisSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Voer de seeder uit.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
-        Vakantiehuis::factory()->count(10)->create()->each(function ($vakantiehuis) {
-            Image::factory()->count(3)->create([
-                'vakantiehuis_id' => $vakantiehuis->id,
-                'url' => 'https://via.placeholder.com/400x300.png?text=Vakantiehuis+' . $vakantiehuis->id
-            ]);
-        });
+        // Verwijder bestaande records van de modellen zelf
+        Vakantiehuis::truncate();
+        Image::truncate();
+
+        // Maak een voorbeeld vakantiehuis aan
+        $vakantiehuis = Vakantiehuis::create([
+            'verhuurder_id' => 1, // Pas aan naar een bestaande gebruiker ID in jouw project
+            'naam' => 'Test Vakantiehuis',
+            'prijs' => 150.00,
+            'beschrijving' => 'Een mooi vakantiehuis voor tests.',
+            'slaapkamers' => 3,
+            'stad' => 'Amsterdam',
+            'straatnaam' => 'Kalverstraat',
+            'postcode' => '1012NX',
+            'huisnummer' => '1',
+            'latitude' => 52.370216,
+            'longitude' => 4.895168,
+            'wifi' => true,
+            'zwembad' => false,
+            'parkeren' => true,
+            'speeltuin' => false,
+            'beschikbaarheid' => true,
+        ]);
+
+        // Maak een voorbeeldafbeelding aan die gekoppeld is aan het vakantiehuis
+        $vakantiehuis->images()->create([
+            'url' => '/storage/fotos/example.jpg', // Voeg een voorbeeld URL toe of een bestaande afbeelding
+        ]);
+
+        // Voorbeeld log om te zien of de gegevens correct zijn toegevoegd
+        $this->command->info('Vakantiehuis en bijbehorende afbeelding succesvol toegevoegd.');
     }
 }

@@ -30,7 +30,6 @@ class VerhuurderHuisController extends Controller
     // Toon het formulier voor het toevoegen van een nieuw vakantiehuis
     public function create()
     {
-        // Haal locaties op van de API
         $response = Http::get('http://api.geonames.org/searchJSON', [
             'formatted' => 'true',
             'country' => 'NL',
@@ -45,10 +44,9 @@ class VerhuurderHuisController extends Controller
         return view('verhuurder.huizen.create', compact('locations'));
     }
 
-    // Sla een nieuw vakantiehuis op met de ingevoerde gegevens en geüploade afbeeldingen
     public function store(Request $request)
     {
-        // Validatie voor een enkele afbeelding (gebruik 'foto' i.p.v. 'fotos')
+        // Valideer de invoerdata
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -58,15 +56,11 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Specificeer 'foto' voor validatie
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Enkel één foto toegestaan
         ]);
 
         try {
-            // Debug log voor input data
-            Log::info('Request Data: ', $request->all());
-            Log::info('File Data: ', [$request->file('foto')]);
-
-            // Niewe vakantiehuis maken
+            // Maak een nieuw vakantiehuis aan
             $vakantiehuis = Vakantiehuis::create([
                 'verhuurder_id' => Auth::id(),
                 'naam' => $validatedData['naam'],
@@ -86,20 +80,19 @@ class VerhuurderHuisController extends Controller
                 'beschikbaarheid' => $request->boolean('beschikbaarheid'),
             ]);
 
-            // Controleer of er een bestand is geüpload
-            if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
-                $file = $request->file('foto');
-                $path = $file->store('public/fotos');
-                $url = Storage::url($path);
+            // Opslaan van de foto indien meegegeven
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
 
-                // Log de URL voor debugging
-                Log::info('Uploaded File URL: ' . $url);
+                if ($foto->isValid()) {
+                    $path = $foto->store('public/fotos');
+                    $url = Storage::url($path);
 
-                // Maak een nieuw Image-model aan
-                Image::create([
-                    'url' => $url,
-                    'vakantiehuis_id' => $vakantiehuis->id,
-                ]);
+                    // Maak een nieuwe Image entry aan en koppel deze aan het vakantiehuis
+                    $vakantiehuis->images()->create([
+                        'url' => $url,
+                    ]);
+                }
             }
 
             return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd.');
@@ -108,6 +101,7 @@ class VerhuurderHuisController extends Controller
             return back()->with('error', 'Er is een fout opgetreden bij het opslaan van het vakantiehuis: ' . $e->getMessage());
         }
     }
+
 
 
     // Toon de details van een specifiek vakantiehuis
