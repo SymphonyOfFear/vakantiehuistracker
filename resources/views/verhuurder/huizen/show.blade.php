@@ -11,8 +11,7 @@
                     class="w-full h-96 object-cover rounded-lg mb-4">
                 <p><strong>Locatie:</strong> {{ $huisje->locatie }}</p>
                 <p><strong>Prijs:</strong> € {{ $huisje->prijs }}</p>
-                <p><strong>Aantal slaapkamers:</strong> € {{ $huisje->slaapkamers}}</p>
-                {{-- <p><strong>Beschrijving:</strong> {{ $huisje->beschrijving }}</p> --}}
+                <p><strong>Aantal slaapkamers:</strong> {{ $huisje->slaapkamers }}</p>
 
                 <!-- Amenities -->
                 <h3 class="mt-6 text-xl font-semibold">Voorzieningen</h3>
@@ -30,7 +29,7 @@
                         <li>Speeltuin</li>
                     @endif
                 </ul>
-                <p><strong>Beschikbaar:</strong>  
+                <p><strong>Beschikbaar:</strong>
                     @if ($huisje->beschikbaarheid)
                         Beschikbaar
                     @else
@@ -39,7 +38,68 @@
                 </p>
             </div>
 
+            <!-- Feedback Section -->
+            <div class="mt-10">
+                <button id="feedbackToggle"
+                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring">
+                    Geef Feedback
+                </button>
+
+                <div id="feedbackForm" class="hidden mt-4 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Jouw Feedback</h3>
+
+                    <form action="{{ route('feedback.store') }}" method="POST">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="naam" class="block text-gray-700">Naam:</label>
+                            <input type="text" id="naam" name="naam" class="w-full p-2 border rounded-lg"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700">E-mail:</label>
+                            <input type="email" id="email" name="email" class="w-full p-2 border rounded-lg"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="feedback" class="block text-gray-700">Feedback:</label>
+                            <textarea id="feedback" name="feedback" rows="4" class="w-full p-2 border rounded-lg" required></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring">
+                            Verstuur Feedback
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Feedback tonen -->
+                @if ($feedbacks->isEmpty())
+                    <p>Er is nog geen feedback.</p>
+                @else
+                    <ul>
+                        @foreach ($feedbacks as $feedback)
+                            <li class="mb-4">
+                                <p><strong>{{ $feedback->naam }}</strong> ({{ $feedback->email }})</p>
+                                <p>{{ $feedback->feedback }}</p>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
         </div>
     </div>
+
     <x-footer />
+
+    <script>
+        // Toggle feedback form visibility
+        const feedbackToggle = document.getElementById('feedbackToggle');
+        const feedbackForm = document.getElementById('feedbackForm');
+
+        feedbackToggle.addEventListener('click', function() {
+            feedbackForm.classList.toggle('hidden');
+        });
+    </script>
 </x-app-layout>

@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class VerhuurderHuisController extends Controller
 {
+    public function dashboard()
+{
+    // Hier kun je alle benodigde data ophalen voor het dashboard
+    // Bijvoorbeeld huizen van de verhuurder:
+    $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();
+
+    // Geef een view terug voor het dashboard
+    return view('verhuurder.dashboard', compact('huisjes'));
+}
     public function index()
     {
         $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();

@@ -9,11 +9,12 @@ use App\Http\Controllers\RecensiesController;
 use App\Http\Controllers\VerhuurderHuisController;
 use App\Http\Controllers\VerhuurderDashboardController;
 use App\Http\Controllers\FavorietenController;
+use App\Http\Controllers\FeedbackController;
 
 // Homepage Route
 Route::get('/', function () {
     return view('welcome');
-})->name('welcome');
+})->name('welcome'); 
 
 // Huizen Routes
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
@@ -70,5 +71,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// routes/web.php
+
+Route::get('/huisje/{huisje}', [FeedbackController::class, 'show'])->name('huisje.show');
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 require __DIR__ . '/auth.php';
