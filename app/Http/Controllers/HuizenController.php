@@ -4,57 +4,116 @@ namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class HuizenController extends Controller
 {
     public function index(Request $request)
     {
-        // Lees de locaties uit de JSON
-        $locations = json_decode(file_get_contents(resource_path('locations.json')), true);
+        // Basisquery voor het ophalen van alle huizen
+        $query = Vakantiehuis::with('images');
 
+        // Filter Functie maken voor de gebruiker
 
-        // Maak een query voor de vakantiehuizen
-        $query = Vakantiehuis::query();
-
-        // Verwerk de locatie filter alleen als het een string is
-        if ($request->has('locatie') && is_string($request->input('locatie'))) {
-            $locatie = trim($request->input('locatie'));
-            $query->where('locatie', 'LIKE', '%' . $locatie . '%');
+        // Filteren op stad
+        if ($request->filled('stad')) {
+            $query->where('stad', 'like', '%' . $request->input('stad') . '%');
         }
 
-        // Verwerk de prijsfilters
-        if ($request->has('min_prijs')) {
+        // Filteren op postcode
+        if ($request->filled('postcode')) {
+            $query->where('postcode', 'like', '%' . $request->input('postcode') . '%');
+        }
+
+        // Filteren op straatnaam
+        if ($request->filled('straatnaam')) {
+            $query->where('straatnaam', 'like', '%' . $request->input('straatnaam') . '%');
+        }
+
+        // Filteren op huisnummer
+        if ($request->filled('huisnummer')) {
+            $query->where('huisnummer', 'like', '%' . $request->input('huisnummer') . '%');
+        }
+
+        // Filteren op radius (bijvoorbeeld binnen 10, 25, 50 km)
+        if ($request->filled('radius') && $request->filled('postcode')) {
+            // Gebruik de opgegeven postcode en bereken de lat/lng-coördinaten
+            $postcode = $request->input('postcode');
+            $radius = $request->input('radius');
+
+            // Haal de coördinaten op van de postcode
+            $locationResponse = Http::get("https://nominatim.openstreetmap.org/search", [
+                'q' => $postcode,
+                'format' => 'json',
+                'country' => 'Netherlands',
+            ]);
+
+            if ($locationResponse->successful() && count($locationResponse->json()) > 0) {
+                $latitude = $locationResponse->json()[0]['lat'];
+                $longitude = $locationResponse->json()[0]['lon'];
+
+                // Bereken huizen binnen de opgegeven straal (radius) van de coördinaten
+                $query->selectRaw("
+                    *, (6371 * acos(
+                        cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
+                        sin(radians(?)) * sin(radians(latitude))
+                    )) AS distance", [$latitude, $longitude, $latitude])
+                    ->having('distance', '<=', $radius);
+            }
+        }
+
+        // Filteren op voorzieningen
+        $voorzieningen = ['wifi', 'zwembad', 'parkeren', 'speeltuin'];
+        foreach ($voorzieningen as $voorziening) {
+            if ($request->filled($voorziening)) {
+                $query->where($voorziening, 1);
+            }
+        }
+
+        // Filteren op prijsbereik
+        if ($request->filled('min_prijs')) {
             $query->where('prijs', '>=', $request->input('min_prijs'));
         }
-
-        if ($request->has('max_prijs')) {
+        if ($request->filled('max_prijs')) {
             $query->where('prijs', '<=', $request->input('max_prijs'));
         }
 
-        // Voeg filters toe voor voorzieningen
-        if ($request->has('zwembad')) {
-            $query->where('zwembad', true);
-        }
+        // Haal de gefilterde vakantiehuizen op
+        $vakantiehuizen = $query->get();
 
-        if ($request->has('wifi')) {
-            $query->where('wifi', true);
-        }
-
-        if ($request->has('spa')) {
-            $query->where('spa', true);
-        }
-
-        if ($request->has('speeltuin')) {
-            $query->where('speeltuin', true);
-        }
-
-        // Haal de gefilterde huizen op
-        $huizen = $query->get();
-
-        // Geef de locaties en huizen door aan de view
-        return view('huizen.index', [
-            'locations' => $locations,
-            'huizen' => $huizen,
+        // Haal locaties op voor dropdown
+        $response = Http::get('http://api.geonames.org/searchJSON', [
+            'formatted' => 'true',
+            'country' => 'NL',
+            'featureClass' => 'P',
+            'maxRows' => 1000,
+            'username' => 'Keiji',
         ]);
+
+        //  JSON response Ophalen
+        $locations = $response->json();
+
+        // Checken voor geonames key
+        if (isset($locations['geonames'])) {
+            $locations = $locations['geonames'];
+        } else {
+            $locations = []; // Set default value to prevent errors
+        }
+
+        // Maak een eenvoudige array met stadsnamen
+        $locationsList = [];
+        foreach ($locations as $location) {
+            if (isset($location['name'])) {
+                $locationsList[] = $location['name'];
+            }
+        }
+
+        return view('huizen.index', compact('locationsList', 'vakantiehuizen'));
+    }
+
+    public function show($id)
+    {
+        $vakantiehuis = Vakantiehuis::with('images')->findOrFail($id);
+        return view('huizen.show', compact('vakantiehuis'));
     }
 }

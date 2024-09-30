@@ -6,16 +6,16 @@ use Illuminate\View\Component;
 
 class Filter extends Component
 {
-    public $locations;
+    public $locationsList;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($locations = [])
+    public function __construct($locationsList = [])
     {
-        $this->locations = $locations;
+        $this->locationsList = $locationsList;
     }
 
     /**

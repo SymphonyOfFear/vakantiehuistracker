@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\RecensiesController;
 use App\Http\Controllers\VerhuurderHuisController;
-use App\Http\Controllers\VerhuurderDashboardController;
 use App\Http\Controllers\FavorietenController;
 
 // Homepage Route
@@ -27,7 +26,6 @@ Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huize
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
-// Verhuurder Routes (Dashboard en Huizenbeheer)
 
 // Routes for Verhuurder Huizen
 Route::middleware('auth')->group(function () {
@@ -42,6 +40,8 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+
 // Reserveringen Routes
 Route::get('/reserveringen', [ReserveringenController::class, 'index'])->name('reserveringen.index');
 Route::get('/reserveringen/create', [ReserveringenController::class, 'create'])->name('reserveringen.create');
@@ -52,9 +52,11 @@ Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->n
 Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
 
 // Recensies Routes
-// Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
-// Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
-// Route::get('/recensies/respond', [RecensiesController::class, 'respond'])->name('recensies.respond');
+Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
+Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
+Route::get('/recensies/respond', [RecensiesController::class, 'create'])->name('recensies.respond');
+Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
+Route::get('/recensies/{id}', [RecensiesController::class, 'show'])->name('recensies.show');
 
 // Favorieten Routes
 Route::middleware('auth')->group(function () {

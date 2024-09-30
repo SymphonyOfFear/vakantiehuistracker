@@ -9,66 +9,41 @@ class Vakantiehuis extends Model
 {
     use HasFactory;
 
-    // Zorg ervoor dat de tabelnaam correct is
-    protected $table = 'vakantiehuizen';  // Verwijst naar de juiste tabel 'vakantiehuizen'
-
-    // Vulbare velden die je massaal wilt kunnen invullen
+    protected $table = 'vakantiehuizen';
     protected $fillable = [
+        'verhuurder_id',
         'naam',
-        'locatie',
         'prijs',
+        'beschrijving',
         'slaapkamers',
+        'stad',
+        'straatnaam',
+        'postcode',
+        'huisnummer',
+        'latitude',
+        'longitude',
         'wifi',
         'zwembad',
-        'spa',
+        'parkeren',
         'speeltuin',
+<<<<<<< HEAD
         'fotos',
         'beschikbaarheid',
         'user_id',
+=======
+        'beschikbaarheid'
+>>>>>>> mikey-backend
     ];
 
-    // Cast 'fotos' naar array (omdat het een JSON-kolom is)
-    protected $casts = [
-        'fotos' => 'array',
-    ];
-    public function favorieten()
+    // Relatie met de verhuurder
+    public function verhuurder()
     {
-        return $this->hasMany(Favorieten::class);
+        return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
-    public function scopeFilter($query, $filters)
+
+    // Relatie met afbeeldingen (images)
+    public function images()
     {
-        // Verwerk de locatie filter alleen als het een string is
-        if (isset($filters['locatie']) && is_string($filters['locatie'])) {
-            $locatie = trim($filters['locatie']);
-            $query->where('locatie', 'LIKE', '%' . $locatie . '%');
-        }
-
-        // Verwerk de prijsfilters
-        if (isset($filters['min_prijs'])) {
-            $query->where('prijs', '>=', $filters['min_prijs']);
-        }
-
-        if (isset($filters['max_prijs'])) {
-            $query->where('prijs', '<=', $filters['max_prijs']);
-        }
-
-        // Voeg filters toe voor voorzieningen
-        if (isset($filters['zwembad'])) {
-            $query->where('zwembad', true);
-        }
-
-        if (isset($filters['wifi'])) {
-            $query->where('wifi', true);
-        }
-
-        if (isset($filters['spa'])) {
-            $query->where('spa', true);
-        }
-
-        if (isset($filters['speeltuin'])) {
-            $query->where('speeltuin', true);
-        }
-
-        return $query;
+        return $this->hasMany(Image::class, 'vakantiehuis_id');
     }
 }

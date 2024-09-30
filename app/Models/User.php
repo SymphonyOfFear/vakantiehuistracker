@@ -46,6 +46,22 @@ class User extends Authenticatable
     }
     public function favorieten()
     {
-        return $this->hasMany(Favorieten::class);
+        return $this->hasMany(Favorieten::class, 'user_id');
+    }
+
+    public function reserveringen()
+    {
+        return $this->hasMany(Reservering::class, 'user_id');
+    }
+
+    public function recensies()
+    {
+        return $this->hasMany(Recensie::class, 'user_id');
+    }
+
+    // Relationship to Vakantiehuis (As Verhuurder)
+    public function vakantiehuizen()
+    {
+        return $this->hasMany(Vakantiehuis::class, 'verhuurder_id');
     }
 }

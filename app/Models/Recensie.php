@@ -4,15 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Reservering extends Model
+class Recensie extends Model
 {
-    protected $table = 'reserveringen';
+    protected $table = 'recensies';
     protected $fillable = [
-        'vakantiehuis_id',
         'huurder_id',
-        'start_datum',
-        'eind_datum',
-        'status',
+        'vakantiehuis_id',
+        'recensie',
     ];
     // Vakantiehuis Relationship
     public function vakantiehuis()
@@ -20,9 +18,9 @@ class Reservering extends Model
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
     }
 
-    // Huurder Relationship
-    public function huurder()
+    // User Relationship (who left the review)
+    public function user()
     {
-        return $this->belongsTo(Huurder::class, 'huurder_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

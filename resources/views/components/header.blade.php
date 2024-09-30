@@ -7,15 +7,14 @@
 
         <!-- Navigation Links -->
         <nav class="space-x-4">
-            <a href="{{ route('welcome') }}" class="hover:text-green-300">Home</a>
+
             <a href="{{ route('huizen.index') }}" class="hover:text-green-300">Huizen</a>
-            <a href="{{ route('contact.index') }}" class="hover:text-green-300">Contact</a>
+
 
             @auth
-                <!-- Links for logged-in users -->
-                <a href="{{ route('favorieten.index') }}" class="hover:text-green-300">Favorieten</a>
-                <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Verhuurder Dashboard</a>
-                <a href="{{ route('reserveringen.index') }}" class="hover:text-green-300">Reserveringen</a>
+
+                <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
+
 
                 <!-- Profile Dropdown -->
                 <div class="relative inline-block">
@@ -40,7 +39,7 @@
                 </div>
             @else
                 <!-- Links for guests -->
-                <a href="{{ route('login') }}" class="hover:text-green-300">Login</a>
+                <a href="{{ route('login') }}" class="hover:text-green-300">Inloggen</a>
                 <a href="{{ route('register') }}" class="hover:text-green-300">Registreren</a>
             @endauth
         </nav>

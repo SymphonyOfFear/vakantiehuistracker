@@ -2,27 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Favorieten extends Model
 {
-    protected $table = 'favorieten'; // The name of the table
-
+    protected $table = 'favorieten';
     protected $fillable = [
-        'user_id',
         'vakantiehuis_id',
+        'huurder_id',
     ];
-
-    // Relationship with User
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Relationship with Vakantiehuis
+    // Vakantiehuis Relationship
     public function vakantiehuis()
     {
-        return $this->belongsTo(Vakantiehuis::class);
+        return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
+    }
+
+    // User Relationship (who marked it as favorite)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

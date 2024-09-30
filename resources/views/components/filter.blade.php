@@ -1,64 +1,79 @@
-<div class="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-xl font-semibold mb-4">Filters</h2>
-    <form action="{{ url()->current() }}" method="GET" class="space-y-4">
-        <!-- Locatie Filter (Dropdown with Search) -->
-        <div class="flex flex-col">
-            <label for="locatie" class="text-gray-600 mb-2">Locatie</label>
-            <select name="locatie" id="locatie"
-                class="select-search px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
-                <option value="">Selecteer een locatie</option>
-                @foreach ($locations as $location)
-                    <option value="{{ $location['name'] }}">{{ $location['name'] }}</option>
+<div class="w-full lg:w-1/4 p-4 bg-white shadow-md">
+    <h2 class="text-xl font-bold mb-4">Filters</h2>
+
+    <form action="{{ route('huizen.index') }}" method="GET">
+
+        <!-- Stad -->
+        <div class="mb-4">
+            <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
+            <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                <option value="">Selecteer een stad</option>
+                @foreach ($locationsList as $locatie)
+                    <option value="{{ $locatie }}">{{ $locatie }}</option>
                 @endforeach
             </select>
         </div>
 
-        <!-- Minimale Prijs Filter -->
-        <div class="flex flex-col">
-            <label for="min_prijs" class="text-gray-600 mb-2">Minimale Prijs</label>
-            <input type="number" name="min_prijs" id="min_prijs" value="{{ request('min_prijs') }}"
-                class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
-                placeholder="0">
+        <!-- Radius -->
+        <div class="mb-4">
+            <label for="radius" class="block text-sm font-medium text-gray-700">Radius (km)</label>
+            <select id="radius" name="radius" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                <option value="">Selecteer een radius</option>
+                <option value="10">10 km</option>
+                <option value="25">25 km</option>
+                <option value="35">35 km</option>
+                <option value="50">50 km</option>
+                <option value="75">75 km</option>
+                <option value="100">100 km</option>
+            </select>
         </div>
 
-        <!-- Maximale Prijs Filter -->
-        <div class="flex flex-col">
-            <label for="max_prijs" class="text-gray-600 mb-2">Maximale Prijs</label>
-            <input type="number" name="max_prijs" id="max_prijs" value="{{ request('max_prijs') }}"
-                class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
-                placeholder="Geen max">
+        <!-- Postcode -->
+        <div class="mb-4">
+            <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
+            <input type="text" id="postcode" name="postcode"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
         </div>
 
-        <!-- Amenities Filter (Checkboxes) -->
-        <div class="flex flex-col">
-            <label class="text-gray-600 mb-2">Voorzieningen</label>
-            <div class="flex items-center">
-                <input type="checkbox" name="zwembad" id="zwembad" value="1"
-                    {{ request('zwembad') ? 'checked' : '' }} class="mr-2">
-                <label for="zwembad" class="text-gray-700">Zwembad</label>
-            </div>
-            <div class="flex items-center">
-                <input type="checkbox" name="wifi" id="wifi" value="1"
-                    {{ request('wifi') ? 'checked' : '' }} class="mr-2">
-                <label for="wifi" class="text-gray-700">Wi-Fi</label>
-            </div>
-            <div class="flex items-center">
-                <input type="checkbox" name="spa" id="spa" value="1"
-                    {{ request('spa') ? 'checked' : '' }} class="mr-2">
-                <label for="spa" class="text-gray-700">Spa</label>
-            </div>
-            <div class="flex items-center">
-                <input type="checkbox" name="speeltuin" id="speeltuin" value="1"
-                    {{ request('speeltuin') ? 'checked' : '' }} class="mr-2">
-                <label for="speeltuin" class="text-gray-700">Speeltuin</label>
+        <!-- Straatnaam -->
+        <div class="mb-4">
+            <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
+            <input type="text" id="straatnaam" name="straatnaam"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+        </div>
+
+        <!-- Huisnummer -->
+        <div class="mb-4">
+            <label for="huisnummer" class="block text-sm font-medium text-gray-700">Huisnummer</label>
+            <input type="text" id="huisnummer" name="huisnummer"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+        </div>
+
+        <!-- Prijsbereik Slider -->
+        <div class="mb-4">
+            <label for="prijs" class="block text-sm font-medium text-gray-700">Prijsbereik (€)</label>
+            <div class="flex items-center space-x-2">
+                <span id="min-prijs-label" class="text-gray-700">€0</span>
+                <input type="range" id="min_prijs" name="min_prijs" min="0" max="1000" value="0"
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-md" oninput="updatePrijsLabels()">
+                <span id="max-prijs-label" class="text-gray-700">€1000</span>
+                <input type="range" id="max_prijs" name="max_prijs" min="0" max="1000" value="1000"
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-md" oninput="updatePrijsLabels()">
             </div>
         </div>
 
-        <div class="flex">
-            <button type="submit"
-                class="w-full px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-                Filter
-            </button>
+        <!-- Voorzieningen -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Voorzieningen</label>
+            <div class="flex flex-col space-y-2">
+                <label><input type="checkbox" name="wifi" value="1"> Wi-Fi</label>
+                <label><input type="checkbox" name="zwembad" value="1"> Zwembad</label>
+                <label><input type="checkbox" name="parkeren" value="1"> Parkeerplaats</label>
+                <label><input type="checkbox" name="speeltuin" value="1"> Speeltuin</label>
+            </div>
         </div>
+
+        <!-- Zoekknop -->
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Zoeken</button>
     </form>
 </div>
