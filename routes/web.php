@@ -30,14 +30,15 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact.index
 // Verhuurder Routes (Dashboard en Huizenbeheer)
 
 // Routes for Verhuurder Huizen
-Route::prefix('verhuurder/huizen')->group(function () {
-    Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard');
-    Route::get('/', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index');
-    Route::get('/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
-    Route::post('/', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
-    Route::get('/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
-    Route::put('/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
-    Route::delete('/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy');
+Route::middleware('auth')->group(function () {
+    Route::get('/verhuurder/dashboard', [VerhuurderHuisController::class, 'dashboard'])->name('verhuurder.dashboard'); // Verhuurder Dashboard
+    Route::get('/verhuurder/huizen', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index'); // Beheer huizen
+    Route::get('/verhuurder/huizen/toevoegen', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.toevoegen'); // Voeg nieuw huis toe
+    Route::post('/verhuurder/huizen', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store'); // Sla nieuw huis op
+    Route::get('/verhuurder/huizen/{huisje}', [VerhuurderHuisController::class, 'show'])->name('verhuurder.huizen.show'); // Toon details van een huis
+    Route::get('/verhuurder/huizen/{huisje}/bewerken', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.bewerken'); // Bewerk een huis
+    Route::put('/verhuurder/huizen/{huisje}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update'); // Update een huis
+    Route::delete('/verhuurder/huizen/{huisje}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy'); // Verwijder een huis
 });
 
 
