@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class VerhuurderHuisController extends Controller
 {
@@ -14,7 +16,7 @@ class VerhuurderHuisController extends Controller
     }
     public function index()
     {
-        $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();
+        $huisjes = Vakantiehuis::where('user_id', FacadesAuth::id())->get();
         return view('verhuurder.huizen.index', compact('huisjes'));
     }
 
@@ -29,7 +31,7 @@ class VerhuurderHuisController extends Controller
     public function store(Request $request)
     {
         Vakantiehuis::create([
-            'user_id' => Auth::id(),
+            'user_id' => FacadesAuth::id(),
             'naam' => $request->naam,
             'prijs' => $request->prijs,
             'locatie' => $request->locatie,
@@ -45,12 +47,12 @@ class VerhuurderHuisController extends Controller
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol toegevoegd!');
     }
 
-    // Show a specific vakantiehuis
-    public function show($id)
-    {
-        $vakantiehuis = Vakantiehuis::findOrFail($id);
-        return view('verhuurder.huizen.show', compact('vakantiehuis'));
-    }
+    // // Show a specific vakantiehuis
+    // public function show($id)
+    // {
+    //     $vakantiehuis = Vakantiehuis::findOrFail($id);
+    //     return view('verhuurder.huizen.show', compact('vakantiehuis'));
+    // }
 
     // Show the form for editing the specified vakantiehuis
     public function edit($id)
