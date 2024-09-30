@@ -11,6 +11,7 @@
                     class="w-full h-96 object-cover rounded-lg mb-4">
                 <p><strong>Locatie:</strong> {{ $huisje->locatie }}</p>
                 <p><strong>Prijs:</strong> € {{ $huisje->prijs }}</p>
+                <p><strong>Aantal slaapkamers:</strong> € {{ $huisje->slaapkamers}}</p>
                 {{-- <p><strong>Beschrijving:</strong> {{ $huisje->beschrijving }}</p> --}}
 
                 <!-- Amenities -->
@@ -29,6 +30,13 @@
                         <li>Speeltuin</li>
                     @endif
                 </ul>
+                <p><strong>Beschikbaar:</strong>  
+                    @if ($huisje->beschikbaarheid)
+                        Beschikbaar
+                    @else
+                        Niet Beschikbaar
+                    @endif
+                </p>
             </div>
 
         </div>
