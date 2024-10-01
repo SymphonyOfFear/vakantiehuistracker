@@ -1,13 +1,14 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HuizenController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\RecensiesController;
-use App\Http\Controllers\VerhuurderHuisController;
 use App\Http\Controllers\FavorietenController;
+use App\Http\Controllers\ReserveringenController;
+use App\Http\Controllers\VerhuurderHuisController;
 
 // Homepage Route
 Route::get('/', function () {
@@ -22,14 +23,14 @@ Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show
 Route::get('/huizen/{id}/edit', [HuizenController::class, 'edit'])->name('huizen.edit');
 Route::put('/huizen/{id}', [HuizenController::class, 'update'])->name('huizen.update');
 Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huizen.destroy');
-
+/*
 Route::get('/verhuurders', function () {
     $user = User::factory()->create();
     $this->actingAs($user)->assertAuthenticated();
 
     $response = $this->get('/verhuurders');
     $response->assertStatus(200);
-});
+});*/
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
