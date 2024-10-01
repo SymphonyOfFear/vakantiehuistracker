@@ -23,6 +23,13 @@ Route::get('/huizen/{id}/edit', [HuizenController::class, 'edit'])->name('huizen
 Route::put('/huizen/{id}', [HuizenController::class, 'update'])->name('huizen.update');
 Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huizen.destroy');
 
+Route::get('/verhuurders', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user)->assertAuthenticated();
+
+    $response = $this->get('/verhuurders');
+    $response->assertStatus(200);
+});
 // Contact Routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
