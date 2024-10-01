@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function reserveringen()
     {
-        return $this->hasMany(Reservering::class, 'user_id');
+        return $this->hasMany(Reservering::class, 'huurder_id');
     }
 
     public function recensies()

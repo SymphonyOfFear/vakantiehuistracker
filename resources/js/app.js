@@ -6,16 +6,18 @@ Alpine.start();
 
 // Initialiseer de kaart zodra de DOM volledig geladen is
 document.addEventListener('DOMContentLoaded', function () {
-    let map;
-    let marker;
+    let map, marker;
 
-    if (document.getElementById('map')) {
-        const latitude = document.querySelector("#latitude").value || 52.3676;
-        const longitude = document.querySelector("#longitude").value || 4.9041;
+    // Controleer of de kaart-element bestaat
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+        const latitude = parseFloat(document.querySelector("#latitude")?.value || 52.3676);  // Standaard: Amsterdam
+        const longitude = parseFloat(document.querySelector("#longitude")?.value || 4.9041);
 
-        // Kaart starten met standaardcoördinaten (Amsterdam)
-        map = L.map('map').setView([latitude, longitude], 13);
+        // Initialiseer de kaart met de standaard coördinaten
+        map = L.map(mapElement).setView([latitude, longitude], 13);
 
+        // Voeg de OpenStreetMap tegel-laag toe
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
@@ -29,56 +31,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Functie om de kaart en marker bij te werken
-    function updateMap(latitude, longitude) {
+    const updateMap = (latitude, longitude) => {
         if (map && latitude && longitude) {
             map.setView([latitude, longitude], 13);
-
             // Verwijder bestaande marker en voeg een nieuwe toe
-            if (marker) {
-                map.removeLayer(marker);
-            }
+            if (marker) map.removeLayer(marker);
             marker = L.marker([latitude, longitude]).addTo(map)
                 .bindPopup('Vakantiehuis locatie')
                 .openPopup();
         }
-    }
+    };
 
     // Functie voor het in-/uitklappen van de zijbalk
-    function toggleSidebar() {
+    const toggleSidebar = () => {
         const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('hidden');
         const showSidebarButton = document.getElementById('showSidebarButton');
-        if (sidebar.classList.contains('hidden')) {
-            showSidebarButton.classList.remove('hidden');
-        } else {
-            showSidebarButton.classList.add('hidden');
+        if (sidebar) {
+            sidebar.classList.toggle('hidden');
+            showSidebarButton?.classList.toggle('hidden', !sidebar.classList.contains('hidden'));
         }
-    }
+    };
 
     // Zijbalk toggle event listeners
-    const toggleButton = document.getElementById('toggleSidebarButton');
-    const showButton = document.getElementById('showSidebarButton');
-
-    if (toggleButton) {
-        toggleButton.addEventListener('click', toggleSidebar);
-    }
-    if (showButton) {
-        showButton.addEventListener('click', toggleSidebar);
-    }
+    document.getElementById('toggleSidebarButton')?.addEventListener('click', toggleSidebar);
+    document.getElementById('showSidebarButton')?.addEventListener('click', toggleSidebar);
 
     // Functie om de prijslabels bij te werken op basis van de sliders
-    const minPriceSlider = document.getElementById('min_prijs');
-    const maxPriceSlider = document.getElementById('max_prijs');
-    const minPriceLabel = document.getElementById('min-prijs-label');
-    const maxPriceLabel = document.getElementById('max-prijs-label');
+    const updatePriceLabels = () => {
+        const minPriceSlider = document.getElementById('min_prijs');
+        const maxPriceSlider = document.getElementById('max_prijs');
+        const minPriceLabel = document.getElementById('min-prijs-label');
+        const maxPriceLabel = document.getElementById('max-prijs-label');
 
-    if (minPriceSlider && maxPriceSlider) {
-        minPriceSlider.addEventListener('input', function () {
-            minPriceLabel.textContent = `€${minPriceSlider.value}`;
-        });
+        if (minPriceSlider && maxPriceSlider && minPriceLabel && maxPriceLabel) {
+            minPriceSlider.addEventListener('input', () => minPriceLabel.textContent = `€${minPriceSlider.value}`);
+            maxPriceSlider.addEventListener('input', () => maxPriceLabel.textContent = `€${maxPriceSlider.value}`);
+        }
+    };
 
-        maxPriceSlider.addEventListener('input', function () {
-            maxPriceLabel.textContent = `€${maxPriceSlider.value}`;
-        });
-    }
+    updatePriceLabels();
 });

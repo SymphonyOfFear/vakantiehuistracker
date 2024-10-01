@@ -14,7 +14,7 @@ return new class extends Migration
 
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('verhuurder_id');
+            $table->foreignId('verhuurder_id')->constrained('users')->onDelete('cascade');
             $table->string('naam');
             $table->decimal('prijs', 8, 2);
             $table->text('beschrijving')->nullable();
@@ -31,8 +31,6 @@ return new class extends Migration
             $table->boolean('speeltuin')->default(false);
             $table->boolean('beschikbaarheid')->default(true);
             $table->timestamps();
-
-            $table->foreign('verhuurder_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -46,7 +46,7 @@ class VerhuurderHuisController extends Controller
 
     public function store(Request $request)
     {
-        // Valideer de invoerdata
+        // Valideer de invoer en controleer of 'fotos' een array is
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -56,7 +56,8 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Enkel één foto toegestaan
+            'fotos' => 'required|array',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
@@ -80,18 +81,19 @@ class VerhuurderHuisController extends Controller
                 'beschikbaarheid' => $request->boolean('beschikbaarheid'),
             ]);
 
-            // Opslaan van de foto indien meegegeven
-            if ($request->hasFile('foto')) {
-                $foto = $request->file('foto');
+            // Verwerk de geüploade afbeeldingen
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $foto) {
+                    if ($foto->isValid()) {
+                        $path = $foto->store('public/fotos');
+                        $url = Storage::url($path);
 
-                if ($foto->isValid()) {
-                    $path = $foto->store('public/fotos');
-                    $url = Storage::url($path);
-
-                    // Maak een nieuwe Image entry aan en koppel deze aan het vakantiehuis
-                    $vakantiehuis->images()->create([
-                        'url' => $url,
-                    ]);
+                        // Sla de URL op in de images-tabel
+                        Image::create([
+                            'url' => $url,
+                            'vakantiehuis_id' => $vakantiehuis->id,
+                        ]);
+                    }
                 }
             }
 
@@ -101,6 +103,7 @@ class VerhuurderHuisController extends Controller
             return back()->with('error', 'Er is een fout opgetreden bij het opslaan van het vakantiehuis: ' . $e->getMessage());
         }
     }
+
 
 
 

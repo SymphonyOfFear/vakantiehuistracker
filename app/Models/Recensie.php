@@ -2,23 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Recensie extends Model
 {
-    protected $table = 'recensies';
+    use HasFactory;
+
     protected $fillable = [
-        'huurder_id',
         'vakantiehuis_id',
-        'recensie',
+        'user_id',
+        'rating',
+        'comment',
     ];
-    // Vakantiehuis Relationship
+
+    // Relatie met Vakantiehuis
     public function vakantiehuis()
     {
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
     }
 
-    // User Relationship (who left the review)
+    // Relatie met User
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

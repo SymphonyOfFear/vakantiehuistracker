@@ -115,12 +115,14 @@
                     </select>
                 </div>
 
-                <!-- Foto Upload -->
                 <div class="mb-4">
-                    <label for="foto" class="block text-sm font-medium text-gray-700">Upload Foto</label>
-                    <input type="file" id="foto" name="foto"
+                    <label for="fotos" class="block text-sm font-medium text-gray-700">Foto's</label>
+                    <input type="file" id="fotos" name="fotos[]" multiple
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
-                    @error('foto')
+                    @error('fotos')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                    @error('fotos.*')
                         <p class="text-red-500 text-xs italic">{{ $message }}</p>
                     @enderror
                 </div>

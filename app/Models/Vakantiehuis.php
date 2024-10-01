@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Vakantiehuis extends Model
 {
     use HasFactory;
-
     protected $table = 'vakantiehuizen';
     protected $fillable = [
         'verhuurder_id',
@@ -29,15 +28,21 @@ class Vakantiehuis extends Model
         'beschikbaarheid'
     ];
 
-    // Relatie met de verhuurder
+    // Relatie met Verhuurder
     public function verhuurder()
     {
         return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
 
-    // Relatie met afbeeldingen (images)
+    // Relatie met Images
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');
+    }
+
+    // Relatie met Recensies
+    public function recensies()
+    {
+        return $this->hasMany(Recensie::class, 'vakantiehuis_id');
     }
 }
