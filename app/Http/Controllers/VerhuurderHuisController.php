@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 
 class VerhuurderHuisController extends Controller
@@ -54,7 +53,7 @@ class VerhuurderHuisController extends Controller
     // Functie om een nieuw vakantiehuis op te slaan
     public function store(Request $request)
     {
-        // Valideer de invoerdata
+        // Valideer de invoer en controleer of 'fotos' een array is
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -64,7 +63,8 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Valideer één afbeelding
+            'fotos' => 'required|array',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         try {
@@ -88,27 +88,19 @@ class VerhuurderHuisController extends Controller
                 'beschikbaarheid' => $request->boolean('beschikbaarheid'),
             ]);
 
-            // Sla de afbeelding op, indien aanwezig
-            if ($request->hasFile('foto')) {
-                Log::info('Bestand gedetecteerd. Verwerken...');
+            // Verwerk de geüploade afbeeldingen
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $foto) {
+                    if ($foto->isValid()) {
+                        $path = $foto->store('public/fotos');
+                        $url = Storage::url($path);
 
-                $foto = $request->file('foto');
-
-                if ($foto->isValid()) {
-                    $path = $foto->store('public/fotos');
-                    $url = Storage::url($path);
-
-                    // Log het geüploade bestandspad voor debugging
-                    Log::info('Geüploade afbeelding URL: ' . $url);
-
-                    // Maak een nieuw Image-model aan en koppel aan het vakantiehuis
-                    $image = new Image([
-                        'url' => $url,
-                    ]);
-
-                    $vakantiehuis->images()->save($image);
-                } else {
-                    Log::error('Bestand is niet geldig: ' . $foto->getClientOriginalName());
+                        // Sla de URL op in de images-tabel
+                        Image::create([
+                            'url' => $url,
+                            'vakantiehuis_id' => $vakantiehuis->id,
+                        ]);
+                    }
                 }
             }
 
@@ -150,10 +142,8 @@ class VerhuurderHuisController extends Controller
     // Functie om een vakantiehuis te updaten
     public function update(Request $request, $id)
     {
-        // Haal het vakantiehuis op
         $vakantiehuis = Vakantiehuis::findOrFail($id);
 
-        // Valideer de data
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -163,7 +153,7 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Valideer één afbeelding
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         Log::info('Vakantiehuis wordt bijgewerkt, ID: ' . $id, $validatedData);
@@ -178,13 +168,9 @@ class VerhuurderHuisController extends Controller
                 $path = $foto->store('public/fotos');
                 $url = Storage::url($path);
 
-                // Log geüploade afbeelding
                 Log::info('Geüploade afbeelding URL: ' . $url);
 
-                // Voeg nieuwe afbeelding toe en verwijder oude indien aanwezig
-                $image = new Image([
-                    'url' => $url,
-                ]);
+                $image = new Image(['url' => $url]);
 
                 $vakantiehuis->images()->delete(); // Verwijder oude afbeeldingen
                 $vakantiehuis->images()->save($image);
@@ -198,11 +184,8 @@ class VerhuurderHuisController extends Controller
     public function destroy($id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
-
-        // Verwijder het vakantiehuis
         $vakantiehuis->delete();
 
-        // Redirect met succesbericht
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol verwijderd.');
     }
 }

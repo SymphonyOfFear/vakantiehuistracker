@@ -1,92 +1,130 @@
-<!-- huizen/show.blade.php -->
 <x-app-layout>
     <x-header />
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-        <!-- Vakantiehuis Titel -->
-        <h1 class="text-4xl font-bold text-gray-800 mb-6 border-b-2 border-green-500 pb-4">{{ $vakantiehuis->naam }}</h1>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Navigatie breadcrumbs -->
+        <nav class="text-gray-500 text-sm mb-4">
+            <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
+            <a href="#" class="hover:text-green-600">{{ $vakantiehuis->stad }}</a> &gt;
+            <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
+        </nav>
 
-        <!-- Afbeeldingen van het Vakantiehuis -->
+        <!-- Hoofdtitel en knopjes -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
+            <div>
+                @if (Auth::id() === $vakantiehuis->verhuurder_id)
+                    <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Bewerk</a>
+                @endif
+                <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
+                    class="ml-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Voeg toe aan
+                    favorieten</a>
+            </div>
+        </div>
+
+        <!-- Hoofdbeeld en extra afbeeldingen -->
         @if ($vakantiehuis->images->isNotEmpty())
-            <div class="mb-8">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Afbeeldingen</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach ($vakantiehuis->images as $image)
-                        <div
-                            class="overflow-hidden rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-                            <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
-                                class="w-full h-48 object-cover">
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <!-- Hoofdafbeelding -->
+                <div class="md:col-span-2">
+                    <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
+                        class="w-full h-auto object-cover rounded-lg">
+                </div>
+                <!-- Extra afbeeldingen -->
+                <div class="md:col-span-2 grid grid-cols-2 gap-2">
+                    @foreach ($vakantiehuis->images->slice(1) as $image)
+                        <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
+                            class="w-full h-40 object-cover rounded-lg">
                     @endforeach
                 </div>
             </div>
         @else
-            <!-- Placeholder Afbeelding -->
-            <div class="mb-8 text-center">
+            <div class="mb-6">
                 <img src="https://via.placeholder.com/600x400.png?text=Geen+Afbeeldingen+Beschikbaar"
-                    alt="Geen afbeeldingen beschikbaar"
-                    class="w-full md:w-3/4 lg:w-1/2 mx-auto object-cover rounded-lg shadow">
-                <p class="text-gray-600 mt-2">Geen afbeeldingen beschikbaar</p>
+                    alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg">
             </div>
         @endif
 
-        <!-- Details van het Vakantiehuis -->
-        <div class="mb-8 bg-gray-50 p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Details</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <p class="text-gray-800"><strong>Naam:</strong> {{ $vakantiehuis->naam }}</p>
-                <p class="text-gray-800"><strong>Prijs:</strong> €{{ number_format($vakantiehuis->prijs, 2) }}</p>
-                <p class="text-gray-800 md:col-span-2"><strong>Beschrijving:</strong>
-                    {{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}
-                </p>
-                <p class="text-gray-800"><strong>Locatie:</strong> {{ $vakantiehuis->straatnaam }}
-                    {{ $vakantiehuis->huisnummer }}, {{ $vakantiehuis->postcode }} {{ $vakantiehuis->stad }}
-                </p>
-                <p class="text-gray-800"><strong>Aantal Slaapkamers:</strong> {{ $vakantiehuis->slaapkamers }}</p>
-                <p class="text-gray-800"><strong>Beschikbaarheid:</strong>
-                    <span class="{{ $vakantiehuis->beschikbaarheid ? 'text-green-500' : 'text-red-500' }}">
-                        {{ $vakantiehuis->beschikbaarheid ? 'Beschikbaar' : 'Niet beschikbaar' }}
-                    </span>
-                </p>
-            </div>
+        <!-- Beschrijving sectie -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
+            <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
-        <!-- Voorzieningen Sectie -->
-        <div class="mb-8 bg-gray-50 p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Voorzieningen</h2>
-            <ul class="list-disc pl-6 space-y-2">
-                @if ($vakantiehuis->wifi)
-                    <li class="text-gray-800">Wi-Fi</li>
-                @endif
-                @if ($vakantiehuis->zwembad)
-                    <li class="text-gray-800">Zwembad</li>
-                @endif
-                @if ($vakantiehuis->parkeren)
-                    <li class="text-gray-800">Parkeerplaats</li>
-                @endif
-                @if ($vakantiehuis->speeltuin)
-                    <li class="text-gray-800">Speeltuin</li>
-                @endif
-                @if (!$vakantiehuis->wifi && !$vakantiehuis->zwembad && !$vakantiehuis->parkeren && !$vakantiehuis->speeltuin)
-                    <li class="text-gray-600 italic">Geen voorzieningen beschikbaar.</li>
-                @endif
-            </ul>
+        <!-- Kenmerken sectie -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-2">Kenmerken</h2>
+            <table class="w-full text-left table-auto">
+                <tr class="border-b">
+                    <th class="py-2 px-4 text-gray-600">Prijs</th>
+                    <td class="py-2 px-4 text-gray-800">€{{ $vakantiehuis->prijs }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 text-gray-600">Slaapkamers</th>
+                    <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->slaapkamers }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 text-gray-600">Beschikbaarheid</th>
+                    <td class="py-2 px-4 text-gray-800">
+                        {{ $vakantiehuis->beschikbaarheid ? 'Beschikbaar' : 'Niet beschikbaar' }}</td>
+                </tr>
+                <tr class="border-b">
+                    <th class="py-2 px-4 text-gray-600">Locatie</th>
+                    <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->straatnaam }}
+                        {{ $vakantiehuis->huisnummer }}, {{ $vakantiehuis->postcode }} {{ $vakantiehuis->stad }}</td>
+                </tr>
+            </table>
         </div>
 
-        <!-- Terug naar overzicht en Bewerk Knop -->
-        <div class="flex items-center justify-between">
+        <!-- Commentaarsectie -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-4">Recensies</h2>
+            <!-- Toon alle recensies -->
+            @foreach ($vakantiehuis->recensies as $recensie)
+                <div class="border-b border-gray-200 py-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-800 font-semibold">{{ $recensie->user->name }}</span>
+                        <span class="text-sm text-gray-500">{{ $recensie->created_at->format('d-m-Y') }}</span>
+                    </div>
+                    <p class="text-gray-700">{{ $recensie->comment }}</p>
+                    <p class="text-yellow-500">Rating: {{ $recensie->rating }}/5</p>
+                </div>
+            @endforeach
+
+            <!-- Recensie toevoegen -->
+            @auth
+                <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
+                        <select name="rating" id="rating" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                            required>
+                            <option value="">Selecteer een beoordeling</option>
+                            <option value="1">1 Ster</option>
+                            <option value="2">2 Sterren</option>
+                            <option value="3">3 Sterren</option>
+                            <option value="4">4 Sterren</option>
+                            <option value="5">5 Sterren</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>
+                        <textarea name="comment" id="comment" rows="4"
+                            class="w-full mt-1 p-2 border border-gray-300 rounded-md resize-none" required></textarea>
+                    </div>
+                    <button type="submit"
+                        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Plaats
+                        Recensie</button>
+                </form>
+            @endauth
+        </div>
+
+        <!-- Terug naar overzicht knop -->
+        <div>
             <a href="{{ route('huizen.index') }}"
-                class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
-                Terug naar overzicht
-            </a>
-
-            @if (auth()->check() && auth()->id() == $vakantiehuis->verhuurder_id)
-                <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
-                    class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-                    Bewerk Huis
-                </a>
-            @endif
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Terug naar
+                overzicht</a>
         </div>
     </div>
 

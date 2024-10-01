@@ -139,6 +139,16 @@
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Vakantiehuis
                     Bijwerken</button>
             </form>
+
+            <!-- Delete Button -->
+            <form action="{{ route('verhuurder.huizen.destroy', $vakantiehuis->id) }}" method="POST"
+                class="mt-4">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">Verwijder
+                    Vakantiehuis</button>
+            </form>
         </div>
     </div>
 

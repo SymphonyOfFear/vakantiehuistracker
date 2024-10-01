@@ -32,15 +32,21 @@ class Vakantiehuis extends Model
         'beschikbaarheid',
     ];
 
-    // Definieer de relatie met het 'Verhuurder' model
+    // Relatie met Verhuurder
     public function verhuurder()
     {
         return $this->belongsTo(User::class, 'verhuurder_id');
     }
 
-    // Definieer de relatie met het 'Image' model
+    // Relatie met Images
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');
+    }
+
+    // Relatie met Recensies
+    public function recensies()
+    {
+        return $this->hasMany(Recensie::class, 'vakantiehuis_id');
     }
 }

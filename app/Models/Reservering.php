@@ -25,4 +25,8 @@ class Reservering extends Model
     {
         return $this->belongsTo(Huurder::class, 'huurder_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'huurder_id');
+    }
 }

@@ -11,22 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-<<<<<<< HEAD
+            // Define foreign key constraint for 'verhuurder_id'
+            $table->foreignId('verhuurder_id')->constrained('users')->onDelete('cascade');
 
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('naam');
-
-            $table->string('locatie');
             $table->decimal('prijs', 10, 2);
-=======
-            $table->unsignedBigInteger('verhuurder_id');
-            $table->string('naam');
-            $table->decimal('prijs', 8, 2);
             $table->text('beschrijving')->nullable();
->>>>>>> mikey-backend
             $table->integer('slaapkamers');
             $table->string('stad');
             $table->string('straatnaam');
@@ -40,8 +32,6 @@ return new class extends Migration
             $table->boolean('speeltuin')->default(false);
             $table->boolean('beschikbaarheid')->default(true);
             $table->timestamps();
-
-            $table->foreign('verhuurder_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -2,64 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Recensie;
+use App\Models\Reservering;
+use App\Models\Vakantiehuis;
+use Illuminate\Support\Facades\Auth;
 
 class RecensiesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(Request $request, $vakantiehuisId)
     {
-        //
-    }
+        // Validatie van de request data
+        $validatedData = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        try {
+            // Controleer of de gebruiker een reservering heeft voor dit vakantiehuis
+            $hasReservation = Reservering::where('huurder_id', Auth::id())
+                ->where('vakantiehuis_id', $vakantiehuisId)
+                ->exists();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            if (!$hasReservation) {
+                return back()->with('error', 'U kunt alleen een recensie schrijven als u een reservering heeft.');
+            }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            // Opslaan van de recensie
+            Recensie::create([
+                'vakantiehuis_id' => $vakantiehuisId,
+                'user_id' => Auth::id(),
+                'rating' => $validatedData['rating'],
+                'comment' => $validatedData['comment'],
+            ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return back()->with('success', 'Uw recensie is succesvol geplaatst.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Er is een fout opgetreden bij het plaatsen van uw recensie.');
+        }
     }
 }

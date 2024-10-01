@@ -50,16 +50,20 @@ Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->n
 Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
 
 // Recensies Routes
-Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
-Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
-Route::get('/recensies/respond', [RecensiesController::class, 'create'])->name('recensies.respond');
-Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
-Route::get('/recensies/{id}', [RecensiesController::class, 'show'])->name('recensies.show');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
+    Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
+    Route::get('/recensies/respond', [RecensiesController::class, 'create'])->name('recensies.respond');
+    Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
+    Route::get('/recensies/{id}', [RecensiesController::class, 'show'])->name('recensies.show');
+});
+
 
 // Favorieten Routes
 Route::middleware('auth')->group(function () {
     Route::get('/favorieten', [FavorietenController::class, 'index'])->name('favorieten.index');
     Route::post('/favorieten', [FavorietenController::class, 'store'])->name('favorieten.store');
+    Route::post('/favorieten', [FavorietenController::class, 'add'])->name('favorieten.add');
     Route::delete('/favorieten/{id}', [FavorietenController::class, 'destroy'])->name('favorieten.destroy');
 });
 
