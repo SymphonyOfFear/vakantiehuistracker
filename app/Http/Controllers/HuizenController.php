@@ -14,22 +14,29 @@ class HuizenController extends Controller
     // Function to show the index page of the houses
     public function index()
     {
-        $huizen = Vakantiehuis::with('images')->get();
-        return view('huizen.index', compact('huizen'));
+        $vakantiehuizen = Vakantiehuis::with('images')->get();
+        return view('huizen.index', compact('vakantiehuizen'));
     }
+    public function show($id)
+    {
+        try {
+            // Retrieve the vacation house by its ID
+            $vakantiehuis = Vakantiehuis::with('images', 'recensies')->findOrFail($id);
 
+            // Return the view for the show page with the vakantiehuis data
+            return view('huizen.show', compact('vakantiehuis'));
+        } catch (\Exception $e) {
+            // Log and redirect back if any exception occurs
+            Log::error("Error displaying vakantiehuis with ID $id: " . $e->getMessage());
+            return redirect()->route('huizen.index')->with('error', 'Vakantiehuis niet gevonden of een fout opgetreden.');
+        }
+    }
     // Function to show the form for creating a new house
     public function create()
     {
-        // Fetch locations using Nominatim API for Netherlands
-        $response = Http::get('https://nominatim.openstreetmap.org/search', [
-            'country' => 'Netherlands',
-            'format' => 'json',
-            'limit' => 1000,
-        ]);
 
-        $locations = $response->json();
-        return view('huizen.create', compact('locations'));
+
+        return view('huizen.create');
     }
 
     // Function to store a new house in the database
@@ -94,15 +101,10 @@ class HuizenController extends Controller
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
 
-        // Fetch locations using Nominatim API for Netherlands
-        $response = Http::get('https://nominatim.openstreetmap.org/search', [
-            'country' => 'Netherlands',
-            'format' => 'json',
-            'limit' => 1000,
-        ]);
 
-        $locations = $response->json();
-        return view('huizen.edit', compact('vakantiehuis', 'locations'));
+
+
+        return view('huizen.edit');
     }
 
     // Function to update an existing house in the database

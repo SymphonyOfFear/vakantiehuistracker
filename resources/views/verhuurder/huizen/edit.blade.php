@@ -15,9 +15,6 @@
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Bewerk Vakantiehuis: {{ $vakantiehuis->naam }}</h1>
 
-
-
-
             <!-- Form for editing a vacation home -->
             <form action="{{ route('verhuurder.huizen.update', $vakantiehuis->id) }}" method="POST"
                 enctype="multipart/form-data">
@@ -58,10 +55,9 @@
                 <div class="mb-4">
                     <label for="location" class="block text-sm font-medium text-gray-700">Stad</label>
                     <div class="relative">
-                        <input type="text" id="location" name="location"
+                        <input type="text" id="location" name="stad"
                             class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Voer een stad of locatie in"
-                            value="{{ old('location', $vakantiehuis->stad) }}">
+                            placeholder="Voer een stad of locatie in" value="{{ old('stad', $vakantiehuis->stad) }}">
                         <div id="location-suggestions"
                             class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
                         </div>
@@ -118,17 +114,33 @@
                     </select>
                 </div>
 
-                <!-- Foto -->
+                <!-- Huidige foto's -->
                 <div class="mb-4">
-                    <label for="fotos" class="block text-sm font-medium text-gray-700">Foto's</label>
+                    <label class="block text-sm font-medium text-gray-700">Huidige foto's</label>
+                    <div id="current-image-previews" class="mt-4 grid grid-cols-4 gap-4">
+                        @foreach ($vakantiehuis->images as $image)
+                            <div class="relative">
+                                <img src="{{ $image->url }}" class="w-full h-32 object-cover rounded">
+                                <!-- Delete button for each existing image -->
+                                <button type="button"
+                                    class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded delete-image-button"
+                                    data-image-id="{{ $image->id }}">Verwijder</button>
+                                <!-- Hidden input to mark image for deletion -->
+                                <input type="hidden" name="deleted_fotos[]" value=""
+                                    id="deleted_foto_{{ $image->id }}">
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Nieuwe foto's -->
+                <div class="mb-4">
+                    <label for="fotos" class="block text-sm font-medium text-gray-700">Nieuwe Foto's</label>
                     <input type="file" id="fotos" name="fotos[]" multiple
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
-                    @error('fotos')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
-                    @error('fotos.*')
-                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                    @enderror
+                    <div id="image-previews" class="mt-4 grid grid-cols-4 gap-4">
+                        <!-- Image previews for new uploads will be inserted here by JavaScript -->
+                    </div>
                 </div>
 
                 <!-- Submit Button -->

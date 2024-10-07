@@ -28,15 +28,10 @@
                                 class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
                             </div>
                         </div>
-                        <!-- Updated button with FontAwesome or SVG Icon -->
+                        <!-- Zoekknop -->
                         <button type="submit"
                             class="px-8 py-4 bg-green-600 text-white rounded-r-md hover:bg-green-700 transition ease-in-out duration-300">
-                            <!-- Location Pin SVG Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M12 2C8.134 2 5 5.134 5 9c0 5.166 7 13 7 13s7-7.834 7-13c0-3.866-3.134-7-7-7zM12 11.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                            </svg>
+                            Zoeken
                         </button>
                     </form>
                     <p class="mt-2 text-sm text-gray-500">Laatste zoekopdracht:

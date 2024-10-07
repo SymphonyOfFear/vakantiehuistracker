@@ -33,40 +33,40 @@
                 <div class="mb-4">
                     <label for="naam" class="block text-sm font-medium text-gray-700">Naam</label>
                     <input type="text" id="naam" name="naam"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('naam') }}" required>
                 </div>
 
                 <!-- Prijs -->
                 <div class="mb-4">
                     <label for="prijs" class="block text-sm font-medium text-gray-700">Prijs (€)</label>
                     <input type="number" step="0.01" id="prijs" name="prijs"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('prijs') }}" required>
                 </div>
 
                 <!-- Beschrijving -->
                 <div class="mb-4">
                     <label for="beschrijving" class="block text-sm font-medium text-gray-700">Beschrijving</label>
                     <textarea id="beschrijving" name="beschrijving" rows="4"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md"></textarea>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md">{{ old('beschrijving') }}</textarea>
                 </div>
 
                 <!-- Slaapkamers -->
                 <div class="mb-4">
                     <label for="slaapkamers" class="block text-sm font-medium text-gray-700">Aantal Slaapkamers</label>
                     <input type="number" id="slaapkamers" name="slaapkamers"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('slaapkamers') }}"
+                        required>
                 </div>
 
-                <!-- Stad met suggestie -->
-                <div class="mb-4">
-                    <label for="location" class="block text-sm font-medium text-gray-700">Stad</label>
-                    <div class="relative">
-                        <input type="text" id="location" name="stad"
-                            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                            placeholder="Typ een stad in Nederland">
-                        <div id="location-suggestions"
-                            class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
-                        </div>
+                <!-- Stad met Suggestie -->
+                <div class="mb-4 relative">
+                    <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
+                    <input type="text" id="stad" name="stad"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
+                        placeholder="Typ een stad in Nederland" value="{{ old('stad') }}">
+                    <!-- Suggestiebox voor steden -->
+                    <div id="stad-suggestions"
+                        class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
                     </div>
                 </div>
 
@@ -74,43 +74,49 @@
                 <div class="mb-4">
                     <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
                     <input type="text" id="straatnaam" name="straatnaam"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('straatnaam') }}"
+                        required>
                 </div>
 
                 <!-- Postcode -->
                 <div class="mb-4">
                     <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
                     <input type="text" id="postcode" name="postcode"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('postcode') }}"
+                        required>
                 </div>
 
                 <!-- Huisnummer -->
                 <div class="mb-4">
                     <label for="huisnummer" class="block text-sm font-medium text-gray-700">Huisnummer</label>
                     <input type="text" id="huisnummer" name="huisnummer"
-                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md" value="{{ old('huisnummer') }}"
+                        required>
                 </div>
 
                 <!-- Voorzieningen -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Voorzieningen</label>
                     <div class="flex flex-wrap">
-                        <label class="mr-4 mb-2"><input type="checkbox" name="wifi" value="1"> Wi-Fi</label>
-                        <label class="mr-4 mb-2"><input type="checkbox" name="zwembad" value="1"> Zwembad</label>
-                        <label class="mr-4 mb-2"><input type="checkbox" name="parkeren" value="1">
-                            Parkeerplaats</label>
-                        <label class="mr-4 mb-2"><input type="checkbox" name="speeltuin" value="1">
-                            Speeltuin</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="wifi" value="1"
+                                {{ old('wifi') ? 'checked' : '' }}> Wi-Fi</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="zwembad" value="1"
+                                {{ old('zwembad') ? 'checked' : '' }}> Zwembad</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="parkeren" value="1"
+                                {{ old('parkeren') ? 'checked' : '' }}> Parkeerplaats</label>
+                        <label class="mr-4 mb-2"><input type="checkbox" name="speeltuin" value="1"
+                                {{ old('speeltuin') ? 'checked' : '' }}> Speeltuin</label>
                     </div>
                 </div>
 
                 <!-- Beschikbaarheid -->
                 <div class="mb-4">
-                    <label for="beschikbaarheid" class="block text-sm font-medium text-gray-700">Beschikbaarheid</label>
+                    <label for="beschikbaarheid"
+                        class="block text-sm font-medium text-gray-700">Beschikbaarheid</label>
                     <select id="beschikbaarheid" name="beschikbaarheid"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
-                        <option value="1">Ja</option>
-                        <option value="0">Nee</option>
+                        <option value="1" {{ old('beschikbaarheid') == 1 ? 'selected' : '' }}>Ja</option>
+                        <option value="0" {{ old('beschikbaarheid') == 0 ? 'selected' : '' }}>Nee</option>
                     </select>
                 </div>
 

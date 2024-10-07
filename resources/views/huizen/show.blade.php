@@ -2,14 +2,14 @@
     <x-header />
 
     <div class="container mx-auto px-4 py-8">
-        <!-- Navigatie breadcrumbs -->
+        <!-- Navigation Breadcrumbs -->
         <nav class="text-gray-500 text-sm mb-4">
             <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
-            <a href="#" class="hover:text-green-600">{{ $vakantiehuis->stad }}</a> &gt;
+            <span>{{ $vakantiehuis->stad }}</span> &gt;
             <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
         </nav>
 
-        <!-- Hoofdtitel en knopjes -->
+        <!-- Title and Favorite Button -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
             <div class="flex items-center">
@@ -20,7 +20,7 @@
                         class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(auth()->user()->id) ? 'text-red-600' : 'text-black' }}"></i>
                 </a>
 
-                <!-- Gemiddelde rating (niet-bewerkbaar) -->
+                <!-- Average Rating -->
                 <div class="ml-4" id="average-rating">
                     @php $averageRating = $vakantiehuis->recensies->avg('rating'); @endphp
                     @for ($i = 1; $i <= 5; $i++)
@@ -30,15 +30,13 @@
             </div>
         </div>
 
-        <!-- Hoofdbeeld en extra afbeeldingen -->
+        <!-- Main Image and Additional Images -->
         @if ($vakantiehuis->images->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <!-- Hoofdafbeelding -->
                 <div class="md:col-span-2">
                     <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
                         class="w-full h-auto object-cover rounded-lg">
                 </div>
-                <!-- Extra afbeeldingen -->
                 <div class="md:col-span-2 grid grid-cols-2 gap-2">
                     @foreach ($vakantiehuis->images->slice(1) as $image)
                         <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
@@ -56,26 +54,24 @@
         <!-- Kaart sectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
-            <!-- Map div met data-latitude en data-longitude attributen -->
-            <div id="map" class="w-full h-64 rounded-lg shadow" data-latitude="{{ $vakantiehuis->latitude }}"
-                data-longitude="{{ $vakantiehuis->longitude }}">
+            <!-- Map div with data-postcode attribute -->
+            <div id="map" class="w-full h-64 rounded-lg shadow" data-postcode="{{ $vakantiehuis->postcode }}">
             </div>
 
             <!-- Google Maps Link -->
-            <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->latitude && $vakantiehuis->longitude ? $vakantiehuis->latitude . ',' . $vakantiehuis->longitude : $vakantiehuis->postcode }}"
+            <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->postcode }}"
                 class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
         </div>
 
-        <!-- Beschrijving sectie -->
+        <!-- Description Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
-        <!-- Commentaarsectie -->
+        <!-- Review Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-4">Recensies</h2>
-            <!-- Toon alle recensies -->
             @foreach ($vakantiehuis->recensies as $recensie)
                 <div class="border-b border-gray-200 py-4">
                     <div class="flex justify-between items-center">
@@ -87,7 +83,7 @@
                 </div>
             @endforeach
 
-            <!-- Recensie toevoegen -->
+            <!-- Add Review -->
             @auth
                 <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                     @csrf
@@ -115,7 +111,7 @@
             @endauth
         </div>
 
-        <!-- Terug naar overzicht knop -->
+        <!-- Back Button -->
         <div>
             <a href="{{ route('huizen.index') }}"
                 class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Terug naar
