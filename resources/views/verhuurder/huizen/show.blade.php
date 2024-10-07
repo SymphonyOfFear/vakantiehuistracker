@@ -3,40 +3,50 @@
 
     <div class="flex">
         <!-- Sidebar -->
-        <x-sidebar title="Huizenbeheer">
-            <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
-                    Huizen</a></li>
-            <li><a href="{{ route('verhuurder.huizen.create') }}" class="text-gray-700 hover:text-green-600">Voeg Huis
-                    Toe</a></li>
+        <x-sidebar title="Menu">
+            <li><a href="{{ route('verhuurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a>
+            </li>
+            <li><a href="{{ route('verhuurder.huizen.index') }}"
+                    class="text-gray-700 hover:text-green-600">Huizenbeheer</a></li>
+            <li><a href="{{ route('recensies.index') }}" class="text-gray-700 hover:text-green-600">Recensies</a></li>
+            <li><a href="{{ route('reserveringen.index') }}" class="text-gray-700 hover:text-green-600">Reserveringen</a>
+            </li>
+            <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
         </x-sidebar>
 
         <!-- Main Content -->
         <div class="w-full lg:w-3/4 p-6 bg-white">
-            <h1 class="text-2xl font-bold mb-4">{{ $vakantiehuis->naam }}</h1>
-            <div class="flex justify-between items-center mb-4">
-                <p class="text-lg text-gray-800">{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }},
-                    {{ $vakantiehuis->postcode }} {{ $vakantiehuis->stad }}</p>
+            <!-- Navigation Breadcrumbs -->
+            <nav class="text-gray-500 text-sm mb-4">
+                <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
+                <span>{{ $vakantiehuis->stad }}</span> &gt;
+                <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
+            </nav>
+
+            <!-- Title and Edit Button -->
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
                 @if (Auth::id() === $vakantiehuis->verhuurder_id)
                     <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Bewerk</a>
                 @endif
             </div>
 
-            <!-- Toevoegen aan favorieten knop -->
-            <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
-                class="absolute bottom-4 right-4 text-red-500 hover:text-red-600 favorite-button">
-                <i class="fas fa-heart text-2xl"></i> <!-- Heart icon -->
-            </a>
-
-            <!-- Image Gallery -->
+            <!-- Main Image and Additional Images -->
             @if ($vakantiehuis->images->isNotEmpty())
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    @foreach ($vakantiehuis->images as $image)
-                        <div class="bg-white shadow rounded">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <!-- Hoofdafbeelding -->
+                    <div class="md:col-span-2">
+                        <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
+                            class="w-full h-auto object-cover rounded-lg">
+                    </div>
+                    <!-- Extra afbeeldingen -->
+                    <div class="md:col-span-2 grid grid-cols-2 gap-2">
+                        @foreach ($vakantiehuis->images->slice(1) as $image)
                             <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
-                                class="w-full h-48 object-cover rounded">
-                        </div>
-                    @endforeach
+                                class="w-full h-40 object-cover rounded-lg">
+                        @endforeach
+                    </div>
                 </div>
             @else
                 <div class="mb-6">
@@ -45,22 +55,24 @@
                 </div>
             @endif
 
+            <!-- Kaart sectie -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
+                <div id="map" class="w-full h-64 rounded-lg shadow"
+                    data-postcode="{{ $vakantiehuis->postcode }}"></div>
+                <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->postcode }}"
+                    class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
+            </div>
+
             <!-- Beschrijving sectie -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
                 <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
             </div>
 
-            <!-- Map Section -->
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
-                <div id="map" class="w-full h-64 rounded-lg shadow"></div>
-            </div>
-
-            <!-- Commentaarsectie -->
+            <!-- Recensies sectie -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-4">Recensies</h2>
-                <!-- Toon alle recensies -->
                 @foreach ($vakantiehuis->recensies as $recensie)
                     <div class="border-b border-gray-200 py-4">
                         <div class="flex justify-between items-center">
@@ -72,8 +84,8 @@
                     </div>
                 @endforeach
 
-                <!-- Recensie toevoegen -->
                 @auth
+                    <!-- Add Review -->
                     <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                         @csrf
                         <div class="mb-4">

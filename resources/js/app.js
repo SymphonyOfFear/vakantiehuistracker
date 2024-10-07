@@ -27,25 +27,78 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    // Function to initialize the map from element attributes
+    // Function to initialize the map based on data in HTML elements
     const initializeMap = () => {
         const mapElement = document.getElementById('map');
         if (mapElement) {
-            const latitude = parseFloat(mapElement.getAttribute('data-latitude')) || 52.3676; // Default: Amsterdam
-            const longitude = parseFloat(mapElement.getAttribute('data-longitude')) || 4.9041;
-            initializeMapWithCoordinates(latitude, longitude);
+            const postalCode = mapElement.getAttribute('data-postcode');
+            if (postalCode) {
+                getCoordinatesByPostalCode(postalCode).then(({ latitude, longitude }) => {
+                    initializeMapWithCoordinates(latitude, longitude);
+                });
+            } else {
+                initializeMapWithCoordinates(52.3676, 4.9041); // Default location Amsterdam
+            }
         }
     };
 
-    // Function to handle city autocomplete using the Geonames API
-    const handleCityAutocomplete = () => {
-        const cityInput = document.querySelector('#stad');
-        const citySuggestionsBox = document.querySelector('#stad-suggestions');
+    // Function to fetch coordinates based on a postal code
+    const getCoordinatesByPostalCode = (postalCode) => {
+        const geocodeServiceUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(postalCode)}&countrycodes=NL`;
+        return fetch(geocodeServiceUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const location = data[0];
+                    return { latitude: parseFloat(location.lat), longitude: parseFloat(location.lon) };
+                } else {
+                    throw new Error('Ongeldige postcode of locatie niet gevonden.');
+                }
+            })
+            .catch(error => {
+                console.error('Fout bij het ophalen van coördinaten:', error);
+                return { latitude: 52.3676, longitude: 4.9041 }; // Default location (Amsterdam)
+            });
+    };
 
-        if (cityInput && citySuggestionsBox) {
+    // Function to handle favorite toggling
+    const handleFavoriteButtons = () => {
+        const favoriteForms = document.querySelectorAll('.favorite-form');
+        favoriteForms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent the default form submission
+
+                const id = form.getAttribute('data-id');
+                const url = `/favorieten/toggle/${id}`;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload(); // Refresh the page after toggling the favorite status
+                        } else {
+                            alert('Er is een fout opgetreden.');
+                        }
+                    })
+                    .catch(error => console.error('Fout:', error));
+            });
+        });
+    };
+
+    // Function to handle city and address autocomplete
+    const handleCityAutocomplete = () => {
+        const cityInputs = document.querySelectorAll('#stad, #location');
+        const citySuggestionsBoxes = document.querySelectorAll('#stad-suggestions, #location-suggestions');
+
+        cityInputs.forEach((cityInput, index) => {
+            const citySuggestionsBox = citySuggestionsBoxes[index];
             cityInput.addEventListener('input', () => {
                 const query = cityInput.value.trim();
-
                 if (query.length > 2) {
                     fetch(`https://secure.geonames.org/searchJSON?name_startsWith=${query}&country=NL&maxRows=5&username=Keiji`)
                         .then(response => response.json())
@@ -60,10 +113,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                         cityInput.value = suggestion.textContent;
                                         citySuggestionsBox.innerHTML = '';
 
-                                        // Update the map based on the selected city
+                                        // Update the map with the selected city
                                         const selectedLat = parseFloat(city.lat);
                                         const selectedLon = parseFloat(city.lng || city.lon);
-                                        updateMap(selectedLat, selectedLon);
+                                        initializeMapWithCoordinates(selectedLat, selectedLon);
                                     });
                                     citySuggestionsBox.appendChild(suggestion);
                                 });
@@ -72,85 +125,42 @@ document.addEventListener('DOMContentLoaded', function () {
                                 citySuggestionsBox.classList.add('hidden');
                             }
                         })
-                        .catch(error => console.error('Error fetching suggestions:', error));
+                        .catch(error => console.error('Fout bij het ophalen van suggesties:', error));
                 } else {
                     citySuggestionsBox.innerHTML = '';
                     citySuggestionsBox.classList.add('hidden');
                 }
             });
-        }
+        });
     };
 
-    // Function to handle favorite button toggling
-    const handleFavoriteButtons = () => {
-        const favoriteButtons = document.querySelectorAll('.favorite-button');
-        favoriteButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const url = button.getAttribute('href');
+    const handleImageDeletion = () => {
+        const deleteButtons = document.querySelectorAll('.delete-image-button');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default action
+                const imageUrl = button.closest('.relative').querySelector('img').src;
 
-                fetch(url, {
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            button.querySelector('i').classList.toggle('text-red-600');
-                            button.querySelector('i').classList.toggle('text-black');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+                // Mark the hidden input to indicate the image should be deleted
+                const hiddenInput = document.querySelector(`#deleted_foto_${button.dataset.imageId}`);
+                if (hiddenInput) {
+                    hiddenInput.value = imageUrl; // Set the URL for deletion
+                    console.log("Hidden input value set for deletion: ", hiddenInput.value); // Debugging
+                }
+
+                // Remove the image preview element
+                button.closest('.relative').remove();
+                console.log("Image preview removed for image URL: ", imageUrl); // Debugging
             });
         });
     };
 
-    // Function to handle star rating functionality
-    const handleStarRating = () => {
-        const stars = document.querySelectorAll('#star-rating .fa-star');
-        let selectedRating = parseInt(document.querySelector('#star-rating').dataset.userRating) || 0;
 
-        stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                selectedRating = index + 1;
-                stars.forEach((s, i) => {
-                    s.classList.toggle('text-yellow-500', i < selectedRating);
-                    s.classList.toggle('text-gray-300', i >= selectedRating);
-                });
 
-                // Save the selected rating using a POST request
-                const ratingUrl = star.dataset.url;
-                fetch(ratingUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ rating: selectedRating })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Rating opgeslagen!');
-                        } else {
-                            alert('Er is iets misgegaan.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        });
-    };
 
-    // Sidebar toggle function
-    const toggleSidebar = () => {
-        const sidebar = document.getElementById('sidebar');
-        const showSidebarButton = document.getElementById('showSidebarButton');
-        if (sidebar) {
-            sidebar.classList.toggle('hidden');
-            showSidebarButton?.classList.toggle('hidden', !sidebar.classList.contains('hidden'));
-        }
-    };
 
-    // Function to update price labels based on range slider
+
+    // Function to update price labels with the range of the slider
     const updatePriceLabels = () => {
         const minPriceSlider = document.getElementById('min_prijs');
         const maxPriceSlider = document.getElementById('max_prijs');
@@ -158,19 +168,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const maxPriceLabel = document.getElementById('max-prijs-label');
 
         if (minPriceSlider && maxPriceSlider && minPriceLabel && maxPriceLabel) {
-            minPriceSlider.addEventListener('input', () => minPriceLabel.textContent = `€${minPriceSlider.value}`);
-            maxPriceSlider.addEventListener('input', () => maxPriceLabel.textContent = `€${maxPriceSlider.value}`);
+            minPriceSlider.addEventListener('input', () => {
+                minPriceLabel.textContent = `€${minPriceSlider.value}`;
+                maxPriceSlider.min = minPriceSlider.value;
+            });
+            maxPriceSlider.addEventListener('input', () => {
+                maxPriceLabel.textContent = `€${maxPriceSlider.value}`;
+                minPriceSlider.max = maxPriceSlider.value;
+            });
         }
     };
 
-    // Initialize all functions
-    initializeMap(); // Initialize map on load
-    updatePriceLabels(); // Initialize price labels
-    handleCityAutocomplete(); // Initialize city autocomplete
-    handleFavoriteButtons(); // Initialize favorite button functionality
-    handleStarRating(); // Initialize star rating functionality
-
-    // Sidebar toggle event listeners
-    document.getElementById('toggleSidebarButton')?.addEventListener('click', toggleSidebar);
-    document.getElementById('showSidebarButton')?.addEventListener('click', toggleSidebar);
+    // Initialize all functions if they exist
+    if (typeof handleImageDeletion === 'function') { handleImageDeletion(); }
+    if (typeof initializeMap === 'function') { initializeMap(); }
+    if (typeof handleFavoriteButtons === 'function') { handleFavoriteButtons(); }
+    if (typeof handleCityAutocomplete === 'function') { handleCityAutocomplete(); }
+    if (typeof handleStarRating === 'function') { handleStarRating(); }
+    if (typeof updatePriceLabels === 'function') { updatePriceLabels(); }
 });

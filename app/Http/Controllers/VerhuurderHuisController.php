@@ -27,7 +27,7 @@ class VerhuurderHuisController extends Controller
     public function create()
     {
 
-        return view('verhuurder.huizen.create');
+        return view('verhuurder.huizen.create', ['vakantiehuis' => new Vakantiehuis()]);
     }
 
     public function store(Request $request)
@@ -93,9 +93,7 @@ class VerhuurderHuisController extends Controller
 
     public function edit($id)
     {
-
         $vakantiehuis = Vakantiehuis::findOrFail($id);
-
         return view('verhuurder.huizen.edit', compact('vakantiehuis'));
     }
 
@@ -114,22 +112,33 @@ class VerhuurderHuisController extends Controller
             'huisnummer' => 'required|string',
             'fotos' => 'nullable|array',
             'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'deleted_fotos' => 'nullable|array',  // Ensure 'deleted_fotos' is present
+            'deleted_fotos.*' => 'nullable|string',
         ]);
 
-        Log::info('Vakantiehuis wordt bijgewerkt, ID: ' . $id, $validatedData);
-
-        // Update de basisgegevens van het vakantiehuis
+        // Update the vacation house
         $vakantiehuis->update($validatedData);
 
-        // Verwijder bestaande foto's indien nieuwe foto's zijn geüpload
-        if ($request->hasFile('fotos')) {
-            // Verwijder de oude afbeeldingen uit de database en storage
-            foreach ($vakantiehuis->images as $image) {
-                Storage::delete(str_replace('/storage', 'public', $image->url)); // Verwijder uit de storage
-                $image->delete(); // Verwijder uit de database
-            }
+        // Check if there are deleted_fotos URLs to process
+        if ($request->has('deleted_fotos') && is_array($request->deleted_fotos)) {
+            foreach ($request->deleted_fotos as $deletedFotoUrl) {
+                if ($deletedFotoUrl) {  // Make sure it's not null
+                    // Convert the URL to the stored path and find the image record
+                    $image = Image::where('url', $deletedFotoUrl)->first();
 
-            // Voeg de nieuwe foto's toe
+                    if ($image) {
+                        // Delete the file from storage and the database record
+                        Storage::delete(str_replace('/storage', 'public', $image->url));
+                        $image->delete();
+
+                        Log::info("Deleted image URL: " . $deletedFotoUrl);
+                    }
+                }
+            }
+        }
+
+        // Handle new image uploads if present
+        if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
                 if ($foto->isValid()) {
                     $path = $foto->store('public/fotos');
@@ -141,6 +150,13 @@ class VerhuurderHuisController extends Controller
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt.');
     }
+
+
+
+
+
+
+
 
 
     public function destroy($id)

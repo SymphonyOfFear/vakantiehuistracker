@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Favorieten;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class favorietenController extends Controller
 {
+    /**
+     * Display a listing of the user's favorites.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $user = Auth::user();
@@ -17,27 +21,30 @@ class favorietenController extends Controller
 
         return view('favorieten.index', compact('favorieten'));
     }
-    public function add($vakantiehuisId)
-    {
-        // Ophalen van de ID van de gebruiker
-        $userId = Auth::id();
 
-        // Checken of de vakantiehuis al tussen de gebruikers favorieten staat
-        $favorite = Favorieten::where('vakantiehuis_id', $vakantiehuisId)
-            ->where('user_id', $userId) // Id van gebruiker zoeken in database
+    /**
+     * Toggle the favorite status of a vacation house.
+     *
+     * @param int $vakantiehuisId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggle($vakantiehuisId)
+    {
+        $userId = Auth::id();
+        $favorite = Favorieten::where('user_id', $userId)
+            ->where('vakantiehuis_id', $vakantiehuisId)
             ->first();
-        // Verwijderen van al bestaande favorieten vakantiehuis
+
         if ($favorite) {
             $favorite->delete();
-            return response()->json(['success' => true, 'message' => 'Removed from favorites']); // Output
+        } else {
+            Favorieten::create([
+                'user_id' => $userId,
+                'vakantiehuis_id' => $vakantiehuisId,
+            ]);
         }
 
-        // Als de vakantiehuis hem niet in de favorieten staat van de gebruiker
-        Favorieten::create([
-            'user_id' => $userId,
-            'vakantiehuis_id' => $vakantiehuisId,
-        ]);
-        // Output
-        return response()->json(['success' => true, 'message' => 'Added to favorites']);
+        // Redirect back to the previous page
+        return redirect()->back();
     }
 }

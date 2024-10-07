@@ -44,11 +44,15 @@
                             @php
                                 $isFavorited = $huis->isFavoritedBy(Auth::id());
                             @endphp
-                            <a href="{{ route('favorieten.add', $huis->id) }}"
-                                class="absolute bottom-4 right-4 hover:text-red-600 transition">
-                                <i class="fas fa-heart text-2xl"
-                                    style="color: {{ $isFavorited ? 'red' : 'black' }};"></i> <!-- Heart icon -->
-                            </a>
+                            <form action="{{ route('favorieten.toggle', $huis->id) }}" method="POST"
+                                class="inline-block">
+                                @csrf
+                                <button type="submit" class="favorite-button text-2xl">
+                                    <i
+                                        class="fas fa-heart {{ $huis->isFavoritedBy(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
+                                </button>
+                            </form>
+
                         </div>
                     @endforeach
                 </div>

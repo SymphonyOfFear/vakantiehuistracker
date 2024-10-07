@@ -51,6 +51,7 @@ class Vakantiehuis extends Model
         return $this->favorieten()->where('user_id', $userId)->exists();
     }
 
+
     public function favorieten()
     {
         return $this->hasMany(Favorieten::class, 'vakantiehuis_id');

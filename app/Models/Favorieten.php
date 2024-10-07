@@ -10,7 +10,14 @@ class Favorieten extends Model
     protected $fillable = [
         'vakantiehuis_id',
         'huurder_id',
+        'user_id'
     ];
+    public static function isFavoritedBy($vakantiehuisId, $userId)
+    {
+        return self::where('user_id', $userId)
+            ->where('vakantiehuis_id', $vakantiehuisId)
+            ->exists();
+    }
     // Vakantiehuis Relationship
     public function vakantiehuis()
     {
@@ -20,6 +27,6 @@ class Favorieten extends Model
     // User Relationship (who marked it as favorite)
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }

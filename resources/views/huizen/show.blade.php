@@ -14,12 +14,13 @@
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
             <div class="flex items-center">
                 <!-- Favorite button -->
-                <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
-                    class="text-xl cursor-pointer hover:text-red-600 favorite-button">
-                    <i
-                        class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(auth()->user()->id) ? 'text-red-600' : 'text-black' }}"></i>
-                </a>
-
+                <form action="{{ route('favorieten.toggle', $vakantiehuis->id) }}" method="POST" class="inline-block">
+                    @csrf
+                    <button type="submit" class="favorite-button text-2xl">
+                        <i
+                            class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
+                    </button>
+                </form>
                 <!-- Average Rating -->
                 <div class="ml-4" id="average-rating">
                     @php $averageRating = $vakantiehuis->recensies->avg('rating'); @endphp
