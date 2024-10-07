@@ -22,9 +22,8 @@
                 <!-- Form Inputs: Name, Price, Description, etc. -->
                 @include('verhuurder.huizen.partials.form', ['vakantiehuis' => null])
 
-                <!-- Submit Button -->
-                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Vakantiehuis
-                    Toevoegen</button>
+
+
             </form>
         </div>
     </div>
