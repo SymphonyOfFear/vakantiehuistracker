@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\Storage;
 
 class VerhuurderHuisController extends Controller
 {
+<<<<<<< HEAD
     // Functie om het dashboard van de verhuurder weer te geven
+=======
+>>>>>>> mikey-backend
     public function dashboard()
     {
         return view('verhuurder.dashboard');
     }
 
+<<<<<<< HEAD
     // Functie om de indexpagina met de vakantiehuizen van de verhuurder te tonen
     public function index()
     {
@@ -48,12 +52,24 @@ class VerhuurderHuisController extends Controller
 
         // Toon de create-pagina met de opgehaalde locaties
         return view('verhuurder.huizen.create', compact('locations'));
+=======
+    public function index()
+    {
+        $verhuurderId = Auth::id();
+        $mijnHuizen = Vakantiehuis::where('verhuurder_id', $verhuurderId)->with('images')->get();
+        return view('verhuurder.huizen.index', compact('mijnHuizen'));
+    }
+
+    public function create()
+    {
+
+        return view('verhuurder.huizen.create', ['vakantiehuis' => new Vakantiehuis()]);
+>>>>>>> mikey-backend
     }
 
     // Functie om een nieuw vakantiehuis op te slaan
     public function store(Request $request)
     {
-        // Valideer de invoer en controleer of 'fotos' een array is
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -68,7 +84,6 @@ class VerhuurderHuisController extends Controller
         ]);
 
         try {
-            // Maak een nieuw vakantiehuis aan
             $vakantiehuis = Vakantiehuis::create([
                 'verhuurder_id' => Auth::id(),
                 'naam' => $validatedData['naam'],
@@ -88,14 +103,11 @@ class VerhuurderHuisController extends Controller
                 'beschikbaarheid' => $request->boolean('beschikbaarheid'),
             ]);
 
-            // Verwerk de geüploade afbeeldingen
             if ($request->hasFile('fotos')) {
                 foreach ($request->file('fotos') as $foto) {
                     if ($foto->isValid()) {
                         $path = $foto->store('public/fotos');
                         $url = Storage::url($path);
-
-                        // Sla de URL op in de images-tabel
                         Image::create([
                             'url' => $url,
                             'vakantiehuis_id' => $vakantiehuis->id,
@@ -107,19 +119,26 @@ class VerhuurderHuisController extends Controller
             // Redirect naar de indexpagina met succesbericht
             return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd.');
         } catch (\Exception $e) {
+<<<<<<< HEAD
             // Log fouten
+=======
+>>>>>>> mikey-backend
             Log::error("Fout bij opslaan van vakantiehuis: " . $e->getMessage());
             return back()->with('error', 'Er is een fout opgetreden bij het opslaan van het vakantiehuis: ' . $e->getMessage());
         }
     }
 
+<<<<<<< HEAD
     // Functie om een specifiek vakantiehuis weer te geven
+=======
+>>>>>>> mikey-backend
     public function show($id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
         return view('verhuurder.huizen.show', compact('vakantiehuis'));
     }
 
+<<<<<<< HEAD
     // Functie om de edit-pagina van een vakantiehuis weer te geven
     public function edit($id)
     {
@@ -135,11 +154,18 @@ class VerhuurderHuisController extends Controller
         $locations = $response->json();
         $locations = $locations['geonames'] ?? [];
 
+=======
+    public function edit($id)
+    {
+>>>>>>> mikey-backend
         $vakantiehuis = Vakantiehuis::findOrFail($id);
-        return view('verhuurder.huizen.edit', compact('vakantiehuis', 'locations'));
+        return view('verhuurder.huizen.edit', compact('vakantiehuis'));
     }
 
+<<<<<<< HEAD
     // Functie om een vakantiehuis te updaten
+=======
+>>>>>>> mikey-backend
     public function update(Request $request, $id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
@@ -153,6 +179,7 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
+<<<<<<< HEAD
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -174,13 +201,61 @@ class VerhuurderHuisController extends Controller
 
                 $vakantiehuis->images()->delete(); // Verwijder oude afbeeldingen
                 $vakantiehuis->images()->save($image);
+=======
+            'fotos' => 'nullable|array',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'deleted_fotos' => 'nullable|array',  // Ensure 'deleted_fotos' is present
+            'deleted_fotos.*' => 'nullable|string',
+        ]);
+
+        // Update the vacation house
+        $vakantiehuis->update($validatedData);
+
+        // Check if there are deleted_fotos URLs to process
+        if ($request->has('deleted_fotos') && is_array($request->deleted_fotos)) {
+            foreach ($request->deleted_fotos as $deletedFotoUrl) {
+                if ($deletedFotoUrl) {  // Make sure it's not null
+                    // Convert the URL to the stored path and find the image record
+                    $image = Image::where('url', $deletedFotoUrl)->first();
+
+                    if ($image) {
+                        // Delete the file from storage and the database record
+                        Storage::delete(str_replace('/storage', 'public', $image->url));
+                        $image->delete();
+
+                        Log::info("Deleted image URL: " . $deletedFotoUrl);
+                    }
+                }
+            }
+        }
+
+        // Handle new image uploads if present
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $foto) {
+                if ($foto->isValid()) {
+                    $path = $foto->store('public/fotos');
+                    $url = Storage::url($path);
+                    $vakantiehuis->images()->create(['url' => $url]);
+                }
+>>>>>>> mikey-backend
             }
         }
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt.');
     }
 
+<<<<<<< HEAD
     // Functie om een vakantiehuis te verwijderen
+=======
+
+
+
+
+
+
+
+
+>>>>>>> mikey-backend
     public function destroy($id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);

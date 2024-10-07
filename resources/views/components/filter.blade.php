@@ -3,15 +3,15 @@
 
     <form action="{{ route('huizen.index') }}" method="GET">
 
-        <!-- Stad -->
-        <div class="mb-4">
+        <!-- Stad Zoekbalk met Suggesties -->
+        <div class="mb-4 relative">
             <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
-            <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                <option value="">Selecteer een stad</option>
-                @foreach ($locationsList as $locatie)
-                    <option value="{{ $locatie }}">{{ $locatie }}</option>
-                @endforeach
-            </select>
+            <input type="text" id="stad" name="stad" placeholder="Typ een plaats, buurt of postcode"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
+            <!-- Suggestiebox voor steden -->
+            <div id="stad-suggestions"
+                class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+            </div>
         </div>
 
         <!-- Radius -->

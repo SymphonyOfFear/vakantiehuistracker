@@ -71,7 +71,8 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/favorieten', [FavorietenController::class, 'index'])->name('favorieten.index');
     Route::post('/favorieten', [FavorietenController::class, 'store'])->name('favorieten.store');
-    Route::post('/favorieten', [FavorietenController::class, 'add'])->name('favorieten.add');
+    Route::post('/favorieten/toggle/{id}', [FavorietenController::class, 'toggle'])->name('favorieten.toggle');
+
     Route::delete('/favorieten/{id}', [FavorietenController::class, 'destroy'])->name('favorieten.destroy');
 });
 

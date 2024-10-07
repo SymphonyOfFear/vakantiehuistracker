@@ -46,8 +46,9 @@ class User extends Authenticatable
     }
     public function favorieten()
     {
-        return $this->hasMany(Favorieten::class, 'user_id');
+        return $this->hasMany(Favorieten::class);
     }
+
 
     public function reserveringen()
     {
