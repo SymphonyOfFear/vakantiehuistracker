@@ -57,18 +57,17 @@
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
-                <!-- Stad -->
+                <!-- Stad met suggestie -->
                 <div class="mb-4">
-                    <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
-                    <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
-                        required>
-                        <option value="">Kies een Stad</option>
-                        @foreach ($locations as $location)
-                            @if (is_array($location) && isset($location['name']))
-                                <option value="{{ $location['name'] }}">{{ $location['name'] }}</option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <label for="location" class="block text-sm font-medium text-gray-700">Stad</label>
+                    <div class="relative">
+                        <input type="text" id="location" name="stad"
+                            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Typ een stad in Nederland">
+                        <div id="location-suggestions"
+                            class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Straatnaam -->
@@ -115,6 +114,7 @@
                     </select>
                 </div>
 
+                <!-- Foto's -->
                 <div class="mb-4">
                     <label for="fotos" class="block text-sm font-medium text-gray-700">Foto's</label>
                     <input type="file" id="fotos" name="fotos[]" multiple

@@ -12,14 +12,21 @@
         <!-- Hoofdtitel en knopjes -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
-            <div>
-                @if (Auth::id() === $vakantiehuis->verhuurder_id)
-                    <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Bewerk</a>
-                @endif
+            <div class="flex items-center">
+                <!-- Favorite button -->
                 <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
-                    class="ml-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Voeg toe aan
-                    favorieten</a>
+                    class="text-xl cursor-pointer hover:text-red-600 favorite-button">
+                    <i
+                        class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(auth()->user()->id) ? 'text-red-600' : 'text-black' }}"></i>
+                </a>
+
+                <!-- Gemiddelde rating (niet-bewerkbaar) -->
+                <div class="ml-4" id="average-rating">
+                    @php $averageRating = $vakantiehuis->recensies->avg('rating'); @endphp
+                    @for ($i = 1; $i <= 5; $i++)
+                        <i class="fas fa-star {{ $i <= $averageRating ? 'text-yellow-500' : 'text-gray-300' }}"></i>
+                    @endfor
+                </div>
             </div>
         </div>
 
@@ -46,35 +53,23 @@
             </div>
         @endif
 
+        <!-- Kaart sectie -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
+            <!-- Map div met data-latitude en data-longitude attributen -->
+            <div id="map" class="w-full h-64 rounded-lg shadow" data-latitude="{{ $vakantiehuis->latitude }}"
+                data-longitude="{{ $vakantiehuis->longitude }}">
+            </div>
+
+            <!-- Google Maps Link -->
+            <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->latitude && $vakantiehuis->longitude ? $vakantiehuis->latitude . ',' . $vakantiehuis->longitude : $vakantiehuis->postcode }}"
+                class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
+        </div>
+
         <!-- Beschrijving sectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
-        </div>
-
-        <!-- Kenmerken sectie -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-2">Kenmerken</h2>
-            <table class="w-full text-left table-auto">
-                <tr class="border-b">
-                    <th class="py-2 px-4 text-gray-600">Prijs</th>
-                    <td class="py-2 px-4 text-gray-800">€{{ $vakantiehuis->prijs }}</td>
-                </tr>
-                <tr class="border-b">
-                    <th class="py-2 px-4 text-gray-600">Slaapkamers</th>
-                    <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->slaapkamers }}</td>
-                </tr>
-                <tr class="border-b">
-                    <th class="py-2 px-4 text-gray-600">Beschikbaarheid</th>
-                    <td class="py-2 px-4 text-gray-800">
-                        {{ $vakantiehuis->beschikbaarheid ? 'Beschikbaar' : 'Niet beschikbaar' }}</td>
-                </tr>
-                <tr class="border-b">
-                    <th class="py-2 px-4 text-gray-600">Locatie</th>
-                    <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->straatnaam }}
-                        {{ $vakantiehuis->huisnummer }}, {{ $vakantiehuis->postcode }} {{ $vakantiehuis->stad }}</td>
-                </tr>
-            </table>
         </div>
 
         <!-- Commentaarsectie -->
@@ -98,15 +93,15 @@
                     @csrf
                     <div class="mb-4">
                         <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
-                        <select name="rating" id="rating" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
-                            required>
-                            <option value="">Selecteer een beoordeling</option>
-                            <option value="1">1 Ster</option>
-                            <option value="2">2 Sterren</option>
-                            <option value="3">3 Sterren</option>
-                            <option value="4">4 Sterren</option>
-                            <option value="5">5 Sterren</option>
-                        </select>
+                        <div id="star-rating" class="flex items-center space-x-1"
+                            data-user-rating="{{ $vakantiehuis->userRating(auth()->id()) }}">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->userRating(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                    data-value="{{ $i }}"></i>
+                            @endfor
+                        </div>
+                        <input type="hidden" name="rating" id="rating-input"
+                            value="{{ $vakantiehuis->userRating(auth()->id()) }}">
                     </div>
                     <div class="mb-4">
                         <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>

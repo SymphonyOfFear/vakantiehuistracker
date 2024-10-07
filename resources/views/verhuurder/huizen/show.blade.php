@@ -22,6 +22,12 @@
                 @endif
             </div>
 
+            <!-- Toevoegen aan favorieten knop -->
+            <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
+                class="absolute bottom-4 right-4 text-red-500 hover:text-red-600 favorite-button">
+                <i class="fas fa-heart text-2xl"></i> <!-- Heart icon -->
+            </a>
+
             <!-- Image Gallery -->
             @if ($vakantiehuis->images->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -72,15 +78,14 @@
                         @csrf
                         <div class="mb-4">
                             <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
-                            <select name="rating" id="rating" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
-                                required>
-                                <option value="">Selecteer een beoordeling</option>
-                                <option value="1">1 Ster</option>
-                                <option value="2">2 Sterren</option>
-                                <option value="3">3 Sterren</option>
-                                <option value="4">4 Sterren</option>
-                                <option value="5">5 Sterren</option>
-                            </select>
+                            <div id="star-rating" class="flex items-center space-x-1">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->userRating(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                        data-value="{{ $i }}"></i>
+                                @endfor
+                            </div>
+                            <input type="hidden" name="rating" id="rating-input"
+                                value="{{ $vakantiehuis->userRating(auth()->id()) }}">
                         </div>
                         <div class="mb-4">
                             <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>

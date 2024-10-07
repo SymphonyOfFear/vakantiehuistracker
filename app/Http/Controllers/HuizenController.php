@@ -4,116 +4,155 @@ namespace App\Http\Controllers;
 
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class HuizenController extends Controller
 {
-    public function index(Request $request)
+    // Function to show the index page of the houses
+    public function index()
     {
-        // Basisquery voor het ophalen van alle huizen
-        $query = Vakantiehuis::with('images');
-
-        // Filter Functie maken voor de gebruiker
-
-        // Filteren op stad
-        if ($request->filled('stad')) {
-            $query->where('stad', 'like', '%' . $request->input('stad') . '%');
-        }
-
-        // Filteren op postcode
-        if ($request->filled('postcode')) {
-            $query->where('postcode', 'like', '%' . $request->input('postcode') . '%');
-        }
-
-        // Filteren op straatnaam
-        if ($request->filled('straatnaam')) {
-            $query->where('straatnaam', 'like', '%' . $request->input('straatnaam') . '%');
-        }
-
-        // Filteren op huisnummer
-        if ($request->filled('huisnummer')) {
-            $query->where('huisnummer', 'like', '%' . $request->input('huisnummer') . '%');
-        }
-
-        // Filteren op radius (bijvoorbeeld binnen 10, 25, 50 km)
-        if ($request->filled('radius') && $request->filled('postcode')) {
-            // Gebruik de opgegeven postcode en bereken de lat/lng-coördinaten
-            $postcode = $request->input('postcode');
-            $radius = $request->input('radius');
-
-            // Haal de coördinaten op van de postcode
-            $locationResponse = Http::get("https://nominatim.openstreetmap.org/search", [
-                'q' => $postcode,
-                'format' => 'json',
-                'country' => 'Netherlands',
-            ]);
-
-            if ($locationResponse->successful() && count($locationResponse->json()) > 0) {
-                $latitude = $locationResponse->json()[0]['lat'];
-                $longitude = $locationResponse->json()[0]['lon'];
-
-                // Bereken huizen binnen de opgegeven straal (radius) van de coördinaten
-                $query->selectRaw("
-                    *, (6371 * acos(
-                        cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
-                        sin(radians(?)) * sin(radians(latitude))
-                    )) AS distance", [$latitude, $longitude, $latitude])
-                    ->having('distance', '<=', $radius);
-            }
-        }
-
-        // Filteren op voorzieningen
-        $voorzieningen = ['wifi', 'zwembad', 'parkeren', 'speeltuin'];
-        foreach ($voorzieningen as $voorziening) {
-            if ($request->filled($voorziening)) {
-                $query->where($voorziening, 1);
-            }
-        }
-
-        // Filteren op prijsbereik
-        if ($request->filled('min_prijs')) {
-            $query->where('prijs', '>=', $request->input('min_prijs'));
-        }
-        if ($request->filled('max_prijs')) {
-            $query->where('prijs', '<=', $request->input('max_prijs'));
-        }
-
-        // Haal de gefilterde vakantiehuizen op
-        $vakantiehuizen = $query->get();
-
-        // Haal locaties op voor dropdown
-        $response = Http::get('http://api.geonames.org/searchJSON', [
-            'formatted' => 'true',
-            'country' => 'NL',
-            'featureClass' => 'P',
-            'maxRows' => 1000,
-            'username' => 'Keiji',
-        ]);
-
-        //  JSON response Ophalen
-        $locations = $response->json();
-
-        // Checken voor geonames key
-        if (isset($locations['geonames'])) {
-            $locations = $locations['geonames'];
-        } else {
-            $locations = []; // Set default value to prevent errors
-        }
-
-        // Maak een eenvoudige array met stadsnamen
-        $locationsList = [];
-        foreach ($locations as $location) {
-            if (isset($location['name'])) {
-                $locationsList[] = $location['name'];
-            }
-        }
-
-        return view('huizen.index', compact('locationsList', 'vakantiehuizen'));
+        $huizen = Vakantiehuis::with('images')->get();
+        return view('huizen.index', compact('huizen'));
     }
 
-    public function show($id)
+    // Function to show the form for creating a new house
+    public function create()
     {
-        $vakantiehuis = Vakantiehuis::with('images')->findOrFail($id);
-        return view('huizen.show', compact('vakantiehuis'));
+        // Fetch locations using Nominatim API for Netherlands
+        $response = Http::get('https://nominatim.openstreetmap.org/search', [
+            'country' => 'Netherlands',
+            'format' => 'json',
+            'limit' => 1000,
+        ]);
+
+        $locations = $response->json();
+        return view('huizen.create', compact('locations'));
+    }
+
+    // Function to store a new house in the database
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'naam' => 'required|string|max:255',
+            'prijs' => 'required|numeric',
+            'beschrijving' => 'nullable|string',
+            'slaapkamers' => 'required|integer',
+            'stad' => 'required|string',
+            'straatnaam' => 'required|string',
+            'postcode' => 'required|string',
+            'huisnummer' => 'required|string',
+            'fotos' => 'nullable|array',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $vakantiehuis = Vakantiehuis::create([
+                'verhuurder_id' => Auth::id(),
+                'naam' => $validatedData['naam'],
+                'prijs' => $validatedData['prijs'],
+                'beschrijving' => $validatedData['beschrijving'],
+                'slaapkamers' => $validatedData['slaapkamers'],
+                'stad' => $validatedData['stad'],
+                'straatnaam' => $validatedData['straatnaam'],
+                'postcode' => $validatedData['postcode'],
+                'huisnummer' => $validatedData['huisnummer'],
+                'latitude' => null,
+                'longitude' => null,
+                'wifi' => $request->has('wifi'),
+                'zwembad' => $request->has('zwembad'),
+                'parkeren' => $request->has('parkeren'),
+                'speeltuin' => $request->has('speeltuin'),
+                'beschikbaarheid' => $request->boolean('beschikbaarheid'),
+            ]);
+
+            // Save uploaded images if any
+            if ($request->hasFile('fotos')) {
+                foreach ($request->file('fotos') as $foto) {
+                    if ($foto->isValid()) {
+                        $path = $foto->store('public/fotos');
+                        $url = Storage::url($path);
+
+                        $vakantiehuis->images()->create([
+                            'url' => $url,
+                        ]);
+                    }
+                }
+            }
+
+            return redirect()->route('huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd.');
+        } catch (\Exception $e) {
+            Log::error('Error storing vakantiehuis: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het opslaan van het vakantiehuis.');
+        }
+    }
+
+    // Function to show the edit page for a specific house
+    public function edit($id)
+    {
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+
+        // Fetch locations using Nominatim API for Netherlands
+        $response = Http::get('https://nominatim.openstreetmap.org/search', [
+            'country' => 'Netherlands',
+            'format' => 'json',
+            'limit' => 1000,
+        ]);
+
+        $locations = $response->json();
+        return view('huizen.edit', compact('vakantiehuis', 'locations'));
+    }
+
+    // Function to update an existing house in the database
+    public function update(Request $request, $id)
+    {
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'naam' => 'required|string|max:255',
+            'prijs' => 'required|numeric',
+            'beschrijving' => 'nullable|string',
+            'slaapkamers' => 'required|integer',
+            'stad' => 'required|string',
+            'straatnaam' => 'required|string',
+            'postcode' => 'required|string',
+            'huisnummer' => 'required|string',
+            'fotos' => 'nullable|array',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $vakantiehuis->update($validatedData);
+
+            // Handle images
+            if ($request->hasFile('fotos')) {
+                // Delete old images if any
+                $vakantiehuis->images()->delete();
+                foreach ($request->file('fotos') as $foto) {
+                    if ($foto->isValid()) {
+                        $path = $foto->store('public/fotos');
+                        $url = Storage::url($path);
+
+                        $vakantiehuis->images()->create(['url' => $url]);
+                    }
+                }
+            }
+
+            return redirect()->route('huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt.');
+        } catch (\Exception $e) {
+            Log::error('Error updating vakantiehuis: ' . $e->getMessage());
+            return back()->with('error', 'Er is een fout opgetreden bij het bijwerken van het vakantiehuis.');
+        }
+    }
+
+    // Function to delete a house from the database
+    public function destroy($id)
+    {
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        $vakantiehuis->delete();
+
+        return redirect()->route('huizen.index')->with('success', 'Vakantiehuis succesvol verwijderd.');
     }
 }

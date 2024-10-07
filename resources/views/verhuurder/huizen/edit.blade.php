@@ -15,16 +15,8 @@
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Bewerk Vakantiehuis: {{ $vakantiehuis->naam }}</h1>
 
-            <!-- Display Validation Errors -->
-            @if ($errors->any())
-                <div class="bg-red-500 text-white p-4 rounded mb-4">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+
+
 
             <!-- Form for editing a vacation home -->
             <form action="{{ route('verhuurder.huizen.update', $vakantiehuis->id) }}" method="POST"
@@ -62,21 +54,18 @@
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                 </div>
 
-                <!-- Stad -->
+                <!-- Locatie (met auto-suggestie) -->
                 <div class="mb-4">
-                    <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
-                    <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md"
-                        required>
-                        <option value="">Kies een Stad</option>
-                        @foreach ($locations as $location)
-                            @if (is_array($location) && isset($location['name']))
-                                <option value="{{ $location['name'] }}"
-                                    {{ $vakantiehuis->stad == $location['name'] ? 'selected' : '' }}>
-                                    {{ $location['name'] }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
+                    <label for="location" class="block text-sm font-medium text-gray-700">Stad</label>
+                    <div class="relative">
+                        <input type="text" id="location" name="location"
+                            class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                            placeholder="Voer een stad of locatie in"
+                            value="{{ old('location', $vakantiehuis->stad) }}">
+                        <div id="location-suggestions"
+                            class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Straatnaam -->
@@ -120,7 +109,8 @@
 
                 <!-- Beschikbaarheid -->
                 <div class="mb-4">
-                    <label for="beschikbaarheid" class="block text-sm font-medium text-gray-700">Beschikbaarheid</label>
+                    <label for="beschikbaarheid"
+                        class="block text-sm font-medium text-gray-700">Beschikbaarheid</label>
                     <select id="beschikbaarheid" name="beschikbaarheid"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
                         <option value="1" {{ $vakantiehuis->beschikbaarheid ? 'selected' : '' }}>Ja</option>
@@ -130,9 +120,15 @@
 
                 <!-- Foto -->
                 <div class="mb-4">
-                    <label for="foto" class="block text-sm font-medium text-gray-700">Foto</label>
-                    <input type="file" id="foto" name="foto"
+                    <label for="fotos" class="block text-sm font-medium text-gray-700">Foto's</label>
+                    <input type="file" id="fotos" name="fotos[]" multiple
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
+                    @error('fotos')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
+                    @error('fotos.*')
+                        <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Submit Button -->

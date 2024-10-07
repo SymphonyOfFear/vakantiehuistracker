@@ -49,6 +49,7 @@ class User extends Authenticatable
         return $this->hasMany(Favorieten::class, 'user_id');
     }
 
+
     public function reserveringen()
     {
         return $this->hasMany(Reservering::class, 'huurder_id');

@@ -17,40 +17,27 @@ class favorietenController extends Controller
 
         return view('favorieten.index', compact('favorieten'));
     }
-    public function store(Request $request, $vakantiehuisId)
+    public function add($vakantiehuisId)
     {
+        // Ophalen van de ID van de gebruiker
         $userId = Auth::id();
 
-        // Check of het vakantiehuis al in de favorieten staat
-        $favoriet = Favorieten::where('vakantiehuis_id', $vakantiehuisId)
-            ->where('user_id', $userId)
+        // Checken of de vakantiehuis al tussen de gebruikers favorieten staat
+        $favorite = Favorieten::where('vakantiehuis_id', $vakantiehuisId)
+            ->where('user_id', $userId) // Id van gebruiker zoeken in database
             ->first();
-
-        if ($favoriet) {
-            return redirect()->back()->with('info', 'Dit vakantiehuis staat al in uw favorieten.');
+        // Verwijderen van al bestaande favorieten vakantiehuis
+        if ($favorite) {
+            $favorite->delete();
+            return response()->json(['success' => true, 'message' => 'Removed from favorites']); // Output
         }
 
-        // Voeg het vakantiehuis toe aan de favorieten
+        // Als de vakantiehuis hem niet in de favorieten staat van de gebruiker
         Favorieten::create([
-            'vakantiehuis_id' => $vakantiehuisId,
             'user_id' => $userId,
+            'vakantiehuis_id' => $vakantiehuisId,
         ]);
-
-        return redirect()->back()->with('success', 'Vakantiehuis toegevoegd aan uw favorieten.');
-    }
-
-    /**
-     * Verwijder een vakantiehuis uit de favorieten van de gebruiker.
-     */
-    public function destroy($vakantiehuisId)
-    {
-        $userId = Auth::id();
-
-        // Verwijder de favoriet uit de database
-        Favorieten::where('vakantiehuis_id', $vakantiehuisId)
-            ->where('user_id', $userId)
-            ->delete();
-
-        return redirect()->back()->with('success', 'Vakantiehuis verwijderd uit uw favorieten.');
+        // Output
+        return response()->json(['success' => true, 'message' => 'Added to favorites']);
     }
 }
