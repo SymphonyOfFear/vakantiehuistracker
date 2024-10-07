@@ -1,25 +1,24 @@
 <x-app-layout>
     <x-header />
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 bg-gray-50">
         <!-- Navigatie breadcrumbs -->
         <nav class="text-gray-500 text-sm mb-4">
-            <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
-            <a href="#" class="hover:text-green-600">{{ $vakantiehuis->stad }}</a> &gt;
+            <a href="{{ route('huizen.index') }}" class="hover:text-green-600 transition-colors">Huizen</a> &gt;
+            <a href="#" class="hover:text-green-600 transition-colors">{{ $vakantiehuis->stad }}</a> &gt;
             <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
         </nav>
 
         <!-- Hoofdtitel en knopjes -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
+            <h1 class="text-4xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
             <div>
                 @if (Auth::id() === $vakantiehuis->verhuurder_id)
                     <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Bewerk</a>
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition-transform transform hover:scale-105">Bewerk</a>
                 @endif
                 <a href="{{ route('favorieten.add', $vakantiehuis->id) }}"
-                    class="ml-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Voeg toe aan
-                    favorieten</a>
+                    class="ml-2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-600 transition-transform transform hover:scale-105">Voeg toe aan favorieten</a>
             </div>
         </div>
 
@@ -29,47 +28,47 @@
                 <!-- Hoofdafbeelding -->
                 <div class="md:col-span-2">
                     <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
-                        class="w-full h-auto object-cover rounded-lg">
+                        class="w-full h-auto object-cover rounded-lg shadow-md transition-transform transform hover:scale-105">
                 </div>
                 <!-- Extra afbeeldingen -->
                 <div class="md:col-span-2 grid grid-cols-2 gap-2">
                     @foreach ($vakantiehuis->images->slice(1) as $image)
                         <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
-                            class="w-full h-40 object-cover rounded-lg">
+                            class="w-full h-40 object-cover rounded-lg shadow-md transition-transform transform hover:scale-105">
                     @endforeach
                 </div>
             </div>
         @else
             <div class="mb-6">
                 <img src="https://via.placeholder.com/600x400.png?text=Geen+Afbeeldingen+Beschikbaar"
-                    alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg">
+                    alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg shadow-md">
             </div>
         @endif
 
         <!-- Beschrijving sectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Beschrijving</h2>
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
         <!-- Kenmerken sectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-2">Kenmerken</h2>
-            <table class="w-full text-left table-auto">
-                <tr class="border-b">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Kenmerken</h2>
+            <table class="w-full text-left table-auto border-collapse">
+                <tr class="border-b border-gray-200">
                     <th class="py-2 px-4 text-gray-600">Prijs</th>
                     <td class="py-2 px-4 text-gray-800">€{{ $vakantiehuis->prijs }}</td>
                 </tr>
-                <tr class="border-b">
+                <tr class="border-b border-gray-200">
                     <th class="py-2 px-4 text-gray-600">Slaapkamers</th>
                     <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->slaapkamers }}</td>
                 </tr>
-                <tr class="border-b">
+                <tr class="border-b border-gray-200">
                     <th class="py-2 px-4 text-gray-600">Beschikbaarheid</th>
                     <td class="py-2 px-4 text-gray-800">
                         {{ $vakantiehuis->beschikbaarheid ? 'Beschikbaar' : 'Niet beschikbaar' }}</td>
                 </tr>
-                <tr class="border-b">
+                <tr class="border-b border-gray-200">
                     <th class="py-2 px-4 text-gray-600">Locatie</th>
                     <td class="py-2 px-4 text-gray-800">{{ $vakantiehuis->straatnaam }}
                         {{ $vakantiehuis->huisnummer }}, {{ $vakantiehuis->postcode }} {{ $vakantiehuis->stad }}</td>
@@ -79,7 +78,7 @@
 
         <!-- Commentaarsectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 class="text-xl font-semibold mb-4">Recensies</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Recensies</h2>
             <!-- Toon alle recensies -->
             @foreach ($vakantiehuis->recensies as $recensie)
                 <div class="border-b border-gray-200 py-4">
@@ -114,7 +113,7 @@
                             class="w-full mt-1 p-2 border border-gray-300 rounded-md resize-none" required></textarea>
                     </div>
                     <button type="submit"
-                        class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Plaats
+                        class="bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition-transform transform hover:scale-105">Plaats
                         Recensie</button>
                 </form>
             @endauth
@@ -123,8 +122,7 @@
         <!-- Terug naar overzicht knop -->
         <div>
             <a href="{{ route('huizen.index') }}"
-                class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Terug naar
-                overzicht</a>
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition-transform transform hover:scale-105">Terug naar overzicht</a>
         </div>
     </div>
 
