@@ -10,15 +10,12 @@ class Vakantiehuis extends Model
 {
     use HasFactory;
 
-<<<<<<< HEAD
+
     // De tabel die bij dit model hoort
     protected $table = 'vakantiehuizen';
 
-    // Toegestane velden voor mass assignment
-=======
-    protected $table = 'vakantiehuizen';
 
->>>>>>> mikey-backend
+
     protected $fillable = [
         'verhuurder_id',
         'naam',
