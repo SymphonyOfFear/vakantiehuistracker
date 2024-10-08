@@ -9,6 +9,12 @@ class Feedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'feedbacks';
 
-    protected $fillable = ['naam', 'email', 'feedback'];
+    protected $fillable = ['huisje_id', 'naam', 'email', 'feedback'];
+
+    public function vakantiehuis()
+    {
+        return $this->belongsTo(Vakantiehuis::class, 'huisje_id');
+    }
 }

@@ -74,7 +74,8 @@ Route::middleware('auth')->group(function () {
 
 // routes/web.php
 
-Route::get('/huisje/{huisje}', [FeedbackController::class, 'show'])->name('huisje.show');
-Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::post('/feedback/{huisjeId}', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('/verhuurder/feedback/index', [FeedbackController::class, 'index'])->name('verhuurder.feedback.index'); // Beheer huizen
+
 
 require __DIR__ . '/auth.php';

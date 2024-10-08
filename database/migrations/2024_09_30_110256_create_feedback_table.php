@@ -10,7 +10,7 @@ class CreateFeedbackTable extends Migration
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('huisje_id')->constrained()->onDelete('cascade'); // Relatie met vakantiehuis
+            $table->foreignId('huisje_id')->constrained('vakantiehuizen')->onDelete('cascade'); // Relatie met vakantiehuis
             $table->string('naam');
             $table->string('email');
             $table->text('feedback');
@@ -20,6 +20,7 @@ class CreateFeedbackTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('feedback');
+        Schema::dropIfExists('feedbacks');
     }
 }
+

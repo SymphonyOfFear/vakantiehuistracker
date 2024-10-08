@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feedback;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,6 +84,7 @@ class VerhuurderHuisController extends Controller
     }
     public function show(Vakantiehuis $huisje)
     {
-        return view('verhuurder.huizen.show', compact('huisje'));
+        $feedbacks = Feedback::where('huisje_id', $huisje->id)->get();
+        return view('verhuurder.huizen.show', compact('huisje', 'feedbacks'));
     }
 }
