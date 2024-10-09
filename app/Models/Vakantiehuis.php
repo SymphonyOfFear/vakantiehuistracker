@@ -33,7 +33,15 @@ class Vakantiehuis extends Model
     {
         return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
-
+    public function FavorietChecker($userId)
+    {
+        return $this->favorieten()->where('user_id', $userId)->exists();
+    }
+    public function Beoordeling($userId)
+    {
+        $recensie = $this->recensies()->where('user_id', $userId)->first();
+        return $recensie ? $recensie->rating : 0;
+    }
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');

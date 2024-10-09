@@ -18,7 +18,7 @@
                     @csrf
                     <button type="submit" class="favorite-button text-2xl">
                         <i
-                            class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
+                            class="fas fa-heart {{ $vakantiehuis->FavorietenChecker(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
                     </button>
                 </form>
 
@@ -91,14 +91,14 @@
                     <div class="mb-4">
                         <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
                         <div id="star-rating" class="flex items-center space-x-1"
-                            data-user-rating="{{ $vakantiehuis->userRating(auth()->id()) }}">
+                            data-user-rating="{{ $vakantiehuis->Beoordeling(auth()->id()) }}">
                             @for ($i = 1; $i <= 5; $i++)
-                                <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->userRating(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->Beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
                                     data-value="{{ $i }}"></i>
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="rating-input"
-                            value="{{ $vakantiehuis->userRating(auth()->id()) }}">
+                            value="{{ $vakantiehuis->Beoordeling(auth()->id()) }}">
                     </div>
                     <div class="mb-4">
                         <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>

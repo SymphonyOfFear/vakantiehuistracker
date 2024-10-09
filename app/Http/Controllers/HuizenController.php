@@ -63,7 +63,7 @@ class HuizenController extends Controller
         $huizen = $query->get();
 
 
-        return view('huizen.index', compact('huizen'))->with($request->all());
+        return view('huizen.index', compact('huizen'));
     }
 
     public function show($id)

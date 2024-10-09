@@ -1,16 +1,11 @@
 <x-app-layout>
-
-
     <div class="flex flex-wrap lg:flex-nowrap justify-between lg:space-x-4">
-
         <div class="w-full lg:w-1/4 p-4 bg-white shadow-md mb-4 lg:mb-0 rounded-lg">
             <x-filter />
         </div>
 
-
         <div class="w-full lg:w-3/4 p-6 bg-white rounded-lg shadow-md">
             <h1 class="text-2xl font-bold mb-4">Vakantiehuizen</h1>
-
 
             <form action="{{ route('huizen.index') }}" method="GET" class="mb-4 flex items-center space-x-4">
                 <div class="relative w-full">
@@ -34,8 +29,8 @@
                     @foreach ($huizen as $huis)
                         <div
                             class="relative flex flex-col justify-between bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300 h-full">
-
-                            <img src="{{ $huis->images->first()->url ?? 'https://via.placeholder.com/400x300.png?text=Geen+Afbeelding' }}"
+                            <!-- Controleer of er een afbeelding is en toon de URL -->
+                            <img src="{{ asset($huis->images->first()->url ?? 'images/placeholder.png') }}"
                                 alt="{{ $huis->naam }}" class="w-full h-48 object-cover rounded-t-lg mb-4">
 
                             <div class="flex-grow">
@@ -50,14 +45,13 @@
                                     Bekijk details
                                 </a>
 
-
                                 @auth
                                     <form class="absolute bottom-4 right-4 favorite-form" data-id="{{ $huis->id }}"
                                         method="POST" action="{{ route('favorieten.toggle', $huis->id) }}">
                                         @csrf
                                         <button type="submit" class="favorite-button text-2xl">
                                             <i
-                                                class="fas fa-heart {{ $huis->isFavoritedBy(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
+                                                class="fas fa-heart {{ $huis->FavorietenChecker(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
                                         </button>
                                     </form>
                                 @endauth
@@ -68,6 +62,4 @@
             @endif
         </div>
     </div>
-
-
 </x-app-layout>

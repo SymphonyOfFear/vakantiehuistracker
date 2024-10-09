@@ -17,12 +17,10 @@ Route::get('/', function () {
 
 
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
-Route::get('/huizen/create', [HuizenController::class, 'create'])->name('huizen.create');
+
 Route::post('/huizen', [HuizenController::class, 'store'])->name('huizen.store');
 Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');
-Route::get('/huizen/{id}/edit', [HuizenController::class, 'edit'])->name('huizen.edit');
-Route::put('/huizen/{id}', [HuizenController::class, 'update'])->name('huizen.update');
-Route::delete('/huizen/{id}', [HuizenController::class, 'destroy'])->name('huizen.destroy');
+
 /*
 Route::get('/verhuurders', function () {
     $user = User::factory()->create();
