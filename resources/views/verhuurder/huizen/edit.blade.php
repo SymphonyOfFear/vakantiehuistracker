@@ -61,6 +61,13 @@
                                     class="w-full mt-1 p-2 border border-gray-300 rounded-md"
                                     x-bind:required="tab === 'general'">
                             </div>
+                            <div>
+                                <label for="beschrijving"
+                                    class="block text-sm font-medium text-gray-700">Beschrijving</label>
+                                <textarea step="0.01" id="beschrijving" name="beschrijving"
+                                    value="{{ old('beschrijving') }}"
+                                    class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                            </div>
                         </div>
                     </div>
 
@@ -130,7 +137,7 @@
                             <label class="block text-sm font-medium text-gray-700">Huidige foto's</label>
                             <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                                 @foreach ($vakantiehuis->images as $image)
-                                    <div class="relative">
+<div class="relative">
                                         <img src="{{ $image->url }}" class="w-full h-32 object-cover rounded">
                                         <button type="button"
                                             class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded delete-image-button"
@@ -140,7 +147,7 @@
                                         <input type="hidden" name="deleted_fotos[]" value=""
                                             id="deleted_foto_{{ $image->id }}">
                                     </div>
-                                @endforeach
+@endforeach
                             </div>
                         @endif
 

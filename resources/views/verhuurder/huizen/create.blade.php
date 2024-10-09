@@ -60,6 +60,13 @@
                                     value="{{ old('prijs') }}"
                                     class="w-full mt-1 p-2 border border-gray-300 rounded-md">
                             </div>
+                            <div>
+                                <label for="beschrijving"
+                                    class="block text-sm font-medium text-gray-700">Beschrijving</label>
+                                <textarea step="0.01" id="beschrijving" name="beschrijving"
+                                    value="{{ old('beschrijving') }}"
+                                    class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                            </div>
                         </div>
                     </div>
 
@@ -102,8 +109,8 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <label class="flex items-center"><input type="checkbox" name="wifi" value="1"> <span
                                     class="ml-2">Wi-Fi</span></label>
-                            <label class="flex items-center"><input type="checkbox" name="zwembad" value="1"> <span
-                                    class="ml-2">Zwembad</span></label>
+                            <label class="flex items-center"><input type="checkbox" name="zwembad" value="1">
+                                <span class="ml-2">Zwembad</span></label>
                             <label class="flex items-center"><input type="checkbox" name="parkeren" value="1">
                                 <span class="ml-2">Parkeerplaats</span></label>
                             <label class="flex items-center"><input type="checkbox" name="speeltuin" value="1">

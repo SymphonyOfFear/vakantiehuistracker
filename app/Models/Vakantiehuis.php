@@ -33,7 +33,7 @@ class Vakantiehuis extends Model
     {
         return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
-    public function FavorietChecker($userId)
+    public function FavorietenChecker($userId)
     {
         return $this->favorieten()->where('user_id', $userId)->exists();
     }
