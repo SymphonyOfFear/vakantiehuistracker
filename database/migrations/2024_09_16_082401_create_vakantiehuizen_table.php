@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-            // Define foreign key constraint for 'verhuurder_id'
+
             $table->foreignId('verhuurder_id')->constrained('users')->onDelete('cascade');
 
             $table->string('naam');
@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('straatnaam');
             $table->string('postcode');
             $table->string('huisnummer');
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->default(0);
+            $table->decimal('longitude', 10, 7)->default(0);
             $table->boolean('wifi')->default(false);
             $table->boolean('zwembad')->default(false);
             $table->boolean('parkeren')->default(false);

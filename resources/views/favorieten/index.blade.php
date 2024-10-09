@@ -1,8 +1,8 @@
 <x-app-layout>
-    <x-header />
 
-    <div class="flex">
-        <!-- Sidebar -->
+
+    <div class="flex h-max">
+
         <x-sidebar title="Favorietenbeheer">
             <li><a href="{{ route('verhuurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a>
             </li>
@@ -14,7 +14,7 @@
             <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
         </x-sidebar>
 
-        <!-- Main Content -->
+
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Mijn Favoriete Vakantiehuizen</h1>
 
@@ -28,7 +28,7 @@
                             $huis = $favoriet->vakantiehuis; // Use the relationship to get the associated Vakantiehuis
                         @endphp
                         <div class="relative bg-white p-4 rounded-lg shadow">
-                            <!-- Display image or a placeholder if not available -->
+
                             <img src="{{ $huis->images->first()->url ?? 'https://placehold.co/400' }}"
                                 alt="{{ $huis->naam }}" class="w-full h-48 object-cover rounded-t-lg mb-4">
                             <h3 class="text-xl font-bold text-gray-800">{{ $huis->naam }}</h3>
@@ -36,12 +36,11 @@
                                 {{ $huis->stad }}</p>
                             <p class="text-green-600 font-semibold">€ {{ $huis->prijs }}</p>
 
-                            <!-- Details button -->
                             <a href="{{ route('huizen.show', $huis->id) }}"
                                 class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Bekijk
                                 details</a>
 
-                            <!-- Favorite toggle icon -->
+
                             <form class="absolute bottom-4 right-4 favorite-form" data-id="{{ $huis->id }}"
                                 method="POST" action="{{ route('favorieten.toggle', $huis->id) }}">
                                 @csrf
@@ -57,5 +56,5 @@
         </div>
     </div>
 
-    <x-footer />
+
 </x-app-layout>

@@ -1,23 +1,22 @@
-<div class="w-full lg:w-1/4 p-4 bg-white shadow-md">
-    <h2 class="text-xl font-bold mb-4">Filters</h2>
+<div class="w-full bg-white p-4 rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-4 text-gray-800">Filters</h2>
 
     <form action="{{ route('huizen.index') }}" method="GET">
 
-        <!-- Stad Zoekbalk met Suggesties -->
         <div class="mb-4 relative">
             <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
             <input type="text" id="stad" name="stad" placeholder="Typ een plaats, buurt of postcode"
                 class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
-            <!-- Suggestiebox voor steden -->
+
             <div id="stad-suggestions"
                 class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
             </div>
         </div>
 
-        <!-- Radius -->
         <div class="mb-4">
             <label for="radius" class="block text-sm font-medium text-gray-700">Radius (km)</label>
-            <select id="radius" name="radius" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+            <select id="radius" name="radius"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
                 <option value="">Selecteer een radius</option>
                 <option value="10">10 km</option>
                 <option value="25">25 km</option>
@@ -28,28 +27,28 @@
             </select>
         </div>
 
-        <!-- Postcode -->
+
         <div class="mb-4">
             <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
             <input type="text" id="postcode" name="postcode"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
         </div>
 
-        <!-- Straatnaam -->
+
         <div class="mb-4">
             <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
             <input type="text" id="straatnaam" name="straatnaam"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
         </div>
 
-        <!-- Huisnummer -->
+
         <div class="mb-4">
             <label for="huisnummer" class="block text-sm font-medium text-gray-700">Huisnummer</label>
             <input type="text" id="huisnummer" name="huisnummer"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
         </div>
 
-        <!-- Prijsbereik Slider -->
+
         <div class="mb-4">
             <label for="prijs" class="block text-sm font-medium text-gray-700">Prijsbereik (€)</label>
             <div class="flex items-center space-x-2">
@@ -62,7 +61,7 @@
             </div>
         </div>
 
-        <!-- Voorzieningen -->
+
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Voorzieningen</label>
             <div class="flex flex-col space-y-2">
@@ -73,7 +72,8 @@
             </div>
         </div>
 
-        <!-- Zoekknop -->
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Zoeken</button>
+
+        <button type="submit"
+            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Zoeken</button>
     </form>
 </div>

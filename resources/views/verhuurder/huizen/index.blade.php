@@ -1,9 +1,7 @@
 <x-app-layout>
-    <x-header />
+    <div class="flex lg:flex-nowrap flex-wrap min-h-screen">
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <x-sidebar title="Mijn Huizen">
+        <x-sidebar title="Mijn Huizen" class="lg:min-h-screen">
             <li><a href="{{ route('verhuurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a>
             </li>
             <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
@@ -14,35 +12,27 @@
             <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
         </x-sidebar>
 
-        <!-- Main Content -->
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Mijn Vakantiehuizen</h1>
 
-            @if ($mijnHuizen->isEmpty())
+            @if ($huizen->isEmpty())
                 <p class="text-gray-600">Je hebt nog geen vakantiehuizen toegevoegd.</p>
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {{-- Loop through the user's vacation homes --}}
-                    @foreach ($mijnHuizen as $huis)
+                    @foreach ($huizen as $huis)
                         <div class="relative bg-white p-4 rounded-lg shadow">
-                            <!-- Display image or a placeholder if not available -->
-                            <img src="{{ $huis->images->first()->url ?? 'https://placehold.co/400' }}"
+                            <img src="{{ asset($huis->images->first()->url ?? 'images/placeholder.png') }}"
                                 alt="{{ $huis->naam }}" class="w-full h-48 object-cover rounded-t-lg mb-4">
                             <h3 class="text-xl font-bold text-gray-800">{{ $huis->naam }}</h3>
                             <p class="text-gray-600">{{ $huis->straatnaam }} {{ $huis->huisnummer }},
                                 {{ $huis->stad }}</p>
                             <p class="text-green-600 font-semibold">€ {{ $huis->prijs }}</p>
 
-                            <!-- Details button -->
                             <a href="{{ route('verhuurder.huizen.show', $huis->id) }}"
                                 class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                                 Bekijk details
                             </a>
 
-                            <!-- Edit button -->
-
-
-                            <!-- Delete button -->
                             <form action="{{ route('verhuurder.huizen.destroy', $huis->id) }}" method="POST"
                                 class="mt-2">
                                 @csrf
@@ -53,7 +43,6 @@
                                 </button>
                             </form>
 
-                            <!-- Favorite toggle icon -->
                             <form class="absolute bottom-4 right-4 favorite-form" data-id="{{ $huis->id }}"
                                 method="POST" action="{{ route('favorieten.toggle', $huis->id) }}">
                                 @csrf
@@ -68,6 +57,4 @@
             @endif
         </div>
     </div>
-
-    <x-footer />
 </x-app-layout>

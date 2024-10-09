@@ -1,11 +1,11 @@
 <x-app-layout>
-    <x-header />
 
 
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <x-sidebar title="Menu">
+
+    <div class="flex lg:flex-nowrap flex-wrap min-h-screen">
+
+        <x-sidebar title="Menu" class="lg:min-h-screen">
             <li><a href="{{ route('verhuurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a>
             </li>
             <li><a href="{{ route('verhuurder.huizen.index') }}"
@@ -16,16 +16,16 @@
             <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
         </x-sidebar>
 
-        <!-- Main Content -->
+
         <div class="w-full lg:w-3/4 p-6 bg-white">
-            <!-- Navigation Breadcrumbs -->
+
             <nav class="text-gray-500 text-sm mb-4">
                 <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
                 <span>{{ $vakantiehuis->stad }}</span> &gt;
                 <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
             </nav>
 
-            <!-- Title and Edit Button -->
+
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
                 @if (Auth::id() === $vakantiehuis->verhuurder_id)
@@ -34,15 +34,15 @@
                 @endif
             </div>
 
-            <!-- Main Image and Additional Images -->
+
             @if ($vakantiehuis->images->isNotEmpty())
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <!-- Hoofdafbeelding -->
+
                     <div class="md:col-span-2">
                         <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
                             class="w-full h-auto object-cover rounded-lg">
                     </div>
-                    <!-- Extra afbeeldingen -->
+
                     <div class="md:col-span-2 grid grid-cols-2 gap-2">
                         @foreach ($vakantiehuis->images->slice(1) as $image)
                             <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
@@ -57,7 +57,7 @@
                 </div>
             @endif
 
-            <!-- Kaart sectie -->
+
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
                 <div id="map" class="w-full h-64 rounded-lg shadow"
@@ -66,14 +66,14 @@
                     class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
             </div>
 
-            <!-- Beschrijving sectie -->
+
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
                 <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}
                 </p>
             </div>
 
-            <!-- Recensies sectie -->
+
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-xl font-semibold mb-4">Recensies</h2>
                 @foreach ($vakantiehuis->recensies as $recensie)
@@ -88,7 +88,7 @@
                 @endforeach
 
                 @auth
-                    <!-- Add Review -->
+
                     <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                         @csrf
                         <div class="mb-4">
@@ -114,7 +114,7 @@
                 @endauth
             </div>
 
-            <!-- Terug naar overzicht knop -->
+
             <div>
                 <a href="{{ route('huizen.index') }}"
                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Terug naar
@@ -123,5 +123,5 @@
 
         </div>
     </div>
-    <x-footer />
+
 </x-app-layout>

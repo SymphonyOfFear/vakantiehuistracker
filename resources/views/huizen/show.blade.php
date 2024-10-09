@@ -1,19 +1,19 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="container mx-auto px-4 py-8">
-        <!-- Navigation Breadcrumbs -->
+
         <nav class="text-gray-500 text-sm mb-4">
             <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
             <span>{{ $vakantiehuis->stad }}</span> &gt;
             <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
         </nav>
 
-        <!-- Title and Favorite Button -->
+
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
             <div class="flex items-center">
-                <!-- Favorite button -->
+
                 <form action="{{ route('favorieten.toggle', $vakantiehuis->id) }}" method="POST" class="inline-block">
                     @csrf
                     <button type="submit" class="favorite-button text-2xl">
@@ -21,7 +21,7 @@
                             class="fas fa-heart {{ $vakantiehuis->isFavoritedBy(Auth::id()) ? 'text-red-600' : 'text-black' }}"></i>
                     </button>
                 </form>
-                <!-- Average Rating -->
+
                 <div class="ml-4" id="average-rating">
                     @php $averageRating = $vakantiehuis->recensies->avg('rating'); @endphp
                     @for ($i = 1; $i <= 5; $i++)
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- Main Image and Additional Images -->
+
         @if ($vakantiehuis->images->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div class="md:col-span-2">
@@ -52,25 +52,25 @@
             </div>
         @endif
 
-        <!-- Kaart sectie -->
+
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
-            <!-- Map div with data-postcode attribute -->
+
             <div id="map" class="w-full h-64 rounded-lg shadow" data-postcode="{{ $vakantiehuis->postcode }}">
             </div>
 
-            <!-- Google Maps Link -->
+
             <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->postcode }}"
                 class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
         </div>
 
-        <!-- Description Section -->
+
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Beschrijving</h2>
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
-        <!-- Review Section -->
+
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-4">Recensies</h2>
             @foreach ($vakantiehuis->recensies as $recensie)
@@ -84,7 +84,7 @@
                 </div>
             @endforeach
 
-            <!-- Add Review -->
+
             @auth
                 <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                     @csrf
@@ -112,7 +112,7 @@
             @endauth
         </div>
 
-        <!-- Back Button -->
+
         <div>
             <a href="{{ route('huizen.index') }}"
                 class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">Terug naar
@@ -120,5 +120,5 @@
         </div>
     </div>
 
-    <x-footer />
+
 </x-app-layout>

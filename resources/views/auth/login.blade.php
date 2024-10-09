@@ -1,6 +1,6 @@
 <x-app-layout>
-    <!-- Header Component -->
-    <x-header />
+
+
 
     <div class="min-h-screen flex items-center justify-center bg-green-100 py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -13,7 +13,7 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Email Address -->
+
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div>
                         <label for="email" class="sr-only">Email adres</label>
@@ -22,7 +22,7 @@
                             placeholder="Email adres">
                     </div>
 
-                    <!-- Password -->
+
                     <div class="mt-4">
                         <label for="password" class="sr-only">Wachtwoord</label>
                         <input id="password" name="password" type="password" autocomplete="current-password" required
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <!-- Remember Me -->
+
                 <div class="flex items-center justify-between mt-4">
                     <div class="flex items-center">
                         <input id="remember_me" name="remember" type="checkbox"
@@ -66,6 +66,6 @@
         </div>
     </div>
 
-    <!-- Footer Component -->
-    <x-footer />
+
+
 </x-app-layout>

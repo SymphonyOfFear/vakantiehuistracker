@@ -7,13 +7,9 @@ use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class favorietenController extends Controller
+class FavorietenController extends Controller
 {
-    /**
-     * Display a listing of the user's favorites.
-     *
-     * @return \Illuminate\View\View
-     */
+
     public function index()
     {
         $user = Auth::user();
@@ -23,11 +19,9 @@ class favorietenController extends Controller
     }
 
     /**
-     * Toggle the favorite status of a vacation house.
-     *
-     * @param int $vakantiehuisId
-     * @return \Illuminate\Http\JsonResponse
-     */
+     * Schakelaar voor favorieten toevoegen en verwijderen
+     **/
+
     public function toggle($vakantiehuisId)
     {
         $userId = Auth::id();
@@ -44,7 +38,7 @@ class favorietenController extends Controller
             ]);
         }
 
-        // Redirect back to the previous page
+
         return redirect()->back();
     }
 }

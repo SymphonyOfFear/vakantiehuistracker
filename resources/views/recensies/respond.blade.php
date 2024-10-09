@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="min-h-screen bg-green-100 py-16">
         <div class="container mx-auto">
@@ -11,7 +11,7 @@
                 <p class="text-green-600 font-semibold">Rating: {{ $recensie->rating }} / 5</p>
                 <p class="text-gray-600">Gepubliceerd op: {{ $recensie->created_at->format('d-m-Y') }}</p>
 
-                <!-- Respond to Review Form -->
+
                 <h3 class="mt-6 text-xl font-semibold">Reageer op deze recensie</h3>
                 <form action="{{ route('recensies.beantwoorden', $recensie->id) }}" method="POST" class="mt-4">
                     @csrf
@@ -30,5 +30,5 @@
         </div>
     </div>
 
-    <x-footer />
+
 </x-app-layout>

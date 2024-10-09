@@ -15,7 +15,6 @@ class Image extends Model
         'vakantiehuis_id',
     ];
 
-    // Relatie met Vakantiehuis
     public function vakantiehuis()
     {
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
