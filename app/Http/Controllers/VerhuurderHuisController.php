@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\Image;
 use App\Models\Vakantiehuis;
 use Illuminate\Support\Facades\Log;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Requests\VerhuurderHuisRequest;
+use Illuminate\Support\Facades\Hash;
 
 class VerhuurderHuisController extends Controller
 {
@@ -53,6 +55,10 @@ class VerhuurderHuisController extends Controller
             foreach ($request->file('fotos') as $foto) {
                 if ($foto->isValid()) {
                     $fileName = time() . '_' . $foto->getClientOriginalName();
+
+
+                    $fileName
+                        = Str::uuid()->toString();
                     $publicPath = public_path('images/huizen');
                     if (!File::exists($publicPath)) {
                         File::makeDirectory($publicPath, 0755, true);
@@ -112,6 +118,9 @@ class VerhuurderHuisController extends Controller
     }
     public function deleteImage($id)
     {
+        $image = $id;
+        $vakantiehuisId = Vakantiehuis::findOrFail($image->vakantiehuis);
+        Log($vakantiehuisId);
         try {
             $image = Image::findOrFail($id);
             $imagePath = base_path($image->url);
