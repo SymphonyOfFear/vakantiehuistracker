@@ -35,7 +35,7 @@
                         </a>
                     </p>
 
-                    <div class="min-h-screen bg-green-100 py-16">
+                    {{-- <div class="min-h-screen bg-green-100 py-16">
                         <div class="container mx-auto">
                             <h1 class="text-3xl font-semibold text-gray-700 mb-6">Mijn Vakantiehuizen</h1>
                             <a href="{{ route('verhuurder.huizen.toevoegen') }}"
@@ -44,8 +44,6 @@
                             </a>
                             <!-- List of vacation houses added by the landlord -->
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                                {{-- Loop through the houses --}}
                                 @foreach ($huisjes as $huisje)
                                     <div class="bg-white p-4 rounded-lg shadow">
                                         <img src="{{ $huisje->afbeelding ?? 'https://placehold.co/400' }}"
@@ -62,7 +60,7 @@
                                 @endforeach
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
