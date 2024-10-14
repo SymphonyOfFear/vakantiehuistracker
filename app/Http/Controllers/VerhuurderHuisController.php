@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Requests\VerhuurderHuisRequest;
-use Illuminate\Support\Facades\Hash;
 
 class VerhuurderHuisController extends Controller
 {
@@ -41,6 +40,8 @@ class VerhuurderHuisController extends Controller
             'beschrijving' => $validatedData['beschrijving'] ?? '',
             'slaapkamers' => $validatedData['slaapkamers'] ?? 0,
             'stad' => $validatedData['stad'],
+            'longitude' => $validatedData['longitude'] ?? null,
+            'latitude' => $validatedData['latitude'] ?? null,
             'straatnaam' => $validatedData['straatnaam'],
             'postcode' => $validatedData['postcode'],
             'huisnummer' => $validatedData['huisnummer'],
@@ -54,11 +55,7 @@ class VerhuurderHuisController extends Controller
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
                 if ($foto->isValid()) {
-                    $fileName = time() . '_' . $foto->getClientOriginalName();
-
-
-                    $fileName
-                        = Str::uuid()->toString();
+                    $fileName = md5(uniqid() . time()) . '.' . $foto->getClientOriginalExtension();
                     $publicPath = public_path('images/huizen');
                     if (!File::exists($publicPath)) {
                         File::makeDirectory($publicPath, 0755, true);
@@ -99,7 +96,7 @@ class VerhuurderHuisController extends Controller
 
             foreach ($request->file('fotos') as $foto) {
                 if ($foto->isValid()) {
-                    $fileName = time() . '_' . $foto->getClientOriginalName();
+                    $fileName = md5(uniqid() . time()) . '.' . $foto->getClientOriginalExtension();
                     $publicPath = public_path('images/huizen');
                     if (!File::exists($publicPath)) {
                         File::makeDirectory($publicPath, 0755, true);
@@ -116,25 +113,20 @@ class VerhuurderHuisController extends Controller
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt.');
     }
+
     public function deleteImage($id)
     {
-        $image = $id;
-        $vakantiehuisId = Vakantiehuis::findOrFail($image->vakantiehuis);
-        Log($vakantiehuisId);
-        try {
-            $image = Image::findOrFail($id);
-            $imagePath = base_path($image->url);
+        $image = Image::findOrFail($id);
+        $imagePath = public_path($image->url);
 
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
-
-            $image->delete();
-            return response()->json(['success' => 'Afbeelding succesvol verwijderd.']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Er is een fout opgetreden bij het verwijderen van de afbeelding.'], 500);
+        if (File::exists($imagePath)) {
+            File::delete($imagePath);
         }
+
+        $image->delete();
+        return response()->json(['success' => 'Afbeelding succesvol verwijderd.']);
     }
+
     public function show($id)
     {
         $vakantiehuis = Vakantiehuis::with('images')->findOrFail($id);

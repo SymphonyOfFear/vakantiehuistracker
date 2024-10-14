@@ -21,6 +21,8 @@ class VerhuurderHuisRequest extends FormRequest
             'stad' => 'required|string|max:255',
             'straatnaam' => 'required|string|max:255',
             'postcode' => 'required|string|max:10',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
             'huisnummer' => 'required|string|max:10',
             'wifi' => 'boolean',
             'zwembad' => 'boolean',

@@ -9,7 +9,8 @@
 
             <form action="{{ route('huizen.index') }}" method="GET" class="mb-4 flex items-center space-x-4">
                 <div class="relative w-full">
-                    <input type="text" id="stad" name="stad" placeholder="Typ een plaats, buurt of postcode"
+                    <input autocomplete="off" type="text" id="stad" name="stad"
+                        placeholder="Typ een plaats, buurt of postcode"
                         class="w-full px-6 py-4 border border-gray-300 rounded-md focus:outline-none focus:border-green-500">
 
                     <div id="stad-suggestions"

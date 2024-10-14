@@ -20,6 +20,8 @@ class VakantiehuisRequest extends FormRequest
             'huisnummer' => 'nullable|string|max:10',
             'min_prijs' => 'nullable|numeric|min:0',
             'max_prijs' => 'nullable|numeric|min:0',
+            'longitude' => 'integer',
+            'latitude' => 'integer',
             'wifi' => 'nullable|boolean',
             'zwembad' => 'nullable|boolean',
             'parkeren' => 'nullable|boolean',
