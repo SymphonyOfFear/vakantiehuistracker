@@ -48,7 +48,7 @@
                 <div id="feedbackForm" class="hidden mt-4 bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-semibold mb-4">Jouw Feedback</h3>
 
-                    <form action="{{ route('feedback.store', ['huisjeId' => $huisje->id]) }}" method="POST">
+                    <form action="{{ route('verhuurder.feedback.store', ['huisjeId' => $huisje->id]) }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <label for="naam" class="block text-gray-700">Naam:</label>

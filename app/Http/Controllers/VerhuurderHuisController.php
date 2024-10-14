@@ -31,19 +31,28 @@ class VerhuurderHuisController extends Controller
 
     public function store(Request $request)
     {
-        Vakantiehuis::create([
-            'user_id' => Auth::id(),
-            'naam' => $request->naam,
-            'prijs' => $request->prijs,
-            'locatie' => $request->locatie,
-            'beschikbaarheid' => $request->beschikbaarheid,
-            'slaapkamers' => $request->slaapkamers,
-            'wifi' => $request->has('wifi'),
-            'zwembad' => $request->has('zwembad'),
-            'spa' => $request->has('spa'),
-            'speeltuin' => $request->has('speeltuin'),
-            'fotos' => json_encode($request->fotos),
-        ]);
+        
+        // Vakantiehuis::create([
+        //     $validated = $request->validated(),
+        //     'wifi' => $request->has('wifi'),
+        //     'zwembad' => $request->has('zwembad'),
+        //     'spa' => $request->has('spa'),
+        //     'speeltuin' => $request->has('speeltuin'),
+        //     'fotos' => json_encode($request->fotos),
+        // ]);
+            Vakantiehuis::create([
+                'user_id' => Auth::id(),
+                'naam' => $request->naam,
+                'prijs' => $request->prijs,
+                'locatie' => $request->locatie,
+                'beschikbaarheid' => $request->beschikbaarheid,
+                'slaapkamers' => $request->slaapkamers,
+                'wifi' => $request->has('wifi'),
+                'zwembad' => $request->has('zwembad'),
+                'spa' => $request->has('spa'),
+                'speeltuin' => $request->has('speeltuin'),
+                'fotos' => json_encode($request->fotos),
+            ]);
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol toegevoegd!');
     }

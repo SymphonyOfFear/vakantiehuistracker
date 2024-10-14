@@ -13,8 +13,8 @@ use App\Http\Controllers\FeedbackController;
 
 // Homepage Route
 Route::get('/', function () {
-    return view('welcome');
-})->name('welcome'); 
+    return view('welcome', [VerhuurderHuisController::class, 'index']);
+})->name('welcome');
 
 // Huizen Routes
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
@@ -73,9 +73,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // routes/web.php
-
-Route::post('/feedback/{huisjeId}', [FeedbackController::class, 'store'])->name('feedback.store');
-Route::get('/verhuurder/feedback/index', [FeedbackController::class, 'index'])->name('verhuurder.feedback.index'); // Beheer huizen
-
-
+Route::middleware('auth')->group(function () {
+    Route::post('/feedback/{huisjeId}', [FeedbackController::class, 'store'])->name('verhuurder.feedback.store');
+    // Route::get('/verhuurder/feedback/index/{huisje}', [FeedbackController::class, 'show'])->name('verhuurder.feedback.index');
+    Route::get('/verhuurder/feedback/index/{huisje}', [FeedbackController::class, 'show'])->name('verhuurder.feedback.index');
+    Route::delete('/verhuurder/feedback/{huisje}', [FeedbackController::class, 'destroy'])->name('verhuurder.feedback.destroy'); // Verwijder een huis
+});
 require __DIR__ . '/auth.php';

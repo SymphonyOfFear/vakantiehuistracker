@@ -1,42 +1,115 @@
 <x-app-layout>
     <x-header />
 
-
     <div class="min-h-screen bg-green-100 py-16">
         <div class="container mx-auto">
-            <h1 class="text-3xl font-semibold text-gray-700 mb-6">Mijn Vakantiehuizen</h1>
+            <h1 class="text-3xl font-semibold text-gray-700 mb-6">{{ $huisje->naam }}</h1>
 
-            <!-- List of vacation houses added by the landlord -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- House details -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <img src="{{ $huisje->afbeelding ?? 'https://placehold.co/600x400' }}" alt="{{ $huisje->naam }}"
+                    class="w-full h-96 object-cover rounded-lg mb-4">
+                <p><strong>Locatie:</strong> {{ $huisje->locatie }}</p>
+                <p><strong>Prijs:</strong> € {{ $huisje->prijs }}</p>
+                <p><strong>Aantal slaapkamers:</strong> {{ $huisje->slaapkamers }}</p>
 
-                {{-- @foreach ($feedbacks as $feedback)
-                    <div class="bg-white p-4 rounded-lg shadow">
-                        <h3 class="text-xl font-bold text-gray-800">{{ $feedback->naam }}</h3>
-                        <p class="text-green-600 font-semibold">€ {{ $feedback->feedbackp }}</p>
-                        {{-- <a href="{{ route('verhuurder.huizen.show', $huisje->id) }}"
-                            class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
-                            Bekijk details
-                        </a>
-                        <a href="{{ route('verhuurder.huizen.bewerken', $huisje->id) }}"
-                            class="mt-4 inline-block bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
-                            Bewerk Vakantiehuis
-                        </a>
-                        <form action="{{ route('verhuurder.huizen.destroy', $huisje->id) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to delete this category?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-red-600 hover:text-red-900 focus:outline-none focus:border-red-700 focus:ring-red active:text-red-700 transition ease-in-out duration-150">
-                                Delete
-                            </button>
-                        </form>
+                <!-- Amenities -->
+                <h3 class="mt-6 text-xl font-semibold">Voorzieningen</h3>
+                <ul class="list-disc list-inside">
+                    @if ($huisje->zwembad)
+                        <li>Zwembad</li>
+                    @endif
+                    @if ($huisje->wifi)
+                        <li>Wi-Fi</li>
+                    @endif
+                    @if ($huisje->spa)
+                        <li>Spa</li>
+                    @endif
+                    @if ($huisje->speeltuin)
+                        <li>Speeltuin</li>
+                    @endif
+                </ul>
+                <p><strong>Beschikbaar:</strong>
+                    @if ($huisje->beschikbaarheid)
+                        Beschikbaar
+                    @else
+                        Niet Beschikbaar
+                    @endif
+                </p>
+            </div>
 
-                    </div>
-                @endforeach 
-                --}}
+            <!-- Feedback Section -->
+            <div class="mt-10">
+                <button id="feedbackToggle"
+                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring">
+                    Geef Feedback
+                </button>
+
+                <div id="feedbackForm" class="hidden mt-4 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Jouw Feedback</h3>
+
+                    <form action="{{ route('verhuurder.feedback.store', ['huisjeId' => $huisje->id]) }}" method="POST">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="naam" class="block text-gray-700">Naam:</label>
+                            <input type="text" id="naam" name="naam" class="w-full p-2 border rounded-lg"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700">E-mail:</label>
+                            <input type="email" id="email" name="email" class="w-full p-2 border rounded-lg"
+                                required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="feedback" class="block text-gray-700">Feedback:</label>
+                            <textarea id="feedback" name="feedback" rows="4" class="w-full p-2 border rounded-lg" required></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring">
+                            Verstuur Feedback
+                        </button>
+                    </form>
+                </div>
+
+                @if ($feedbacks->isEmpty())
+                    <p>Er is nog geen feedback.</p>
+                @else
+                    <ul>
+                        @foreach ($feedbacks as $feedback)
+                            <li class="mb-4">
+                                <p><strong>{{ $feedback->naam }}</strong></p>
+                                <p>{{ $feedback->feedback }}</p>
+
+                                <!-- Zorg ervoor dat de form altijd wordt weergegeven -->
+                                <form action="{{ route('verhuurder.feedback.destroy', $feedback->id) }}" method="POST"
+                                    onsubmit="return confirm('Weet je zeker dat je deze feedback wilt verwijderen?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-5 font-medium rounded-md text-red-600 hover:text-red-900 focus:outline-none focus:border-red-700 focus:ring-red active:text-red-700 transition ease-in-out duration-150">
+                                        Delete
+                                    </button>
+                                </form>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
         </div>
     </div>
 
     <x-footer />
+
+    <script>
+        // Toggle feedback form visibility
+        const feedbackToggle = document.getElementById('feedbackToggle');
+        const feedbackForm = document.getElementById('feedbackForm');
+
+        feedbackToggle.addEventListener('click', function() {
+            feedbackForm.classList.toggle('hidden');
+        });
+    </script>
 </x-app-layout>
