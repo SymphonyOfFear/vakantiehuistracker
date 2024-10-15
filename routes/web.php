@@ -9,10 +9,12 @@ use App\Http\Controllers\RecensiesController;
 use App\Http\Controllers\FavorietenController;
 use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\VerhuurderHuisController;
+use App\Http\Controllers\FeedbackController;
+
 
 // Homepage Route
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [VerhuurderHuisController::class, 'index']);
 })->name('welcome');
 
 // Huizen Routes
@@ -83,4 +85,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// routes/web.php
+Route::middleware('auth')->group(function () {
+    Route::post('/feedback/{huisjeId}', [FeedbackController::class, 'store'])->name('verhuurder.feedback.store');
+    // Route::get('/verhuurder/feedback/index/{huisje}', [FeedbackController::class, 'show'])->name('verhuurder.feedback.index');
+    Route::get('/verhuurder/feedback/index/{huisje}', [FeedbackController::class, 'show'])->name('verhuurder.feedback.index');
+    Route::delete('/verhuurder/feedback/{huisje}', [FeedbackController::class, 'destroy'])->name('verhuurder.feedback.destroy'); // Verwijder een huis
+});
 require __DIR__ . '/auth.php';
