@@ -1,22 +1,9 @@
 <x-app-layout>
+    <x-header />
 
-
-    <div class="flex h-max">
-
-        <x-sidebar title="Favorietenbeheer">
-            <li><a href="{{ route('verhuurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a>
-            </li>
-            <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
-                    Huizen</a></li>
-            <li><a href="{{ route('recensies.index') }}" class="text-gray-700 hover:text-green-600">Recensies</a></li>
-            <li><a href="{{ route('reserveringen.index') }}" class="text-gray-700 hover:text-green-600">Reserveringen</a>
-            </li>
-            <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
-        </x-sidebar>
-
-
-        <div class="w-full lg:w-3/4 p-6 bg-white">
-            <h1 class="text-2xl font-bold mb-4">Mijn Favoriete Vakantiehuizen</h1>
+    <div class="min-h-screen bg-green-100 py-16">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-semibold text-gray-700 mb-6">Mijn Favoriete Vakantiehuizen</h1>
 
             @if ($favorieten->isEmpty())
                 <p class="text-gray-600">Je hebt nog geen vakantiehuizen aan je favorieten toegevoegd.</p>
@@ -52,8 +39,8 @@
                         </div>
                     @endforeach
                 </div>
-            @endif
         </div>
+    </div>
     </div>
 
 

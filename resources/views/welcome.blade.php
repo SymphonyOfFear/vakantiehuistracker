@@ -5,7 +5,7 @@
             <div class="container mx-auto text-center">
 
                 <div class="mb-8">
-                    <img src="{{ asset('images/site/hero-image.png') }}" alt="Vakantiehuis illustratie"
+                    <img src="{{ asset('images/hero-image.png') }}" alt="Vakantiehuis illustratie"
                         class="w-48 lg:w-64 h-auto mx-auto">
                 </div>
 
@@ -42,4 +42,16 @@
 
 
     </div>
+
+    <style>
+        /* Custom CSS for the hero image */
+        .hero-icon {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .hero-icon:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </x-app-layout>
