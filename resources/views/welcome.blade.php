@@ -5,7 +5,7 @@
             <div class="container mx-auto text-center">
 
                 <div class="mb-8">
-                    <img src="{{ asset('images/hero-image.png') }}" alt="Vakantiehuis illustratie"
+                    <img src="{{ asset('images/site/hero-image.png') }}" alt="Vakantiehuis illustratie"
                         class="w-48 lg:w-64 h-auto mx-auto">
                 </div>
 
