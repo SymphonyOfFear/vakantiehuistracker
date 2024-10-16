@@ -14,12 +14,11 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        // Create a default user if one does not already exist
         User::firstOrCreate(
-            ['email' => 'admin@example.com'], // Search for this email
+            ['email' => 'yuyu@gmail.com'],
             [
-                'name' => 'Admin User',
-                'password' => bcrypt('password'), // Replace with your desired password
+                'name' => 'Yurina',
+                'password' => bcrypt('password'),
             ]
         );
     }

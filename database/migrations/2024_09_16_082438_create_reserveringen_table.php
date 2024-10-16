@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vakantiehuis_id')->constrained('vakantiehuizen');
             $table->foreignId('huurder_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('huisje_id')->constrained('vakantiehuizen')->onDelete('cascade');
             $table->string('reserveringsnummer')->unique();
             $table->date('begindatum');
             $table->date('einddatum');
-            $table->text('feedback')->nullable();
+            $table->enum('status', ['bevestigd', 'in_afwachting', 'geannuleerd'])->default('in_afwachting');
             $table->timestamps();
         });
     }

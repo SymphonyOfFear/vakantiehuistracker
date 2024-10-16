@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\RecensieRequest;
 use App\Models\Recensie;
 use App\Models\Reservering;
 use App\Models\Vakantiehuis;
@@ -10,16 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class RecensiesController extends Controller
 {
-    public function store(Request $request, $vakantiehuisId)
+    public function index()
     {
-        // Validatie van de request data
-        $validatedData = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'required|string|max:1000',
-        ]);
+        $user = Auth::user();
+        $vakantiehuizen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
+            $query->where('huurder_id', $user->id);
+        })->get();
 
+        $recensies = Recensie::whereIn('vakantiehuis_id', $vakantiehuizen->pluck('id'))->get();
+
+        return view('recensies.index', compact('vakantiehuizen', 'recensies'));
+    }
+
+    public function store(RecensieRequest $request, $vakantiehuisId)
+    {
         try {
-            // Controleer of de gebruiker een reservering heeft voor dit vakantiehuis
             $hasReservation = Reservering::where('huurder_id', Auth::id())
                 ->where('vakantiehuis_id', $vakantiehuisId)
                 ->exists();
@@ -28,12 +33,11 @@ class RecensiesController extends Controller
                 return back()->with('error', 'U kunt alleen een recensie schrijven als u een reservering heeft.');
             }
 
-            // Opslaan van de recensie
             Recensie::create([
                 'vakantiehuis_id' => $vakantiehuisId,
                 'user_id' => Auth::id(),
-                'rating' => $validatedData['rating'],
-                'comment' => $validatedData['comment'],
+                'rating' => $request->rating,
+                'comment' => $request->comment,
             ]);
 
             return back()->with('success', 'Uw recensie is succesvol geplaatst.');

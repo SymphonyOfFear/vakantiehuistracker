@@ -1,7 +1,7 @@
 <?php
 
 it('returns a successful response', function () {
-    $response = $this->get('/');
+    $response = $this->get('welcome');
 
     $response->assertStatus(200);
 });

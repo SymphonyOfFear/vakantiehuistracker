@@ -1,6 +1,6 @@
 <x-app-layout>
-    <!-- Header Component -->
-    <x-header />
+
+
 
     <div class="min-h-screen flex flex-col bg-green-100">
         <div class="container mx-auto py-8 flex-grow flex justify-center items-center">
@@ -22,7 +22,7 @@
                     <p class="text-gray-600">****</p>
                 </div>
 
-                <!-- Button at the Bottom -->
+
                 <div class="text-center mt-4">
                     <a href="{{ route('profile.edit') }}"
                         class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- Footer Component -->
-        <x-footer class="mt-auto" />
+
+
     </div>
 </x-app-layout>

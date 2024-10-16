@@ -1,64 +1,70 @@
-<div class="w-full lg:w-1/4 p-4 bg-white shadow-md">
-    <h2 class="text-xl font-bold mb-4">Filters</h2>
+<div class="w-full bg-white p-4 rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-4 text-gray-800">Filters</h2>
 
     <form action="{{ route('huizen.index') }}" method="GET">
 
-        <!-- Stad -->
-        <div class="mb-4">
+        <!-- Stad Field with Autocomplete -->
+        <div class="mb-4 relative">
             <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
-            <select id="stad" name="stad" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                <option value="">Selecteer een stad</option>
-                @foreach ($locationsList as $locatie)
-                    <option value="{{ $locatie }}">{{ $locatie }}</option>
-                @endforeach
-            </select>
+            <input type="text" id="stad" name="stad" placeholder="Typ een plaats, buurt of postcode"
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
+                autocomplete="off">
+            <div id="stad-suggestions"
+                class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+            </div>
         </div>
 
-        <!-- Radius -->
-        <div class="mb-4">
-            <label for="radius" class="block text-sm font-medium text-gray-700">Radius (km)</label>
-            <select id="radius" name="radius" class="w-full mt-1 p-2 border border-gray-300 rounded-md">
-                <option value="">Selecteer een radius</option>
-                <option value="10">10 km</option>
-                <option value="25">25 km</option>
-                <option value="35">35 km</option>
-                <option value="50">50 km</option>
-                <option value="75">75 km</option>
-                <option value="100">100 km</option>
-            </select>
-        </div>
-
-        <!-- Postcode -->
+        <!-- Postcode Field -->
         <div class="mb-4">
             <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
             <input type="text" id="postcode" name="postcode"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
+                autocomplete="off">
+            <div id="postcode-suggestions"
+                class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+            </div>
         </div>
 
-        <!-- Straatnaam -->
+        <!-- Straatnaam Field with Auto-fill -->
         <div class="mb-4">
             <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
             <input type="text" id="straatnaam" name="straatnaam"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
+                autocomplete="off">
+            <div id="straatnaam-suggestions"
+                class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
+            </div>
         </div>
 
-        <!-- Huisnummer -->
+        <!-- Huisnummer Field -->
         <div class="mb-4">
             <label for="huisnummer" class="block text-sm font-medium text-gray-700">Huisnummer</label>
             <input type="text" id="huisnummer" name="huisnummer"
-                class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+                class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500"
+                autocomplete="off">
         </div>
 
-        <!-- Prijsbereik Slider -->
+        <!-- Prijs Range Slider -->
         <div class="mb-4">
             <label for="prijs" class="block text-sm font-medium text-gray-700">Prijsbereik (€)</label>
-            <div class="flex items-center space-x-2">
-                <span id="min-prijs-label" class="text-gray-700">€0</span>
-                <input type="range" id="min_prijs" name="min_prijs" min="0" max="1000" value="0"
-                    class="w-full mt-1 p-2 border border-gray-300 rounded-md" oninput="updatePrijsLabels()">
-                <span id="max-prijs-label" class="text-gray-700">€1000</span>
-                <input type="range" id="max_prijs" name="max_prijs" min="0" max="1000" value="1000"
-                    class="w-full mt-1 p-2 border border-gray-300 rounded-md" oninput="updatePrijsLabels()">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center">
+                    <label for="min-prijs-input" class="text-sm font-medium text-gray-700 mr-2">Min:</label>
+                    <input type="number" id="min-prijs-input" name="min_prijs" value="0" min="0"
+                        max="1000" class="w-full mt-1 p-2 border border-gray-300 rounded-md" autocomplete="off">
+                </div>
+                <div class="flex items-center">
+                    <label for="max-prijs-input" class="text-sm font-medium text-gray-700 mr-2">Max:</label>
+                    <input type="number" id="max-prijs-input" name="max_prijs" value="1000" min="0"
+                        max="1000" class="w-full mt-1 p-2 border border-gray-300 rounded-md" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <input type="range" id="min_prijs" name="min_prijs_range" min="0" max="1000" value="0"
+                    class="w-full">
+                <input type="range" id="max_prijs" name="max_prijs_range" min="0" max="1000" value="1000"
+                    class="w-full">
             </div>
         </div>
 
@@ -73,7 +79,8 @@
             </div>
         </div>
 
-        <!-- Zoekknop -->
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Zoeken</button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+            Zoeken
+        </button>
     </form>
 </div>

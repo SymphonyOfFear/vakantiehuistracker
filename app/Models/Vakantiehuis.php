@@ -9,10 +9,7 @@ class Vakantiehuis extends Model
 {
     use HasFactory;
 
-    // De tabel die bij dit model hoort
     protected $table = 'vakantiehuizen';
-
-    // Toegestane velden voor mass assignment
     protected $fillable = [
         'verhuurder_id',
         'naam',
@@ -32,21 +29,36 @@ class Vakantiehuis extends Model
         'beschikbaarheid',
     ];
 
-    // Relatie met Verhuurder
     public function verhuurder()
     {
-        return $this->belongsTo(User::class, 'verhuurder_id');
+        return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
     }
-
-    // Relatie met Images
+    public function FavorietenChecker($userId)
+    {
+        return $this->favorieten()->where('user_id', $userId)->exists();
+    }
+    public function Beoordeling($userId)
+    {
+        $recensie = $this->recensies()->where('user_id', $userId)->first();
+        return $recensie ? $recensie->rating : 0;
+    }
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');
     }
 
-    // Relatie met Recensies
     public function recensies()
     {
         return $this->hasMany(Recensie::class, 'vakantiehuis_id');
+    }
+
+    public function reserveringen()
+    {
+        return $this->hasMany(Reservering::class, 'vakantiehuis_id');
+    }
+
+    public function favorieten()
+    {
+        return $this->hasMany(Favorieten::class, 'vakantiehuis_id');
     }
 }

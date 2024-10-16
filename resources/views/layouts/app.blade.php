@@ -8,41 +8,54 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <!-- Tom Select CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/css/tom-select.css" rel="stylesheet">
-    <!-- Tom Select JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
-
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Scripts -->
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-white light:bg-white-900">
-        {{-- @include('layouts.navigation') --}}
+    <div class="flex flex-col min-h-screen bg-white light:bg-white-900">
 
-        <!-- Page Heading -->
-        @if (isset($header))
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
 
-        <!-- Page Content -->
-        <main>
+        @include('layouts.header')
+
+
+        <main class="flex-grow">
             {{ $slot }}
         </main>
+
+
+        <footer class="bg-green-600 text-white py-4">
+            <div class="container mx-auto text-center">
+                <p>&copy; 2024 Vakantiehuistracker</p>
+                <div class="flex justify-center space-x-4 mt-2">
+                    <a href="#" class="text-white hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white hover:text-gray-300"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </footer>
     </div>
+
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        // Toggle Dropdown Menu for Profile
+        document.querySelectorAll('.profile-dropdown').forEach(function(dropdown) {
+            const button = dropdown.previousElementSibling;
+            button.addEventListener('click', function() {
+                dropdown.classList.toggle('hidden');
+            });
+        });
+    </script>
 </body>
 
 </html>

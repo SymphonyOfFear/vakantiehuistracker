@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Redirect to welcome page after successful registration
+
         return redirect()->route('welcome');
     }
 }

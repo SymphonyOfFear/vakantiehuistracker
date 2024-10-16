@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Redirect to welcome page after successful login
+
         return redirect()->intended(route('welcome'));
     }
 
@@ -52,7 +52,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        // Redirect to welcome page after logout
+
         return redirect()->route('welcome');
     }
 }

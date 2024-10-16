@@ -1,22 +1,15 @@
 <header class="bg-green-600 text-white p-4 shadow-md">
     <div class="container mx-auto flex justify-between items-center">
-        <!-- Logo -->
+
         <div class="text-xl font-bold">
             <a href="{{ route('welcome') }}" class="text-white">Vakantiehuistracker</a>
         </div>
 
-        <!-- Navigation Links -->
+
         <nav class="space-x-4">
-
             <a href="{{ route('huizen.index') }}" class="hover:text-green-300">Huizen</a>
-
-
             @auth
-
                 <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
-
-
-                <!-- Profile Dropdown -->
                 <div class="relative inline-block">
                     <button aria-haspopup="true" class="inline-flex items-center focus:outline-none hover:text-green-300">
                         {{ Auth::user()->name }}
@@ -26,7 +19,8 @@
                                 d="M5.121 12l4.243 4.243a1 1 0 001.415 0l4.243-4.243" />
                         </svg>
                     </button>
-                    <ul class="absolute hidden bg-white text-gray-800 shadow-md rounded-lg mt-2 right-0 w-48">
+                    <ul
+                        class="absolute hidden bg-white text-gray-800 shadow-md rounded-lg mt-2 right-0 w-48 profile-dropdown">
                         <li><a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100">Profiel</a></li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
@@ -38,7 +32,6 @@
                     </ul>
                 </div>
             @else
-                <!-- Links for guests -->
                 <a href="{{ route('login') }}" class="hover:text-green-300">Inloggen</a>
                 <a href="{{ route('register') }}" class="hover:text-green-300">Registreren</a>
             @endauth

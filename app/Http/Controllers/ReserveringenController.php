@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReserveringRequest;
 use App\Models\Reservering;
 use App\Models\Vakantiehuis;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReserveringenController extends Controller
 {
     public function index()
     {
-        // Alle huizen die door deze gebruiker wordt gehuurd ophalen
         $user = Auth::id();
         $gehuurdeHuizen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
-            $query->where('huurder_id', $user); // Zoekt op huurder_id en vergelijkt die met onze gebruikers zijn user_id
-        })->get(); // Data ophalen
+            $query->where('huurder_id', $user);
+        })->get();
         return view('reserveringen.index', compact('gehuurdeHuizen'));
     }
 
@@ -25,9 +24,12 @@ class ReserveringenController extends Controller
         return view('reserveringen.create', compact('huizen'));
     }
 
-    public function store(Request $request)
+    public function store(ReserveringRequest $request)
     {
-        Reservering::create($request->all());
+        $requestData = $request->validated();
+        $requestData['huurder_id'] = Auth::id();
+        Reservering::create($requestData);
+
         return redirect()->route('reserveringen.index');
     }
 
@@ -42,9 +44,12 @@ class ReserveringenController extends Controller
         return view('reserveringen.edit', compact('reservering', 'huizen'));
     }
 
-    public function update(Request $request, Reservering $reservering)
+    public function update(ReserveringRequest $request, Reservering $reservering)
     {
-        $reservering->update($request->all());
+        $requestData = $request->validated();
+        $requestData['huurder_id'] = Auth::id();
+        $reservering->update($requestData);
+
         return redirect()->route('reserveringen.index');
     }
 

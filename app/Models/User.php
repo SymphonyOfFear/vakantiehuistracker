@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,32 +10,17 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -44,9 +28,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     public function favorieten()
     {
-        return $this->hasMany(Favorieten::class, 'user_id');
+        return $this->hasMany(Favorieten::class);
     }
 
     public function reserveringen()
@@ -59,9 +44,18 @@ class User extends Authenticatable
         return $this->hasMany(Recensie::class, 'user_id');
     }
 
-    // Relationship to Vakantiehuis (As Verhuurder)
     public function vakantiehuizen()
     {
         return $this->hasMany(Vakantiehuis::class, 'verhuurder_id');
+    }
+
+    public function verhuurder()
+    {
+        return $this->hasOne(Verhuurder::class);
+    }
+
+    public function huurder()
+    {
+        return $this->hasOne(Huurder::class);
     }
 }
