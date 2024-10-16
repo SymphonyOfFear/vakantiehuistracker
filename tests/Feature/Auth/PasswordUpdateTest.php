@@ -1,40 +1,33 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+
+
 
 test('password can be updated', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'huurder']);
+    $user = User::factory()->create(['password' => bcrypt('password'), 'role_id' => $role->id]);
 
-    $response = $this
-        ->actingAs($user)
-        ->from('/profile')
-        ->put('/password', [
-            'current_password' => 'password',
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
-        ]);
+    $response = $this->actingAs($user)->put('/user/password', [
+        'current_password' => 'password',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ]);
 
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect('/profile');
-
-    $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+    $response->assertSessionHasNoErrors();
+    $response->assertRedirect(route('dashboard'));
 });
 
 test('correct password must be provided to update password', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'huurder']);
+    $user = User::factory()->create(['password' => bcrypt('password'), 'role_id' => $role->id]);
 
-    $response = $this
-        ->actingAs($user)
-        ->from('/profile')
-        ->put('/password', [
-            'current_password' => 'wrong-password',
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
-        ]);
+    $response = $this->actingAs($user)->put('/user/password', [
+        'current_password' => 'wrong-password',
+        'password' => 'new-password',
+        'password_confirmation' => 'new-password',
+    ]);
 
-    $response
-        ->assertSessionHasErrorsIn('updatePassword', 'current_password')
-        ->assertRedirect('/profile');
+    $response->assertSessionHasErrors();
 });

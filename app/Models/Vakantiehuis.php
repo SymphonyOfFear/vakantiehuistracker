@@ -29,10 +29,7 @@ class Vakantiehuis extends Model
         'beschikbaarheid',
     ];
 
-    public function verhuurder()
-    {
-        return $this->belongsTo(Verhuurder::class, 'verhuurder_id');
-    }
+
     public function FavorietenChecker($userId)
     {
         return $this->favorieten()->where('user_id', $userId)->exists();
@@ -59,6 +56,10 @@ class Vakantiehuis extends Model
 
     public function favorieten()
     {
-        return $this->hasMany(Favorieten::class, 'vakantiehuis_id');
+        return $this->hasMany(Favoriet::class, 'vakantiehuis_id');
+    }
+    public function verhuurder()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

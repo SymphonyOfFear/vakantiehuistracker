@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorieten;
+use App\Models\Favoriet;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class FavorietenController extends Controller
+class favorietenController extends Controller
 {
-
     public function index()
     {
         $user = Auth::user();
@@ -25,14 +24,14 @@ class FavorietenController extends Controller
     public function toggle($vakantiehuisId)
     {
         $userId = Auth::id();
-        $favorite = Favorieten::where('user_id', $userId)
+        $favorite = Favoriet::where('user_id', $userId)
             ->where('vakantiehuis_id', $vakantiehuisId)
             ->first();
 
         if ($favorite) {
             $favorite->delete();
         } else {
-            Favorieten::create([
+            Favoriet::create([
                 'user_id' => $userId,
                 'vakantiehuis_id' => $vakantiehuisId,
             ]);

@@ -2,7 +2,7 @@
     <div class="container mx-auto flex justify-between items-center">
 
         <div class="text-xl font-bold">
-            <a href="{{ route('welcome') }}" class="text-white">Vakantiehuistracker</a>
+            <a href="{{ route('home') }}" class="text-white">Vakantiehuistracker</a>
         </div>
 
 

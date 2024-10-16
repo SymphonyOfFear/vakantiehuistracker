@@ -7,6 +7,20 @@ Alpine.start();
 document.addEventListener('DOMContentLoaded', () => {
     let kaart;
 
+    const sidebar = document.getElementById('sidebar');
+    const toggleSidebarButton = document.getElementById('toggleSidebarButton');
+    const showSidebarButton = document.getElementById('showSidebarButton');
+
+    window.toggleSidebar = function () {
+        if (sidebar.classList.contains('hidden')) {
+            sidebar.classList.remove('hidden');
+            showSidebarButton.classList.add('hidden');
+        } else {
+            sidebar.classList.add('hidden');
+            showSidebarButton.classList.remove('hidden');
+        }
+    };
+
     const initKaart = (lat, lon) => {
         const kaartElement = document.getElementById('map');
         if (!kaartElement) return;
@@ -204,19 +218,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const updatePrijsLabels = () => {
         const minSlider = document.getElementById('min_prijs');
         const maxSlider = document.getElementById('max_prijs');
-        const minLabel = document.getElementById('min-prijs-label');
-        const maxLabel = document.getElementById('max-prijs-label');
+        const minInput = document.getElementById('min-prijs-input');
+        const maxInput = document.getElementById('max-prijs-input');
 
-        if (minSlider && maxSlider && minLabel && maxLabel) {
-            minSlider.addEventListener('input', () => {
-                minLabel.textContent = `€${minSlider.value}`;
-                maxSlider.min = minSlider.value;
-            });
-            maxSlider.addEventListener('input', () => {
-                maxLabel.textContent = `€${maxSlider.value}`;
-                minSlider.max = maxSlider.value;
-            });
-        }
+
+        minSlider.addEventListener('input', () => {
+            minInput.value = minSlider.value;
+        });
+
+        maxSlider.addEventListener('input', () => {
+            maxInput.value = maxSlider.value;
+        });
+
+        minInput.addEventListener('input', () => {
+            minSlider.value = minInput.value;
+        });
+
+        maxInput.addEventListener('input', () => {
+            maxSlider.value = maxInput.value;
+        });
     };
 
     if (document.getElementById('map')) instelKaart();
@@ -225,4 +245,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof instelStadAutocomplete === 'function') instelStadAutocomplete();
     if (typeof instelPostcodeAutocomplete === 'function') instelPostcodeAutocomplete();
     if (typeof updatePrijsLabels === 'function') updatePrijsLabels();
+    if (typeof toggleSidebar === 'function') toggleSidebar();
 });
