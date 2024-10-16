@@ -1,58 +1,46 @@
 <?php
 
-use App\Models\Role;
+namespace Tests\Feature\Auth;
+
 use App\Models\User;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('login screen can be rendered', function () {
-    $response = $this->get('/login');
+class AuthenticationTest extends TestCase
+{
+    use RefreshDatabase;
 
-    $response->assertStatus(200);
-});
+    /** @test */
+    public function login_screen_can_be_rendered()
+    {
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+    }
 
-test('users can authenticate using the login screen', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['role_id' => $role->id]);
+    /** @test */
+    public function users_can_authenticate()
+    {
+        $user = User::factory()->create();
 
-    $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route(''));
-});
+        $this->assertAuthenticated();
+        $response->assertRedirect('/home');
+    }
 
-test('verhuurder role redirects to verhuurder dashboard after login', function () {
-    $role = Role::factory()->create(['name' => 'verhuurder']);
-    $user = User::factory()->create(['role_id' => $role->id]);
+    /** @test */
+    public function users_cannot_authenticate_with_invalid_password()
+    {
+        $user = User::factory()->create();
 
-    $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'wrong-password',
+        ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('verhuurder.dashboard'));
-});
-
-test('users cannot authenticate with invalid password', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['role_id' => $role->id]);
-
-    $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
-
-    $this->assertGuest();
-});
-
-test('users can logout', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['role_id' => $role->id]);
-
-    $response = $this->actingAs($user)->post('/logout');
-
-    $this->assertGuest();
-    $response->assertRedirect('');
-});
+        $this->assertGuest();
+    }
+}

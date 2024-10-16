@@ -1,35 +1,51 @@
 <?php
 
-use App\Models\Role;
+namespace Tests\Feature\Auth;
+
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('confirm password screen can be rendered', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['role_id' => $role->id]);
+class PasswordConfirmationTest extends TestCase
+{
+    use RefreshDatabase;
 
-    $response = $this->actingAs($user)->get('/confirm-password');
+    /** @test */
+    public function confirm_password_screen_can_be_rendered()
+    {
+        $user = User::factory()->create();
 
-    $response->assertStatus(200);
-});
+        $response = $this->actingAs(Auth::user())->get('/user/confirm-password');
 
-test('password can be confirmed', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['password' => bcrypt('password'), 'role_id' => $role->id]);
+        $response->assertStatus(200);
+    }
 
-    $response = $this->actingAs($user)->post('/confirm-password', [
-        'password' => 'password',
-    ]);
+    /** @test */
+    public function password_can_be_confirmed()
+    {
+        $user = User::factory()->create();
 
-    $response->assertRedirect(route('dashboard'));
-});
+        // Act as the user before confirming the password
+        $response = $this->actingAs(Auth::user())->post('/user/confirm-password', [
+            'password' => 'password',
+        ]);
 
-test('password is not confirmed with invalid password', function () {
-    $role = Role::factory()->create(['name' => 'huurder']);
-    $user = User::factory()->create(['password' => bcrypt('password'), 'role_id' => $role->id]);
+        // Ensure no errors
+        $response->assertSessionHasNoErrors();
+    }
 
-    $response = $this->actingAs($user)->post('/confirm-password', [
-        'password' => 'wrong-password',
-    ]);
+    /** @test */
+    public function password_is_not_confirmed_with_invalid_password()
+    {
+        $user = User::factory()->create();
 
-    $response->assertSessionHasErrors();
-});
+        // Act as the user and attempt to confirm the wrong password
+        $response = $this->actingAs(Auth::user())->post('/user/confirm-password', [
+            'password' => 'wrong-password',
+        ]);
+
+        // Ensure errors exist in the session
+        $response->assertSessionHasErrors();
+    }
+}

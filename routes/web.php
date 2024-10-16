@@ -23,7 +23,7 @@ Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
 // Admin
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'Role:admin'])->group(function () {
     Route::get('/admin/results', [AdminResultsController::class, 'index'])->name('admin.results.index');
 });
 

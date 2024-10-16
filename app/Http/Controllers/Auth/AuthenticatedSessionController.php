@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
             if ($user->role->name == 'admin') {
                 return redirect()->route('admin.dashboard');
             } else {
-                return redirect()->route('/');
+                return redirect()->route('home');
             }
         } else {
             return back()->withErrors(['email' => 'Invalid login credentials']);
@@ -53,6 +53,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
 
-        return redirect()->route('welcome');
+        return redirect()->route('home');
     }
 }

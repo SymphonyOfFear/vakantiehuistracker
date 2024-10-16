@@ -2,12 +2,12 @@
     <x-header />
 
     <div class="container mx-auto px-4 py-8">
-<<<<<<< HEAD
+
         <!-- Navigatie breadcrumbs -->
-=======
+        =======
 
         <!-- Breadcrumb Navigation -->
->>>>>>> mikey-backend-backup
+        >>>>>>> mikey-backend-backup
         <nav class="text-gray-500 text-sm mb-4">
             <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
             <a href="#" class="hover:text-green-600">{{ $vakantiehuis->stad }}</a> &gt;
@@ -17,7 +17,7 @@
         <!-- Property Title and Action Buttons -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
-<<<<<<< HEAD
+
             <div>
                 @if (Auth::id() === $vakantiehuis->verhuurder_id)
                     <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
@@ -27,14 +27,14 @@
                     class="ml-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Voeg toe aan
                     favorieten</a>
             </div>
-=======
+            =======
             @if (Auth::id() === $vakantiehuis->verhuurder_id)
                 <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
                     Bewerk
                 </a>
             @endif
->>>>>>> mikey-backend-backup
+            >>>>>>> mikey-backend-backup
         </div>
 
         <!-- Image Gallery Section -->
@@ -42,31 +42,28 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="col-span-2">
                     <img src="{{ $vakantiehuis->images->first()->url }}" alt="{{ $vakantiehuis->naam }}"
-<<<<<<< HEAD
                         class="w-full h-auto object-cover rounded-lg shadow-md transition-transform transform hover:scale-105">
-=======
-                        class="w-full h-auto object-cover rounded-lg shadow">
->>>>>>> mikey-backend-backup
+                    =======
+                    class="w-full h-auto object-cover rounded-lg shadow">
+                    >>>>>>> mikey-backend-backup
                 </div>
                 <div class="col-span-2 grid grid-cols-2 gap-2">
                     @foreach ($vakantiehuis->images->slice(1) as $image)
                         <img src="{{ $image->url }}" alt="{{ $vakantiehuis->naam }}"
-<<<<<<< HEAD
                             class="w-full h-40 object-cover rounded-lg shadow-md transition-transform transform hover:scale-105">
-=======
-                            class="w-full h-40 object-cover rounded-lg shadow">
->>>>>>> mikey-backend-backup
+                        =======
+                        class="w-full h-40 object-cover rounded-lg shadow">
+                        >>>>>>> mikey-backend-backup
                     @endforeach
                 </div>
             </div>
         @else
             <div class="mb-6">
                 <img src="https://via.placeholder.com/600x400.png?text=Geen+Afbeeldingen+Beschikbaar"
-<<<<<<< HEAD
                     alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg shadow-md">
-=======
-                    alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg shadow">
->>>>>>> mikey-backend-backup
+                =======
+                alt="Geen afbeeldingen beschikbaar" class="w-full h-auto object-cover rounded-lg shadow">
+                >>>>>>> mikey-backend-backup
             </div>
         @endif
 
@@ -132,7 +129,7 @@
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
-<<<<<<< HEAD
+
         <!-- Kenmerken sectie -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Kenmerken</h2>
@@ -159,9 +156,9 @@
         </div>
 
         <!-- Commentaarsectie -->
-=======
+        =======
         <!-- Reviews Section -->
->>>>>>> mikey-backend-backup
+        >>>>>>> mikey-backend-backup
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-4">Recensies</h2>
             <!-- Toon alle recensies -->
@@ -196,15 +193,15 @@
                         <textarea name="comment" id="comment" rows="4"
                             class="w-full mt-1 p-2 border border-gray-300 rounded-md resize-none" required></textarea>
                     </div>
-<<<<<<< HEAD
+
                     <button type="submit"
                         class="bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-700 transition-transform transform hover:scale-105">Plaats
                         Recensie</button>
-=======
+                    =======
                     <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
                         Plaats Recensie
                     </button>
->>>>>>> mikey-backend-backup
+                    >>>>>>> mikey-backend-backup
                 </form>
             @endauth
         </div>
@@ -212,13 +209,13 @@
         <!-- Back to Overview Button -->
         <div>
             <a href="{{ route('huizen.index') }}"
-<<<<<<< HEAD
-                class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition-transform transform hover:scale-105">Terug naar overzicht</a>
-=======
-                class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-                Terug naar overzicht
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition-transform transform hover:scale-105">Terug
+                naar overzicht</a>
+            =======
+            class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+            Terug naar overzicht
             </a>
->>>>>>> mikey-backend-backup
+            >>>>>>> mikey-backend-backup
         </div>
     </div>
 </x-app-layout>

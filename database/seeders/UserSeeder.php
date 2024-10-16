@@ -15,29 +15,31 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::where('name', 'admin')->first();
-        $huurderRole = Role::where('name', 'huurder')->first();
-        $verhuurderRole = Role::where('name', 'verhuurder')->first();
-
-        User::create([
+        $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
-            'role_id' => $adminRole->id,
+            'role_id' => Role::where('name', 'admin')->first()->id,
         ]);
 
-        User::create([
-            'name' => 'Huurder User',
-            'email' => 'huurder@example.com',
-            'password' => bcrypt('password'),
-            'role_id' => $huurderRole->id,
-        ]);
 
-        User::create([
+
+        $verhuurder = User::create([
             'name' => 'Verhuurder User',
             'email' => 'verhuurder@example.com',
             'password' => bcrypt('password'),
-            'role_id' => $verhuurderRole->id,
+            'role_id' => Role::where('name', 'verhuurder')->first()->id,
+        ]);
+
+
+
+
+
+        $huurder = User::create([
+            'name' => 'Huurder User',
+            'email' => 'huurder@example.com',
+            'password' => bcrypt('password'),
+            'role_id' => Role::where('name', 'huurder')->first()->id,
         ]);
     }
 }
