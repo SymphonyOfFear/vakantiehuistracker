@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="flex">
         <!-- Sidebar / Filters -->

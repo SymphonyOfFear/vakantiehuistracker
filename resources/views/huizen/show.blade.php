@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="container mx-auto px-4 py-8">
         <!-- Navigatie breadcrumbs -->
