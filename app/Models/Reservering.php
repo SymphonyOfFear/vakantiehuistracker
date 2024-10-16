@@ -21,7 +21,7 @@ class Reservering extends Model
 
     public function huurder()
     {
-        return $this->belongsTo(Huurder::class, 'huurder_id');
+        return $this->belongsTo(huurder::class, 'huurder_id');
     }
 
     public function vakantiehuis()
