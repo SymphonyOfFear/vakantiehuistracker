@@ -53,4 +53,16 @@
             transform: scale(1.05);
         }
     </style>
+
+    <style>
+        /* Custom CSS for the hero image */
+        .hero-icon {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .hero-icon:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </x-app-layout>

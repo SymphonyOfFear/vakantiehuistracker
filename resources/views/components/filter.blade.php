@@ -3,7 +3,6 @@
 
     <form action="{{ route('huizen.index') }}" method="GET">
 
-<<<<<<< HEAD
         <!-- Stad -->
         <div class="mb-4">
             <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
@@ -68,19 +67,23 @@
             <label class="block text-sm font-medium text-gray-600">Voorzieningen</label>
             <div class="flex flex-col space-y-3 mt-2">
                 <label class="inline-flex items-center">
-                    <input type="checkbox" name="wifi" value="1" class="text-green-600 focus:ring-green-500 rounded border-gray-300">
+                    <input type="checkbox" name="wifi" value="1"
+                        class="text-green-600 focus:ring-green-500 rounded border-gray-300">
                     <span class="ml-2 text-gray-700">Wi-Fi</span>
                 </label>
                 <label class="inline-flex items-center">
-                    <input type="checkbox" name="zwembad" value="1" class="text-green-600 focus:ring-green-500 rounded border-gray-300">
+                    <input type="checkbox" name="zwembad" value="1"
+                        class="text-green-600 focus:ring-green-500 rounded border-gray-300">
                     <span class="ml-2 text-gray-700">Zwembad</span>
                 </label>
                 <label class="inline-flex items-center">
-                    <input type="checkbox" name="parkeren" value="1" class="text-green-600 focus:ring-green-500 rounded border-gray-300">
+                    <input type="checkbox" name="parkeren" value="1"
+                        class="text-green-600 focus:ring-green-500 rounded border-gray-300">
                     <span class="ml-2 text-gray-700">Parkeerplaats</span>
                 </label>
                 <label class="inline-flex items-center">
-                    <input type="checkbox" name="speeltuin" value="1" class="text-green-600 focus:ring-green-500 rounded border-gray-300">
+                    <input type="checkbox" name="speeltuin" value="1"
+                        class="text-green-600 focus:ring-green-500 rounded border-gray-300">
                     <span class="ml-2 text-gray-700">Speeltuin</span>
                 </label>
             </div>
@@ -88,7 +91,7 @@
 
         <!-- Zoekknop -->
         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg">Zoeken</button>
-=======
+
         <!-- Prijs Section -->
         <div class="border-neutral-30 mt-6 border-b pb-6">
             <div class="font-semibold text-black mb-4">Prijs (€)</div>
@@ -166,15 +169,6 @@
             </div>
         </div>
 
->>>>>>> mikey-backend-backup
+
     </form>
 </div>
-
-<script>
-    function updatePrijsLabels() {
-        const minPrijs = document.getElementById('min_prijs').value;
-        const maxPrijs = document.getElementById('max_prijs').value;
-        document.getElementById('min-prijs-label').textContent = `€${minPrijs}`;
-        document.getElementById('max-prijs-label').textContent = `€${maxPrijs}`;
-    }
-</script>

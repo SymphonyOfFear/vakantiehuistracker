@@ -9,8 +9,8 @@
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Vakantiehuizen</h1>
 
-            <<<<<<< HEAD @if ($vakantiehuizen->isEmpty())
-                =======
+            @if ($vakantiehuizen->isEmpty())
+
                 <!-- Search Bar -->
                 <form action="{{ route('huizen.index') }}" method="GET" class="mb-6">
                     <div class="flex items-center">
@@ -37,12 +37,12 @@
 
                 <!-- Results -->
                 @if ($huizen->isEmpty())
-                    >>>>>>> mikey-backend-backup
+
                     <p class="text-gray-600">Geen vakantiehuizen beschikbaar.</p>
                 @else
                     <!-- List of Vacation Homes -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                        <<<<<<< HEAD @foreach ($vakantiehuizen as $huis)
+                        @foreach ($vakantiehuizen as $huis)
                             <div class="bg-white p-4 rounded-lg shadow">
                                 <!-- Display the image or placeholder if no image exists -->
                                 <img src="{{ $huis->images->first()->url ?? 'https://via.placeholder.com/400x300.png?text=Vakantiehuis' }}"
@@ -54,7 +54,7 @@
                                 <a href="{{ route('huizen.show', $huis->id) }}"
                                     class="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Bekijk
                                     details</a>
-                                =======
+
                                 @foreach ($huizen as $huis)
                                     <div
                                         class="relative flex flex-col justify-between bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300 h-full">
@@ -101,12 +101,12 @@
                                                 </form>
                                             @endauth
                                         </div>
-                                        >>>>>>> mikey-backend-backup
-                                        >>>>>>> mikey-backend-backup
+
+
                                     </div>
                                 @endforeach
                             </div>
-                @endif
+                        @endif
+                    </div>
         </div>
-    </div>
 </x-app-layout>
