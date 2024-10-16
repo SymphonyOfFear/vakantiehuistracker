@@ -55,6 +55,14 @@
                                     x-bind:required="tab === 'general'">
                             </div>
                             <div>
+                                <label for="slaapkamers"
+                                    class="block text-sm font-medium text-gray-700">Slaapkamers</label>
+                                <input type="number" step="0.01" id="slaapkamers" name="slaapkamers"
+                                    value="{{ old('slaapkamers', $vakantiehuis->slaapkamers) }}"
+                                    class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                                    x-bind:required="tab === 'general'">
+                            </div>
+                            <div>
                                 <label for="prijs" class="block text-sm font-medium text-gray-700">Prijs (€)</label>
                                 <input type="number" step="0.01" id="prijs" name="prijs"
                                     value="{{ old('prijs', $vakantiehuis->prijs) }}"

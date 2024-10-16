@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use App\Models\User;
 
 test('login screen can be rendered', function () {
@@ -9,7 +10,8 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'huurder']);
+    $user = User::factory()->create(['role_id' => $role->id]);
 
     $response = $this->post('/login', [
         'email' => $user->email,
@@ -17,11 +19,25 @@ test('users can authenticate using the login screen', function () {
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('welcome', absolute: false));
+    $response->assertRedirect(route(''));
 });
 
-test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
+test('verhuurder role redirects to verhuurder dashboard after login', function () {
+    $role = Role::factory()->create(['name' => 'verhuurder']);
+    $user = User::factory()->create(['role_id' => $role->id]);
+
+    $response = $this->post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('verhuurder.dashboard'));
+});
+
+test('users cannot authenticate with invalid password', function () {
+    $role = Role::factory()->create(['name' => 'huurder']);
+    $user = User::factory()->create(['role_id' => $role->id]);
 
     $this->post('/login', [
         'email' => $user->email,
@@ -32,10 +48,11 @@ test('users can not authenticate with invalid password', function () {
 });
 
 test('users can logout', function () {
-    $user = User::factory()->create();
+    $role = Role::factory()->create(['name' => 'huurder']);
+    $user = User::factory()->create(['role_id' => $role->id]);
 
     $response = $this->actingAs($user)->post('/logout');
 
     $this->assertGuest();
-    $response->assertRedirect('/');
+    $response->assertRedirect('');
 });

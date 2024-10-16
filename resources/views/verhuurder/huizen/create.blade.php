@@ -45,6 +45,14 @@
                                     required autocomplete="off">
                             </div>
                             <div>
+                                <label for="slaapkamers"
+                                    class="block text-lg font-medium text-gray-700">Slaapkamers</label>
+                                <input type="number" step="0.01" id="slaapkamers" name="slaapkamers"
+                                    value="{{ old('slaapkamers') }}"
+                                    class="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-600 focus:border-green-600"
+                                    required autocomplete="off">
+                            </div>
+                            <div>
                                 <label for="prijs" class="block text-lg font-medium text-gray-700">Prijs (€)</label>
                                 <input type="number" step="0.01" id="prijs" name="prijs"
                                     value="{{ old('prijs') }}"
@@ -97,7 +105,8 @@
                             <div>
                                 <label for="huisnummer"
                                     class="block text-lg font-medium text-gray-700">Huisnummer</label>
-                                <input type="text" id="huisnummer" name="huisnummer" value="{{ old('huisnummer') }}"
+                                <input type="text" id="huisnummer" name="huisnummer"
+                                    value="{{ old('huisnummer') }}"
                                     class="w-full mt-2 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-600 focus:border-green-600"
                                     required autocomplete="off">
                             </div>

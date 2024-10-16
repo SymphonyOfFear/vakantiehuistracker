@@ -14,6 +14,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role_id',
     ];
 
     protected $hidden = [
@@ -31,7 +32,7 @@ class User extends Authenticatable
 
     public function favorieten()
     {
-        return $this->hasMany(Favorieten::class);
+        return $this->hasMany(Favoriet::class);
     }
 
     public function reserveringen()
@@ -48,14 +49,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(Vakantiehuis::class, 'verhuurder_id');
     }
-
-    public function verhuurder()
+    public function role()
     {
-        return $this->hasOne(Verhuurder::class);
+        return $this->belongsTo(Role::class);
     }
 
-    public function huurder()
+    public function isHuurder()
     {
-        return $this->hasOne(Huurder::class);
+        return $this->role && $this->role->name === 'huurder';
+    }
+
+    public function isVerhuurder()
+    {
+        return $this->role && $this->role->name === 'verhuurder';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role && $this->role->name === 'admin';
     }
 }
