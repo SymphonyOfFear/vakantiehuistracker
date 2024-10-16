@@ -16,7 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
+Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index'); 
 Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');
 
 // Contact
