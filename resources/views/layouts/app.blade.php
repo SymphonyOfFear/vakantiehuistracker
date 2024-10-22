@@ -47,15 +47,7 @@
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
-    <script>
-        // Toggle Dropdown Menu for Profile
-        document.querySelectorAll('.profile-dropdown').forEach(function(dropdown) {
-            const button = dropdown.previousElementSibling;
-            button.addEventListener('click', function() {
-                dropdown.classList.toggle('hidden');
-            });
-        });
-    </script>
+
 </body>
 
 </html>

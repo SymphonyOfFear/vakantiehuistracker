@@ -1,33 +1,40 @@
 <?php
 
-namespace Tests\Feature\Auth;
-
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 
-class PasswordUpdateTest extends TestCase
-{
-    use RefreshDatabase;
+test('password can be updated', function () {
+    $user = User::factory()->create();
 
-    /** @test */
-    public function password_can_be_updated()
-    {
-        $user = User::factory()->create();
-
-        // Act as the user and update their password
-        $response = $this->actingAs(Auth::user())->put('/user/password', [
+    $response = $this
+        ->actingAs($user)
+        ->from('/profile')
+        ->put('/password', [
             'current_password' => 'password',
             'password' => 'new-password',
             'password_confirmation' => 'new-password',
         ]);
 
-        // Ensure no errors
-        $response->assertSessionHasNoErrors();
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
 
-        // Test if the password has been updated by attempting to log in with the new credentials
-        Auth::logout();
-        $this->assertTrue(Auth::attempt(['email' => $user->email, 'password' => 'new-password']));
-    }
-}
+    $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+});
+
+test('correct password must be provided to update password', function () {
+    $user = User::factory()->create();
+
+    $response = $this
+        ->actingAs($user)
+        ->from('/profile')
+        ->put('/password', [
+            'current_password' => 'wrong-password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ]);
+
+    $response
+        ->assertSessionHasErrorsIn('updatePassword', 'current_password')
+        ->assertRedirect('/profile');
+});

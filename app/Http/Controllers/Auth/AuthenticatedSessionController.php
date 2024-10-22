@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\ValidationException;
-use App\Providers\RouteServiceProvider;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,21 +22,30 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Redirect based on user role
             $user = Auth::user();
-            if ($user->role->name == 'admin') {
+            if ($user->hasRole('admin')) {
                 return redirect()->route('admin.dashboard');
+            } elseif ($user->hasRole('verhuurder')) {
+                return redirect()->route('verhuurder.dashboard');
+            } elseif ($user->hasRole('huurder')) {
+                return redirect()->route('huurder.dashboard');
             } else {
                 return redirect()->route('home');
             }
-        } else {
-            return back()->withErrors(['email' => 'Invalid login credentials']);
         }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
     }
 
     /**
@@ -51,7 +58,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
 
         return redirect()->route('home');
     }

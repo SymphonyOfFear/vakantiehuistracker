@@ -3,33 +3,37 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Permissions for various controllers and actions
         $permissions = [
             'view admin dashboard',
             'view verhuurder dashboard',
+            'view huizen',
+            'create huis',
+            'edit huis',
+            'delete huis',
             'view huurder dashboard',
-            'manage users', // Admin
-            'create huizen', // Verhuurder
-            'edit huizen', // Verhuurder
-            'delete huizen', // Verhuurder
-            'manage reviews', // Admin & Huurder
-            'create reserveringen', // Huurder
-            'view reserveringen', // Huurder, Verhuurder
-            'edit reserveringen', // Admin, Verhuurder
-            'delete reserveringen', // Admin, Verhuurder
+            'view reserveringen',
+            'create reserveringen',
+            'edit reserveringen',
+            'delete reserveringen',
+            'create recensies',
+            'edit recensies',
+            'delete recensies',
+            'manage users',
+            'manage roles',
+            'manage permissions',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            // Check if the permission already exists before creating it
+            if (!Permission::where('name', $permission)->exists()) {
+                Permission::create(['name' => $permission]);
+            }
         }
     }
 }

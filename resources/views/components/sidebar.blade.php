@@ -9,28 +9,54 @@
         </button>
     </div>
     <ul class="space-y-4 overflow-y-auto h-full">
-        <li><a href="{{ route('verhuurder.dashboard') }}"
-                class="{{ Request::is('verhuurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
-                Dashboard</a>
-        </li>
-        <li x-data="{ open: false }">
-            <a @click="open = !open"
-                class="cursor-pointer {{ Request::is('verhuurder/huizen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Huizenbeheer</a>
-            <ul x-show="open" class="pl-4 mt-2 space-y-2">
-                <li><a href="{{ route('verhuurder.huizen.index') }}"
-                        class="{{ Request::is('verhuurder/huizen/index') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
-                        Alle Huizen</a>
-                </li>
-                <li><a href="{{ route('verhuurder.huizen.create') }}"
-                        class="{{ Request::is('verhuurder/huizen/create') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
-                        Voeg Huis Toe</a>
-                </li>
-            </ul>
-        </li>
+        <!-- Admin-specifieke links -->
+        @role('admin')
+            <li><a href="{{ route('admin.dashboard') }}"
+                    class="{{ Request::is('admin/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Admin Dashboard</a></li>
+            <li><a href="{{ route('admin.users.index') }}"
+                    class="{{ Request::is('admin/users*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Gebruikersbeheer</a></li>
+            <li><a href="{{ route('admin.permissions.index') }}"
+                    class="{{ Request::is('admin/permissions*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Rollen & Permissies</a></li>
+        @endrole
+
+        <!-- Verhuurder-specifieke links -->
+        @role('verhuurder')
+            <li><a href="{{ route('verhuurder.dashboard') }}"
+                    class="{{ Request::is('verhuurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Verhuurder Dashboard</a></li>
+            <li x-data="{ open: false }">
+                <a @click="open = !open"
+                    class="cursor-pointer {{ Request::is('verhuurder/huizen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Huizenbeheer</a>
+                <ul x-show="open" class="pl-4 mt-2 space-y-2">
+                    <li><a href="{{ route('verhuurder.huizen.index') }}"
+                            class="{{ Request::is('verhuurder/huizen/index') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
+                            Alle Huizen</a></li>
+                    <li><a href="{{ route('verhuurder.huizen.create') }}"
+                            class="{{ Request::is('verhuurder/huizen/create') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
+                            Voeg Huis Toe</a></li>
+                </ul>
+            </li>
+        @endrole
+
+        <!-- Huurder-specifieke links -->
+        @role('huurder')
+            <li><a href="{{ route('huurder.dashboard') }}"
+                    class="{{ Request::is('huurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Huurder Dashboard</a></li>
+            <li><a href="{{ route('huurder.results.index') }}"
+                    class="{{ Request::is('huurder/results*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                    Zoek Resultaten</a></li>
+        @endrole
+
+        <!-- Gedeelde links voor alle rollen -->
         <li><a href="{{ route('recensies.index') }}"
                 class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Recensies</a>
         </li>
-        <li> <a href="{{ route('reserveringen.index') }}"
+        <li><a href="{{ route('reserveringen.index') }}"
                 class="{{ Request::is('reserveringen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Reserveringen</a>
         </li>
         <li><a href="{{ route('favorieten.index') }}"
@@ -38,8 +64,10 @@
         </li>
     </ul>
 </div>
+
+<!-- Sidebar Toggle Button voor kleinere schermen -->
 <div class="mt-5 left-2 z-50">
-    <button id="showSidebarButton" class="hidden bg-green-500 text-white p-2 rounded-full focus:outline-none "
+    <button id="showSidebarButton" class="hidden bg-green-500 text-white p-2 rounded-full focus:outline-none"
         onclick="toggleSidebar()">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">

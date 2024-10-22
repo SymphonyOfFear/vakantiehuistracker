@@ -3,23 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Role extends Model
 {
-    use HasFactory;
-    protected $fillable = [
-        'name',
-        'guard_name',
-    ];
+    protected $fillable = ['name'];
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
 
     public function users()
     {
-        return $this->hasMany(User::class);
-    }
-    public function permissions()
-    {
-        return $this->belongsToMany(Permission::class, 'role_has_permissions');
+        return $this->belongsToMany(User::class, 'role_user');
     }
 }

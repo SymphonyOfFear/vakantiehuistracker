@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RoleFactory extends Factory
@@ -12,7 +14,8 @@ class RoleFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->randomElement(['huurder', 'verhuurder', 'admin']),
+            'name' => $this->faker->word,
+            'guard_name' => 'web',
         ];
     }
 }

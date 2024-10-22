@@ -9,6 +9,7 @@ use App\Http\Controllers\ReserveringenController;
 use App\Http\Controllers\Verhuurder\ResultsController as VerhuurderResultsController;
 use App\Http\Controllers\Huurder\ResultsController as HuurderResultsController;
 use App\Http\Controllers\Admin\ResultsController as AdminResultsController;
+use App\Http\Controllers\VerhuurderHuisController;
 use Illuminate\Support\Facades\Route;
 
 // General Routes
@@ -16,40 +17,43 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index'); 
+Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
 Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');
 
 // Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
 // Admin
-Route::middleware(['auth', 'Role:admin'])->group(function () {
-    Route::get('/admin/results', [AdminResultsController::class, 'index'])->name('admin.results.index');
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminResultsController::class, 'index'])->name('admin.dashboard');
+    Route::get('/users', [AdminResultsController::class, 'usersIndex'])->name('admin.users.index');
+    Route::get('/permissions', [AdminResultsController::class, 'permissionsIndex'])->name('admin.permissions.index');
+    Route::get('/settings', [AdminResultsController::class, 'settings'])->name('admin.settings');
+    Route::get('/users/edit', [AdminResultsController::class, 'edit'])->name('users.edit');
+    Route::delete('/users/destroy', [AdminResultsController::class, 'destroy'])->name('users.destroy');
 });
 
-// Verhuurder 
-Route::middleware(['auth', 'role:verhuurder'])->group(function () {
-    Route::get('/verhuurder/dashboard', [VerhuurderResultsController::class, 'dashboard'])->name('verhuurder.dashboard');
-    Route::get('/verhuurder/results', [VerhuurderResultsController::class, 'index'])->name('verhuurder.results.index');
-    Route::get('/verhuurder/huizen', [VerhuurderResultsController::class, 'huizen'])->name('verhuurder.huizen.index');
-    Route::get('/verhuurder/huizen/create', [VerhuurderResultsController::class, 'create'])->name('verhuurder.huizen.create');
-    Route::post('/verhuurder/huizen', [VerhuurderResultsController::class, 'store'])->name('verhuurder.huizen.store');
-    Route::get('/verhuurder/huizen/{id}/edit', [VerhuurderResultsController::class, 'edit'])->name('verhuurder.huizen.edit');
-    Route::put('/verhuurder/huizen/{id}', [VerhuurderResultsController::class, 'update'])->name('verhuurder.huizen.update');
-    Route::delete('/verhuurder/huizen/{id}', [VerhuurderResultsController::class, 'destroy'])->name('verhuurder.huizen.destroy');
+// Verhuurder
+Route::middleware(['auth'])->prefix('verhuurder')->group(function () {
+    Route::get('/dashboard', [VerhuurderResultsController::class, 'index'])->name('verhuurder.dashboard');
+    Route::get('/huizen', [VerhuurderHuisController::class, 'huizen'])->name('verhuurder.huizen.index');
+    Route::get('/huizen/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
+    Route::post('/huizen', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
+    Route::get('/huizen/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
+    Route::put('/huizen/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
+    Route::delete('/huizen/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy');
 });
 
-// Huurder 
-Route::middleware(['auth', 'role:huurder'])->group(function () {
-    Route::get('/huurder/dashboard', [HuurderResultsController::class, 'dashboard'])->name('huurder.dashboard');
-    Route::get('/huurder/results', [HuurderResultsController::class, 'index'])->name('huurder.results.index');
+// Huurder
+Route::middleware(['auth', 'role:huurder'])->prefix('huurder')->group(function () {
+    Route::get('/dashboard', [HuurderResultsController::class, 'index'])->name('huurder.dashboard');
 });
 
 // Recensies
 Route::middleware('auth')->group(function () {
     Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
+    Route::get('/recensies/create', [RecensiesController::class, 'create'])->name('recensies.create');
     Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
-    Route::get('/recensies/{id}', [RecensiesController::class, 'show'])->name('recensies.show');
     Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
     Route::put('/recensies/{id}', [RecensiesController::class, 'update'])->name('recensies.update');
     Route::delete('/recensies/{id}', [RecensiesController::class, 'destroy'])->name('recensies.destroy');

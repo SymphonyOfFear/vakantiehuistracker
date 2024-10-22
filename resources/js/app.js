@@ -64,6 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
             initKaart(lat, lon);
         }
     };
+    document.querySelectorAll('.profile-dropdown').forEach(function (dropdown) {
+        const button = dropdown.previousElementSibling;
+        button.addEventListener('click', function () {
+            dropdown.classList.toggle('hidden');
+        });
+    });
 
     const beheerFavorieten = () => {
         document.querySelectorAll('.favoriet-form').forEach((form) => {

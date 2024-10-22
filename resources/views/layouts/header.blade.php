@@ -5,11 +5,16 @@
             <a href="{{ route('home') }}" class="text-white">Vakantiehuistracker</a>
         </div>
 
-
         <nav class="space-x-4">
             <a href="{{ route('huizen.index') }}" class="hover:text-green-300">Huizen</a>
             @auth
-                <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
+                @if (Auth::user()->hasRole('verhuurder'))
+                    <a href="{{ route('verhuurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
+                @elseif (Auth::user()->hasRole('huurder'))
+                    <a href="{{ route('huurder.dashboard') }}" class="hover:text-green-300">Dashboard</a>
+                @elseif (Auth::user()->hasRole('admin'))
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-green-300">Dashboard</a>
+                @endif
                 <div class="relative inline-block">
                     <button aria-haspopup="true" class="inline-flex items-center focus:outline-none hover:text-green-300">
                         {{ Auth::user()->name }}

@@ -3,40 +3,41 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
+use App\Models\Role;
 
 class RoleHasPermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Fetch roles by their name
+        // Assign permissions to admin
         $admin = Role::where('name', 'admin')->first();
+        $admin->permissions()->attach(Permission::all());
+
+        // Assign permissions to verhuurder
         $verhuurder = Role::where('name', 'verhuurder')->first();
+        $verhuurder->permissions()->attach(
+            Permission::whereIn('name', [
+                'view verhuurder dashboard',
+                'view huizen',
+                'create huis',
+                'edit huis',
+                'delete huis',
+            ])->get()
+        );
+
+        // Assign permissions to huurder
         $huurder = Role::where('name', 'huurder')->first();
-
-        // Define permissions for each role
-        $adminPermissions = Permission::all(); // Admin gets all permissions
-        $verhuurderPermissions = Permission::whereIn('name', [
-            'create huizen',
-            'edit huizen',
-            'delete huizen',
-            'view reserveringen',
-            'edit reserveringen',
-            'delete reserveringen'
-        ])->get();
-        $huurderPermissions = Permission::whereIn('name', [
-            'manage reviews',
-            'create reserveringen',
-            'view reserveringen'
-        ])->get();
-
-        // Sync permissions to the roles
-        $admin->syncPermissions($adminPermissions);
-        $verhuurder->syncPermissions($verhuurderPermissions);
-        $huurder->syncPermissions($huurderPermissions);
+        $huurder->permissions()->attach(
+            Permission::whereIn('name', [
+                'view huurder dashboard',
+                'view huizen',
+                'create reserveringen',
+                'view reserveringen',
+                'create recensies',
+                'edit recensies',
+                'delete recensies',
+            ])->get()
+        );
     }
 }

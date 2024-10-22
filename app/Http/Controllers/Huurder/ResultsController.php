@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ResultsController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         return view('huurder.dashboard');
     }
