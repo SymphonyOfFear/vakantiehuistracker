@@ -3,52 +3,88 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Types\Relations\Role as RelationsRole;
-use Spatie\Permission\Contracts\Permission as ContractsPermission;
 
 class ResultsController extends Controller
 {
     // Dashboard 
     public function index()
     {
+        // Get all permissions
+        $permissions = Permission::count();
+        $users = User::count();
+        $userId = Auth::id();
+        $user = User::find($userId);
 
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+            return view('admin.dashboard', compact('role', 'permissions', 'users'));
+        } else {
+            return redirect('home');
+        }
+        // Pass data to the view
 
-
-        $users = User::all()->count();
-        $permissions = Permission::all()->count();
-
-        return view('admin.dashboard', compact('users', 'permissions'));
     }
 
     // Users
     public function usersIndex()
     {
-        $users = User::with('roles')->get(); // Fetch all users with their roles
-        return view('admin.users.index', compact('users'));
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+            $users = User::with('roles')->get();
+            return view('admin.users.index', compact('users'));
+        } else {
+            return view('home');
+        }
     }
 
     // Permissions
     public function permissionsIndex()
     {
-        $roles = Role::with('permissions')->get();
-        $permissions = Permission::all();
-        return view('admin.permissions.index', compact('roles', 'permissions'));
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+            return view('admin.permissions.index');
+        } else {
+            return view('home');
+        }
     }
 
-    // Settings 
+    // Settings
     public function settings()
     {
-        return view('admin.settings');
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+            return view('admin.settings');
+        } else {
+            return view('home');
+        }
     }
 
     public function edit()
     {
-        return view('admin.users.edit');
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+            return view('admin.users.edit');
+        } else {
+            return view('home');
+        }
     }
-    public function destroy() {}
+
+
+    public function destroy()
+    {
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($role = $user->roles()->where('name', 'admin')->first()) {
+        } else {
+            return view('home');
+        }
+    }
 }

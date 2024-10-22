@@ -2,39 +2,61 @@
 
 namespace App\Models;
 
-use Laravel\Sanctum\HasApiTokens;
-
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     use Notifiable, HasFactory, HasApiTokens;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $fillable = ['name', 'email', 'password'];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected $casts = ['email_verified_at' => 'datetime'];
 
-    /**
-     * Get the redirect route name based on the user's role.
-     */
-    public function getRedirectRouteName(): string
+    // Relation with roles
+    public function roles()
     {
-        // Check the user's role and return corresponding route
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    // Check if user has a specific role
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    // Relation with favorieten
+    public function favorieten()
+    {
+        return $this->hasMany(Favoriet::class);
+    }
+
+    // Relation with reserveringen
+    public function reserveringen()
+    {
+        return $this->hasMany(Reservering::class, 'huurder_id');
+    }
+
+    // Relation with recensies
+    public function recensies()
+    {
+        return $this->hasMany(Recensie::class, 'user_id');
+    }
+
+    // Relation with vakantiehuizen (as a verhuurder)
+    public function vakantiehuizen()
+    {
+        return $this->hasMany(Vakantiehuis::class);
+    }
+
+    // Redirect route method based on role
+    public function getRedirectRouteName()
+    {
         if ($this->hasRole('admin')) {
             return 'admin.dashboard';
         } elseif ($this->hasRole('verhuurder')) {
@@ -43,29 +65,6 @@ class User extends Authenticatable
             return 'huurder.dashboard';
         }
 
-        // Default fallback
         return 'home';
-    }
-
-    // Relationships
-
-    public function favorieten()
-    {
-        return $this->hasMany(Favoriet::class);
-    }
-
-    public function reserveringen()
-    {
-        return $this->hasMany(Reservering::class, 'huurder_id');
-    }
-
-    public function recensies()
-    {
-        return $this->hasMany(Recensie::class, 'user_id');
-    }
-
-    public function vakantiehuizen()
-    {
-        return $this->hasMany(Vakantiehuis::class, 'verhuurder_id');
     }
 }

@@ -24,7 +24,7 @@ Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
 // Admin
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminResultsController::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminResultsController::class, 'usersIndex'])->name('admin.users.index');
     Route::get('/permissions', [AdminResultsController::class, 'permissionsIndex'])->name('admin.permissions.index');
@@ -34,23 +34,24 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 });
 
 // Verhuurder
-Route::middleware(['auth'])->prefix('verhuurder')->group(function () {
+Route::prefix('verhuurder')->group(function () {
     Route::get('/dashboard', [VerhuurderResultsController::class, 'index'])->name('verhuurder.dashboard');
-    Route::get('/huizen', [VerhuurderHuisController::class, 'huizen'])->name('verhuurder.huizen.index');
+    Route::get('/huizen', [VerhuurderHuisController::class, 'index'])->name('verhuurder.huizen.index');
     Route::get('/huizen/create', [VerhuurderHuisController::class, 'create'])->name('verhuurder.huizen.create');
     Route::post('/huizen', [VerhuurderHuisController::class, 'store'])->name('verhuurder.huizen.store');
     Route::get('/huizen/{id}/edit', [VerhuurderHuisController::class, 'edit'])->name('verhuurder.huizen.edit');
     Route::put('/huizen/{id}', [VerhuurderHuisController::class, 'update'])->name('verhuurder.huizen.update');
     Route::delete('/huizen/{id}', [VerhuurderHuisController::class, 'destroy'])->name('verhuurder.huizen.destroy');
+    Route::get('/huizen/{id}/show', [VerhuurderHuisController::class, 'show'])->name('verhuurder.huizen.show');
 });
 
 // Huurder
-Route::middleware(['auth', 'role:huurder'])->prefix('huurder')->group(function () {
-    Route::get('/dashboard', [HuurderResultsController::class, 'index'])->name('huurder.dashboard');
+Route::prefix('huurder')->group(function () {
+    Route::get('/dashboard', [HuurderResultsController::class, 'dashboard'])->name('huurder.dashboard');
 });
 
 // Recensies
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
     Route::get('/recensies/create', [RecensiesController::class, 'create'])->name('recensies.create');
     Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
@@ -60,7 +61,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Favorieten
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/favorieten', [FavorietenController::class, 'index'])->name('favorieten.index');
     Route::post('/favorieten', [FavorietenController::class, 'store'])->name('favorieten.store');
     Route::post('/favorieten/toggle/{id}', [FavorietenController::class, 'toggle'])->name('favorieten.toggle');
@@ -68,7 +69,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Reserveringen
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/reserveringen', [ReserveringenController::class, 'index'])->name('reserveringen.index');
     Route::get('/reserveringen/create', [ReserveringenController::class, 'create'])->name('reserveringen.create');
     Route::post('/reserveringen', [ReserveringenController::class, 'store'])->name('reserveringen.store');
@@ -79,7 +80,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Profile
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

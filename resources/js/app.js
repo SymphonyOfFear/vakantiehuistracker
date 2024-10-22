@@ -7,24 +7,12 @@ Alpine.start();
 document.addEventListener('DOMContentLoaded', () => {
     let kaart;
 
-    const sidebar = document.getElementById('sidebar');
-    const toggleSidebarButton = document.getElementById('toggleSidebarButton');
-    const showSidebarButton = document.getElementById('showSidebarButton');
-
-    window.toggleSidebar = function () {
-        if (sidebar.classList.contains('hidden')) {
-            sidebar.classList.remove('hidden');
-            showSidebarButton.classList.add('hidden');
-        } else {
-            sidebar.classList.add('hidden');
-            showSidebarButton.classList.remove('hidden');
-        }
-    };
-
+    // Initialize the map
     const initKaart = (lat, lon) => {
         const kaartElement = document.getElementById('map');
         if (!kaartElement) return;
-        if (kaart) kaart.remove();
+
+        if (kaart) kaart.remove(); // Remove existing map
         kaart = L.map(kaartElement).setView([lat, lon], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors',
@@ -32,10 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
         L.marker([lat, lon]).addTo(kaart).bindPopup('Vakantiehuis locatie').openPopup();
     };
 
+    // Check if map exists and initialize it
     if (document.getElementById('map')) {
         const lat = document.getElementById('map').getAttribute('data-lat');
         const lon = document.getElementById('map').getAttribute('data-lon');
-        console.log('Latitude:', lat, 'Longitude:', lon); // Log the latitude and longitude
+        console.log('Latitude:', lat, 'Longitude:', lon);
         if (lat && lon) {
             initKaart(parseFloat(lat), parseFloat(lon));
         } else {
@@ -43,17 +32,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Fetch coordinates based on the postcode
     const haalCoordinaten = (postcode) => {
         const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(postcode)}&countrycodes=NL`;
         return fetch(geocodeUrl)
             .then((res) => res.json())
             .then((data) => {
-                if (data && data.length > 0) return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
-                else throw new Error('Ongeldige postcode of locatie niet gevonden.');
+                if (data && data.length > 0) {
+                    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+                } else {
+                    throw new Error('Ongeldige postcode of locatie niet gevonden.');
+                }
             })
-            .catch(() => ({ lat: 52.3676, lon: 4.9041 }));
+            .catch(() => ({ lat: 52.3676, lon: 4.9041 })); // Default coordinates
     };
 
+    // Initialize the map with default or fetched coordinates
     const instelKaart = () => {
         const latField = document.getElementById('latitude');
         const lonField = document.getElementById('longitude');
@@ -64,13 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
             initKaart(lat, lon);
         }
     };
-    document.querySelectorAll('.profile-dropdown').forEach(function (dropdown) {
-        const button = dropdown.previousElementSibling;
-        button.addEventListener('click', function () {
-            dropdown.classList.toggle('hidden');
-        });
-    });
 
+    // Manage favorite items
     const beheerFavorieten = () => {
         document.querySelectorAll('.favoriet-form').forEach((form) => {
             form.addEventListener('submit', (e) => {
@@ -89,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Autocomplete input for cities and streets
     const instelAutocomplete = (invoerId, suggestieId, zoekType, callback) => {
         const invoer = document.getElementById(invoerId);
         const suggestieBox = document.getElementById(suggestieId);
@@ -106,12 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             data.forEach((locatie) => {
                                 const suggestie = document.createElement('div');
                                 suggestie.classList.add('cursor-pointer', 'py-2', 'px-4', 'hover:bg-gray-200');
-
-                                if (zoekType === 'city') {
-                                    suggestie.textContent = locatie.display_name.split(',')[0];
-                                } else {
-                                    suggestie.textContent = locatie.display_name;
-                                }
+                                suggestie.textContent = zoekType === 'city' ? locatie.display_name.split(',')[0] : locatie.display_name;
 
                                 suggestie.addEventListener('click', () => {
                                     invoer.value = suggestie.textContent.split(',')[0];
@@ -121,7 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 suggestieBox.appendChild(suggestie);
                             });
                             suggestieBox.classList.remove('hidden');
-                        } else suggestieBox.classList.add('hidden');
+                        } else {
+                            suggestieBox.classList.add('hidden');
+                        }
                     })
                     .catch((err) => console.error('Fout bij het ophalen van suggesties:', err));
             } else {
@@ -131,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Initialize autocomplete for city
     const instelStadAutocomplete = () => {
         instelAutocomplete('stad', 'stad-suggestions', 'city', (locatie) => {
             const latField = document.getElementById('latitude');
@@ -144,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Postcode autocomplete
     const instelPostcodeAutocomplete = () => {
         const invoer = document.getElementById('postcode');
         if (invoer) {
@@ -165,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Fetch streets based on lat/lon
     const haalStraten = (lat, lon) => {
         const straatnaamInput = document.getElementById('straatnaam');
         const stadInput = document.getElementById('stad');
@@ -178,17 +168,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.address) {
-                    if (data.address.road) {
-                        straatnaamInput.value = data.address.road;
-                    }
-                    if (data.address.city || data.address.town || data.address.village || data.address.state) {
-                        stadInput.value = data.address.city || data.address.town || data.address.village || data.address.state;
-                    }
+                    straatnaamInput.value = data.address.road || '';
+                    stadInput.value = data.address.city || data.address.town || data.address.village || data.address.state || '';
                 }
             })
             .catch((err) => console.error('Fout bij het ophalen van straatnamen en stad:', err));
     };
 
+    // Preview images before uploading
     const previewAfbeeldingen = (event) => {
         const previewContainer = document.getElementById('new-image-previews');
         if (!previewContainer) return;
@@ -203,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Delete images
     const verwijderAfbeelding = () => {
         document.querySelectorAll('.delete-image-button').forEach((button) => {
             button.addEventListener('click', function (e) {
@@ -221,35 +209,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Update price labels dynamically
     const updatePrijsLabels = () => {
         const minSlider = document.getElementById('min_prijs');
         const maxSlider = document.getElementById('max_prijs');
-        const minInput = document.getElementById('min-prijs-input');
-        const maxInput = document.getElementById('max-prijs-input');
+        const minLabel = document.getElementById('min-prijs-label');
+        const maxLabel = document.getElementById('max-prijs-label');
 
-
-        minSlider.addEventListener('input', () => {
-            minInput.value = minSlider.value;
-        });
-
-        maxSlider.addEventListener('input', () => {
-            maxInput.value = maxSlider.value;
-        });
-
-        minInput.addEventListener('input', () => {
-            minSlider.value = minInput.value;
-        });
-
-        maxInput.addEventListener('input', () => {
-            maxSlider.value = maxInput.value;
-        });
+        if (minSlider && maxSlider && minLabel && maxLabel) {
+            minSlider.addEventListener('input', () => {
+                minLabel.textContent = `€${minSlider.value}`;
+                maxSlider.min = minSlider.value;
+            });
+            maxSlider.addEventListener('input', () => {
+                maxLabel.textContent = `€${maxSlider.value}`;
+                minSlider.max = maxSlider.value;
+            });
+        }
     };
 
+    // Initialize all the necessary functions
     if (document.getElementById('map')) instelKaart();
     if (typeof verwijderAfbeelding === 'function') verwijderAfbeelding();
     if (typeof beheerFavorieten === 'function') beheerFavorieten();
     if (typeof instelStadAutocomplete === 'function') instelStadAutocomplete();
     if (typeof instelPostcodeAutocomplete === 'function') instelPostcodeAutocomplete();
     if (typeof updatePrijsLabels === 'function') updatePrijsLabels();
-    if (typeof toggleSidebar === 'function') toggleSidebar();
 });

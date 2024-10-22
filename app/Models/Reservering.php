@@ -9,23 +9,17 @@ class Reservering extends Model
 {
     use HasFactory;
 
-    protected $table = 'reserveringen';
-    protected $fillable = [
-        'vakantiehuis_id',
-        'huurder_id',
-        'reserveringsnummer',
-        'begindatum',
-        'einddatum',
-        'status',
-    ];
+    protected $fillable = ['vakantiehuis_id', 'huurder_id', 'reserveringsnummer', 'begindatum', 'einddatum', 'status'];
 
-    public function huurder()
-    {
-        return $this->belongsTo(huurder::class, 'huurder_id');
-    }
-
+    // Relation with Vakantiehuis
     public function vakantiehuis()
     {
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
+    }
+
+    // Relation with Huurder (User model)
+    public function huurder()
+    {
+        return $this->belongsTo(User::class, 'huurder_id');
     }
 }

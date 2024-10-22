@@ -9,8 +9,8 @@
         </button>
     </div>
     <ul class="space-y-4 overflow-y-auto h-full">
-        <!-- Admin-specifieke links -->
-        @role('admin')
+        <!-- Admin-specific links -->
+        @if (auth()->user() && auth()->user()->hasRole('admin'))
             <li><a href="{{ route('admin.dashboard') }}"
                     class="{{ Request::is('admin/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Admin Dashboard</a></li>
@@ -20,10 +20,10 @@
             <li><a href="{{ route('admin.permissions.index') }}"
                     class="{{ Request::is('admin/permissions*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Rollen & Permissies</a></li>
-        @endrole
+        @endif
 
-        <!-- Verhuurder-specifieke links -->
-        @role('verhuurder')
+        <!-- Verhuurder-specific links -->
+        @if (auth()->user() && auth()->user()->hasRole('verhuurder'))
             <li><a href="{{ route('verhuurder.dashboard') }}"
                     class="{{ Request::is('verhuurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Verhuurder Dashboard</a></li>
@@ -40,19 +40,16 @@
                             Voeg Huis Toe</a></li>
                 </ul>
             </li>
-        @endrole
+        @endif
 
-        <!-- Huurder-specifieke links -->
-        @role('huurder')
+        <!-- Huurder-specific links -->
+        @if (auth()->user() && auth()->user()->hasRole('huurder'))
             <li><a href="{{ route('huurder.dashboard') }}"
                     class="{{ Request::is('huurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Huurder Dashboard</a></li>
-            <li><a href="{{ route('huurder.results.index') }}"
-                    class="{{ Request::is('huurder/results*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
-                    Zoek Resultaten</a></li>
-        @endrole
+        @endif
 
-        <!-- Gedeelde links voor alle rollen -->
+        <!-- Shared links for all roles -->
         <li><a href="{{ route('recensies.index') }}"
                 class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Recensies</a>
         </li>
@@ -65,7 +62,7 @@
     </ul>
 </div>
 
-<!-- Sidebar Toggle Button voor kleinere schermen -->
+<!-- Sidebar Toggle Button for smaller screens -->
 <div class="mt-5 left-2 z-50">
     <button id="showSidebarButton" class="hidden bg-green-500 text-white p-2 rounded-full focus:outline-none"
         onclick="toggleSidebar()">

@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Illuminate\Http\RedirectResponse;
+use App\Providers\RouteServiceProvider;
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
-    public function create()
+    public function create(): View
     {
         return view('auth.login');
     }
@@ -20,32 +24,23 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(Request $request)
+    public function store(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $request->authenticate();
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            // Redirect based on user role
-            $user = Auth::user();
-            if ($user->hasRole('admin')) {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->hasRole('verhuurder')) {
-                return redirect()->route('verhuurder.dashboard');
-            } elseif ($user->hasRole('huurder')) {
-                return redirect()->route('huurder.dashboard');
-            } else {
-                return redirect()->route('home');
-            }
+        $userId = Auth::id();
+        $user = User::find($userId);
+        if ($user && $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user && $user->hasRole('verhuurder')) {
+            return redirect()->route('verhuurder.dashboard');
+        } elseif ($user && $user->hasRole('huurder')) {
+            return redirect()->route('huurder.dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return redirect()->intended(route('home'));
     }
 
     /**
@@ -59,6 +54,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+
+        return redirect('/');
     }
 }

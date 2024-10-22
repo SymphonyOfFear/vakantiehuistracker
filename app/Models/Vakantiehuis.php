@@ -10,24 +10,7 @@ class Vakantiehuis extends Model
     use HasFactory;
 
     protected $table = 'vakantiehuizen';
-    protected $fillable = [
-        'verhuurder_id',
-        'naam',
-        'prijs',
-        'beschrijving',
-        'slaapkamers',
-        'stad',
-        'straatnaam',
-        'postcode',
-        'huisnummer',
-        'latitude',
-        'longitude',
-        'wifi',
-        'zwembad',
-        'parkeren',
-        'speeltuin',
-        'beschikbaarheid',
-    ];
+    protected $fillable = ['naam', 'prijs', 'beschrijving', 'slaapkamers', 'stad', 'straatnaam', 'postcode', 'huisnummer', 'latitude', 'longitude', 'wifi', 'zwembad', 'parkeren', 'speeltuin', 'beschikbaarheid', 'verhuurder_id'];
 
 
     public function FavorietenChecker($userId)
@@ -39,27 +22,32 @@ class Vakantiehuis extends Model
         $recensie = $this->recensies()->where('user_id', $userId)->first();
         return $recensie ? $recensie->rating : 0;
     }
+    public function verhuurder()
+    {
+        return $this->belongsTo(User::class, 'verhuurder_id');
+    }
+
+    // Relation with images
     public function images()
     {
         return $this->hasMany(Image::class, 'vakantiehuis_id');
     }
 
+    // Relation with favorieten
+    public function favorieten()
+    {
+        return $this->hasMany(Favoriet::class, 'vakantiehuis_id');
+    }
+
+    // Relation with recensies
     public function recensies()
     {
         return $this->hasMany(Recensie::class, 'vakantiehuis_id');
     }
 
+    // Relation with reserveringen
     public function reserveringen()
     {
         return $this->hasMany(Reservering::class, 'vakantiehuis_id');
-    }
-
-    public function favorieten()
-    {
-        return $this->hasMany(Favoriet::class, 'vakantiehuis_id');
-    }
-    public function verhuurder()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -33,6 +33,6 @@ class ConfirmablePasswordController extends Controller
 
         session(['auth.password_confirmed_at' => time()]);
 
-        return redirect()->intended('/');
+        return redirect()->intended('home');
     }
 }

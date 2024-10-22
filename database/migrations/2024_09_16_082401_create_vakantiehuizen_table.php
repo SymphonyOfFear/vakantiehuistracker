@@ -6,16 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('verhuurder_id')->constrained('users')->onDelete('cascade');
+            // Foreign key referencing users with a role of 'verhuurder'
+            $table->unsignedBigInteger('verhuurder_id');
+            $table->foreign('verhuurder_id')
+                ->references('id')  // Directly referencing the 'id' in 'users' table
+                ->on('users')
+                ->onDelete('cascade');
 
+            // Ensure that the verhuurder role is enforced via application logic
             $table->string('naam');
             $table->decimal('prijs', 10, 2);
             $table->text('beschrijving')->nullable();
@@ -35,9 +38,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('vakantiehuizen');

@@ -67,6 +67,6 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
 
-        return Redirect::to('/');
+        return Redirect::to('home');
     }
 }

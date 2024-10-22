@@ -1,9 +1,20 @@
+{{-- Favorieten Page --}}
 <x-app-layout>
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <x-sidebar title="Favorieten">
+            <li><a href="{{ route('huurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Huurder
+                    Dashboard</a>
+            </li>
+            <li><a href="{{ route('recensies.index') }}" class="text-gray-700 hover:text-green-600">Recensies</a></li>
+            <li><a href="{{ route('reserveringen.index') }}" class="text-gray-700 hover:text-green-600">Reserveringen</a>
+            </li>
+            <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
+        </x-sidebar>
 
-
-    <div class="min-h-screen bg-green-100 py-16">
-        <div class="container mx-auto">
-            <h1 class="text-3xl font-semibold text-gray-700 mb-6">Mijn Favoriete Vakantiehuizen</h1>
+        <!-- Main Content -->
+        <div class="w-full bg-white p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Mijn Favoriete Vakantiehuizen</h1>
 
             @if ($favorieten->isEmpty())
                 <p class="text-gray-600">Je hebt nog geen vakantiehuizen aan je favorieten toegevoegd.</p>
@@ -27,7 +38,6 @@
                                 class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Bekijk
                                 details</a>
 
-
                             <form class="absolute bottom-4 right-4 favorite-form" data-id="{{ $huis->id }}"
                                 method="POST" action="{{ route('favorieten.toggle', $huis->id) }}">
                                 @csrf
@@ -39,9 +49,7 @@
                         </div>
                     @endforeach
                 </div>
+            @endif
         </div>
     </div>
-    </div>
-
-
 </x-app-layout>

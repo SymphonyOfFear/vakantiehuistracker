@@ -9,21 +9,17 @@ class Recensie extends Model
 {
     use HasFactory;
 
-    protected $table = 'recensies';
-    protected $fillable = [
-        'vakantiehuis_id',
-        'user_id',
-        'rating',
-        'comment'
-    ];
+    protected $fillable = ['user_id', 'vakantiehuis_id', 'beoordeling', 'opmerking'];
 
-    public function vakantiehuis()
-    {
-        return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
-    }
-
+    // Relation with User
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relation with Vakantiehuis
+    public function vakantiehuis()
+    {
+        return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
     }
 }

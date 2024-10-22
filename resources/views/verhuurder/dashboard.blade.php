@@ -1,6 +1,5 @@
+{{-- Verhuurder Dashboard --}}
 <x-app-layout>
-
-
     <div class="flex h-screen">
         <!-- Sidebar -->
         <x-sidebar title="Dashboard">

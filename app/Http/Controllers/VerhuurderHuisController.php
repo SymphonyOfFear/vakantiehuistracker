@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Http\Requests\VerhuurderHuisRequest;
+use App\Models\User;
 
 class VerhuurderHuisController extends Controller
 {
@@ -32,7 +33,14 @@ class VerhuurderHuisController extends Controller
     public function store(VerhuurderHuisRequest $request)
     {
         $validatedData = $request->validated();
+        $userId = Auth::id();
+        $user = User::find($userId);
 
+        if (!$role = $user->roles()->where('name', 'verhuurder')->first()) {
+            return redirect()->back()->withErrors('Alleen verhuurders kunnen vakantiehuizen toevoegen.');
+        }
+
+        // Create vakantiehuis
         $vakantiehuis = Vakantiehuis::create([
             'verhuurder_id' => Auth::id(),
             'naam' => $validatedData['naam'],
@@ -52,6 +60,7 @@ class VerhuurderHuisController extends Controller
             'beschikbaarheid' => $request->boolean('beschikbaarheid'),
         ]);
 
+        // Handle image upload if any
         if ($request->hasFile('fotos')) {
             foreach ($request->file('fotos') as $foto) {
                 if ($foto->isValid()) {
@@ -72,6 +81,7 @@ class VerhuurderHuisController extends Controller
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd.');
     }
+
 
     public function edit($id)
     {

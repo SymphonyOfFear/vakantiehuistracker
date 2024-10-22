@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favoriet;
+use App\Models\User;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,9 @@ class favorietenController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        $favorieten = $user->favorieten;
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $favorieten = $user->favorieten()->with('vakantiehuis')->get();
 
         return view('favorieten.index', compact('favorieten'));
     }

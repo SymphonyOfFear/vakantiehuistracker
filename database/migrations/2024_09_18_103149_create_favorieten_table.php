@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('favorieten', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Foreign key to the users table
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            // Foreign key to the vakantiehuizen table
             $table->foreignId('vakantiehuis_id')->constrained('vakantiehuizen')->onDelete('cascade');
             $table->timestamps();
         });
