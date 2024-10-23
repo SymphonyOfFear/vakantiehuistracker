@@ -16,7 +16,8 @@
                     <a href="{{ route('admin.dashboard') }}" class="hover:text-green-300">Dashboard</a>
                 @endif
                 <div class="relative inline-block">
-                    <button aria-haspopup="true" class="inline-flex items-center focus:outline-none hover:text-green-300">
+                    <button aria-haspopup="true"
+                        class="inline-flex items-center focus:outline-none hover:text-green-300 profile-toggle">
                         {{ Auth::user()->name }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2">
@@ -43,3 +44,20 @@
         </nav>
     </div>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileToggle = document.querySelector('.profile-toggle');
+        const dropdownMenu = document.querySelector('.profile-dropdown');
+
+        profileToggle.addEventListener('click', function() {
+            dropdownMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!profileToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+    });
+</script>

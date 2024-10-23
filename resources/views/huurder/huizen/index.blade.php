@@ -7,7 +7,6 @@
                     Toe</a></li>
         </x-sidebar>
 
-        <!-- Main Content -->
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Mijn Vakantiehuizen</h1>
 

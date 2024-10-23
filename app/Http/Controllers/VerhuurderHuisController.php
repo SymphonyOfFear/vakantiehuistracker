@@ -40,7 +40,7 @@ class VerhuurderHuisController extends Controller
             return redirect()->back()->withErrors('Alleen verhuurders kunnen vakantiehuizen toevoegen.');
         }
 
-        // Create vakantiehuis
+
         $vakantiehuis = Vakantiehuis::create([
             'verhuurder_id' => Auth::id(),
             'naam' => $validatedData['naam'],

@@ -2,10 +2,7 @@
 
 
     <div class="container mx-auto px-4 py-8">
-        <!-- Navigatie breadcrumbs -->
 
-
-        <!-- Breadcrumb Navigation -->
 
         <nav class="text-gray-500 text-sm mb-4">
             <a href="{{ route('huizen.index') }}" class="hover:text-green-600">Huizen</a> &gt;
@@ -13,7 +10,6 @@
             <span>{{ $vakantiehuis->straatnaam }} {{ $vakantiehuis->huisnummer }}</span>
         </nav>
 
-        <!-- Property Title and Action Buttons -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
             <div>
@@ -36,7 +32,6 @@
 
         </div>
 
-        <!-- Image Gallery Section -->
         @if ($vakantiehuis->images->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="col-span-2">
@@ -111,7 +106,6 @@
             </ul>
         </div>
 
-        <!-- Map Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
             <div id="map" class="w-full h-64 rounded-lg shadow" data-lat="{{ $vakantiehuis->latitude }}"
@@ -122,13 +116,13 @@
             </a>
         </div>
 
-        <!-- Description Section -->
+
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">Beschrijving</h2>
             <p class="text-gray-700">{{ $vakantiehuis->beschrijving ?? 'Geen beschrijving beschikbaar.' }}</p>
         </div>
 
-        <!-- Kenmerken sectie -->
+
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Kenmerken</h2>
             <table class="w-full text-left table-auto">
@@ -155,25 +149,23 @@
             </table>
         </div>
 
-        <!-- Commentaarsectie -->
 
-        <!-- Reviews Section -->
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-4">Recensies</h2>
-            <!-- Toon alle recensies -->
+
             @foreach ($vakantiehuis->recensies as $recensie)
                 <div class="border-b border-gray-200 py-4">
                     <div class="flex justify-between items-center">
                         <span class="text-gray-800 font-semibold">{{ $recensie->user->name }}</span>
                         <span class="text-sm text-gray-500">{{ $recensie->created_at->format('d-m-Y') }}</span>
                     </div>
-                    <p class="text-gray-700">{{ $recensie->comment }}</p>
-                    <p class="text-yellow-500">Rating: {{ $recensie->rating }}/5</p>
+                    <p class="text-gray-700">{{ $recensie->opmerking }}</p>
+                    <p class="text-yellow-500">Rating: {{ $recensie->beoordeling }}/5</p>
                 </div>
             @endforeach
 
-            <!-- Add Review Form -->
+
             @auth
                 <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                     @csrf
@@ -206,9 +198,9 @@
             @endauth
         </div>
 
-        <!-- Back to Overview Button -->
+
         <div>
-            <a href="{{ route('huizen.index') }}" <<<<<<< HEAD
+            <a href="{{ route('huizen.index') }}"
                 class="bg-gray-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition-transform transform hover:scale-105">Terug
                 naar overzicht</a>
 

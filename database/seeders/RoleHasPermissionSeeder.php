@@ -10,11 +10,8 @@ class RoleHasPermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        // Assign permissions to admin
         $admin = Role::where('name', 'admin')->first();
         $admin->permissions()->attach(Permission::all());
-
-        // Assign permissions to verhuurder
         $verhuurder = Role::where('name', 'verhuurder')->first();
         $verhuurder->permissions()->attach(
             Permission::whereIn('name', [
@@ -25,8 +22,6 @@ class RoleHasPermissionSeeder extends Seeder
                 'delete huis',
             ])->get()
         );
-
-        // Assign permissions to huurder
         $huurder = Role::where('name', 'huurder')->first();
         $huurder->permissions()->attach(
             Permission::whereIn('name', [

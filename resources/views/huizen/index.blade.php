@@ -7,7 +7,6 @@
         <div class="w-full lg:w-3/4 p-6 bg-white rounded-lg shadow-md">
             <h1 class="text-2xl font-bold mb-4">Vakantiehuizen</h1>
 
-            <!-- Search Bar -->
             <form action="{{ route('huizen.index') }}" method="GET" class="mb-6">
                 <div class="flex items-center">
                     <input type="text" name="search" placeholder="Zoek op plaats, buurt of postcode"
@@ -19,7 +18,6 @@
                     </button>
                 </div>
 
-                <!-- Hidden Fields to Submit Filter Values with Search -->
                 <input type="hidden" name="stad" value="{{ request()->input('stad') }}">
                 <input type="hidden" name="postcode" value="{{ request()->input('postcode') }}">
                 <input type="hidden" name="straatnaam" value="{{ request()->input('straatnaam') }}">
@@ -31,7 +29,6 @@
                 <input type="hidden" name="speeltuin" value="{{ request()->input('speeltuin') }}">
             </form>
 
-            <!-- Results -->
             @if ($huizen->isEmpty())
                 <p class="text-gray-600">Geen vakantiehuizen beschikbaar.</p>
             @else

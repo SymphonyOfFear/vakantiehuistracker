@@ -6,21 +6,19 @@ Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
     let kaart;
-
-    // Initialize the map
     const initKaart = (lat, lon) => {
         const kaartElement = document.getElementById('map');
         if (!kaartElement) return;
-
-        if (kaart) kaart.remove(); // Remove existing map
+        if (kaart) kaart.remove();
         kaart = L.map(kaartElement).setView([lat, lon], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors',
         }).addTo(kaart);
+        // Exacte locatie van de map
         L.marker([lat, lon]).addTo(kaart).bindPopup('Vakantiehuis locatie').openPopup();
     };
 
-    // Check if map exists and initialize it
+    // Checken of de map bestaat
     if (document.getElementById('map')) {
         const lat = document.getElementById('map').getAttribute('data-lat');
         const lon = document.getElementById('map').getAttribute('data-lon');
@@ -32,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch coordinates based on the postcode
+    // Exacte locatie met de postcode ophalen
     const haalCoordinaten = (postcode) => {
         const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(postcode)}&countrycodes=NL`;
         return fetch(geocodeUrl)
@@ -44,10 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error('Ongeldige postcode of locatie niet gevonden.');
                 }
             })
-            .catch(() => ({ lat: 52.3676, lon: 4.9041 })); // Default coordinates
+            .catch(() => ({ lat: 52.3676, lon: 4.9041 })); // Standaard cordinaten wat amsterdam is
     };
 
-    // Initialize the map with default or fetched coordinates
+    // De kaart instellen met de standaard coordinaten
     const instelKaart = () => {
         const latField = document.getElementById('latitude');
         const lonField = document.getElementById('longitude');
@@ -59,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Manage favorite items
+    // Favorieten Toevoegen handlen
     const beheerFavorieten = () => {
         document.querySelectorAll('.favoriet-form').forEach((form) => {
             form.addEventListener('submit', (e) => {
@@ -78,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Autocomplete input for cities and streets
+    // Autocomplete voor de stad
     const instelAutocomplete = (invoerId, suggestieId, zoekType, callback) => {
         const invoer = document.getElementById(invoerId);
         const suggestieBox = document.getElementById(suggestieId);
@@ -118,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Initialize autocomplete for city
+    // Standaard instellingen voor de autocomplete voor de stad
     const instelStadAutocomplete = () => {
         instelAutocomplete('stad', 'stad-suggestions', 'city', (locatie) => {
             const latField = document.getElementById('latitude');
@@ -154,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Fetch streets based on lat/lon
+    // Straat ophalen met de juiste coordinaten
     const haalStraten = (lat, lon) => {
         const straatnaamInput = document.getElementById('straatnaam');
         const stadInput = document.getElementById('stad');
@@ -175,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch((err) => console.error('Fout bij het ophalen van straatnamen en stad:', err));
     };
 
-    // Preview images before uploading
+    // Preview van de geuploaden afbeeldingen
     const previewAfbeeldingen = (event) => {
         const previewContainer = document.getElementById('new-image-previews');
         if (!previewContainer) return;
@@ -190,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Delete images
+    // Afbeelding verwijderen
     const verwijderAfbeelding = () => {
         document.querySelectorAll('.delete-image-button').forEach((button) => {
             button.addEventListener('click', function (e) {
@@ -209,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Update price labels dynamically
+    // Prijs sliders
     const updatePrijsLabels = () => {
         const minSlider = document.getElementById('min_prijs');
         const maxSlider = document.getElementById('max_prijs');
@@ -228,11 +226,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Initialize all the necessary functions
+    // Checken of de functie op de pagina is zo dat ik niet onnodige foutmeldingen krijg 
     if (document.getElementById('map')) instelKaart();
     if (typeof verwijderAfbeelding === 'function') verwijderAfbeelding();
     if (typeof beheerFavorieten === 'function') beheerFavorieten();
     if (typeof instelStadAutocomplete === 'function') instelStadAutocomplete();
     if (typeof instelPostcodeAutocomplete === 'function') instelPostcodeAutocomplete();
     if (typeof updatePrijsLabels === 'function') updatePrijsLabels();
+    window.toggleSidebar = function () {
+        const sidebar = document.getElementById('sidebar');
+        const showSidebarButton = document.getElementById('showSidebarButton');
+        if (sidebar.classList.contains('hidden')) {
+            sidebar.classList.remove('hidden');
+            showSidebarButton.classList.add('hidden');
+        } else {
+            sidebar.classList.add('hidden');
+            showSidebarButton.classList.remove('hidden');
+        }
+    };
 });

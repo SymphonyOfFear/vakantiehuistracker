@@ -6,7 +6,7 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
-                <!-- Name -->
+
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Naam</label>
                     <input id="name"
@@ -17,7 +17,7 @@
                     @enderror
                 </div>
 
-                <!-- Email Address -->
+
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
                     <input id="email"
@@ -28,7 +28,7 @@
                     @enderror
                 </div>
 
-                <!-- Password -->
+
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium text-gray-700">Wachtwoord</label>
                     <input id="password"
@@ -39,7 +39,7 @@
                     @enderror
                 </div>
 
-                <!-- Confirm Password -->
+
                 <div class="mb-4">
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Wachtwoord
                         Bevestigen</label>
@@ -48,7 +48,6 @@
                         type="password" name="password_confirmation" required />
                 </div>
 
-                <!-- Register Button -->
                 <div class="flex items-center justify-between">
                     <a class="text-sm text-green-600 hover:underline" href="{{ route('login') }}">Al geregistreerd?</a>
 

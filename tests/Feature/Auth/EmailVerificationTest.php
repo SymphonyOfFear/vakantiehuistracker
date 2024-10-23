@@ -29,7 +29,6 @@ test('email can be verified', function () {
     Event::assertDispatched(Verified::class);
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
 
-    // Adjusting the redirect URL
     $response->assertRedirect(route('home') . '?verified=1');
 });
 

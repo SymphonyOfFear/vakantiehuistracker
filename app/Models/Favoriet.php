@@ -12,13 +12,13 @@ class Favoriet extends Model
 
     protected $fillable = ['user_id', 'vakantiehuis_id'];
 
-    // Relation with Vakantiehuis
+
     public function vakantiehuis()
     {
         return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
     }
 
-    // Relation with User
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

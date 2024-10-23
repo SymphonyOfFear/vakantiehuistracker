@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Reservering extends Model
 {
     use HasFactory;
-
+    protected $table = 'reserveringen';
     protected $fillable = ['vakantiehuis_id', 'huurder_id', 'reserveringsnummer', 'begindatum', 'einddatum', 'status'];
 
     // Relation with Vakantiehuis

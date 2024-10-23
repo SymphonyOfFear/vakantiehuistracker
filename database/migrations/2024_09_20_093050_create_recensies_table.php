@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('opmerking');
             $table->timestamps();
         });
-
-        // Ensure 'user_id' corresponds to a user with the 'huurder' role
         Schema::table('recensies', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('user_id')

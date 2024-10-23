@@ -11,7 +11,6 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Create users
         $admin = User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
@@ -29,8 +28,6 @@ class UserSeeder extends Seeder
             'email' => 'huurder@example.com',
             'password' => Hash::make('password'),
         ]);
-
-        // Assign roles
         $admin->roles()->attach(Role::where('name', 'admin')->first()->id);
         $verhuurder->roles()->attach(Role::where('name', 'verhuurder')->first()->id);
         $huurder->roles()->attach(Role::where('name', 'huurder')->first()->id);

@@ -1,18 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HuizenController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecensiesController;
-use App\Http\Controllers\FavorietenController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\FavorietController;
 use App\Http\Controllers\ReserveringenController;
-use App\Http\Controllers\Verhuurder\ResultsController as VerhuurderResultsController;
-use App\Http\Controllers\Huurder\ResultsController as HuurderResultsController;
-use App\Http\Controllers\Admin\ResultsController as AdminResultsController;
 use App\Http\Controllers\VerhuurderHuisController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\ResultsController as AdminResultsController;
+use App\Http\Controllers\Huurder\ResultsController as HuurderResultsController;
+use App\Http\Controllers\Verhuurder\ResultsController as VerhuurderResultsController;
 
-// General Routes
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -23,14 +24,23 @@ Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show
 // Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 
-// Admin
 Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminResultsController::class, 'index'])->name('admin.dashboard');
-    Route::get('/users', [AdminResultsController::class, 'usersIndex'])->name('admin.users.index');
-    Route::get('/permissions', [AdminResultsController::class, 'permissionsIndex'])->name('admin.permissions.index');
-    Route::get('/settings', [AdminResultsController::class, 'settings'])->name('admin.settings');
-    Route::get('/users/edit', [AdminResultsController::class, 'edit'])->name('users.edit');
-    Route::delete('/users/destroy', [AdminResultsController::class, 'destroy'])->name('users.destroy');
+    Route::get('/dashboard', [AdminResultsController::class, 'checkAdminAccess'])->name('admin.dashboard');
+
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+
+    Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+
+    Route::get('/permissions/roles', [PermissionController::class, 'roles'])->name('admin.permissions.roles');
+    Route::put('/permissions/update/{id}', [PermissionController::class, 'update'])->name('admin.permissions.update');
+
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
+    Route::get('/permissions/edit/{id}', [PermissionController::class, 'edit'])->name('admin.permissions.edit');
+    Route::put('/permissions/update/{id}', [PermissionController::class, 'update'])->name('admin.permissions.update');
+    Route::delete('/permissions/destroy/{id}', [PermissionController::class, 'destroy'])->name('admin.permissions.destroy');
 });
 
 // Verhuurder
@@ -62,10 +72,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 // Favorieten
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/favorieten', [FavorietenController::class, 'index'])->name('favorieten.index');
-    Route::post('/favorieten', [FavorietenController::class, 'store'])->name('favorieten.store');
-    Route::post('/favorieten/toggle/{id}', [FavorietenController::class, 'toggle'])->name('favorieten.toggle');
-    Route::delete('/favorieten/{id}', [FavorietenController::class, 'destroy'])->name('favorieten.destroy');
+    Route::get('/favorieten', [FavorietController::class, 'index'])->name('favorieten.index');
+    Route::post('/favorieten', [FavorietController::class, 'store'])->name('favorieten.store');
+    Route::post('/favorieten/toggle/{id}', [FavorietController::class, 'toggle'])->name('favorieten.toggle');
+    Route::delete('/favorieten/{id}', [FavorietController::class, 'destroy'])->name('favorieten.destroy');
 });
 
 // Reserveringen

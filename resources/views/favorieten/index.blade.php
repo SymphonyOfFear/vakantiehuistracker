@@ -1,7 +1,7 @@
 {{-- Favorieten Page --}}
 <x-app-layout>
     <div class="flex h-screen">
-        <!-- Sidebar -->
+
         <x-sidebar title="Favorieten">
             <li><a href="{{ route('huurder.dashboard') }}" class="text-gray-700 hover:text-green-600">Huurder
                     Dashboard</a>
@@ -12,7 +12,6 @@
             <li><a href="{{ route('favorieten.index') }}" class="text-gray-700 hover:text-green-600">Favorieten</a></li>
         </x-sidebar>
 
-        <!-- Main Content -->
         <div class="w-full bg-white p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Mijn Favoriete Vakantiehuizen</h1>
 

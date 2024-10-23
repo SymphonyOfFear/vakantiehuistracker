@@ -8,7 +8,7 @@ use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class favorietenController extends Controller
+class FavorietController extends Controller
 {
     public function index()
     {
@@ -19,9 +19,6 @@ class favorietenController extends Controller
         return view('favorieten.index', compact('favorieten'));
     }
 
-    /**
-     * Schakelaar voor favorieten toevoegen en verwijderen
-     **/
 
     public function toggle($vakantiehuisId)
     {

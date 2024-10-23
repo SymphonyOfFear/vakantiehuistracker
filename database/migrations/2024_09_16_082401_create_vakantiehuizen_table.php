@@ -10,15 +10,11 @@ return new class extends Migration
     {
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-
-            // Foreign key referencing users with a role of 'verhuurder'
             $table->unsignedBigInteger('verhuurder_id');
             $table->foreign('verhuurder_id')
-                ->references('id')  // Directly referencing the 'id' in 'users' table
+                ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
-
-            // Ensure that the verhuurder role is enforced via application logic
             $table->string('naam');
             $table->decimal('prijs', 10, 2);
             $table->text('beschrijving')->nullable();

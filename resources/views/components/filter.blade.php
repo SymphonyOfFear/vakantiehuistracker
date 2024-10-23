@@ -3,41 +3,40 @@
 
     <form action="{{ route('huizen.index') }}" method="GET">
 
-        <!-- Prijs Section -->
+
         <div class="border-neutral-30 mt-6 border-b pb-6">
             <div class="font-semibold text-black mb-4">Prijs (€)</div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Min Price -->
+
                 <div class="flex items-center">
                     <label for="min-prijs-input" class="text-sm font-medium text-gray-700 mr-2">Min:</label>
                     <input type="number" id="min-prijs-input" name="min_prijs"
                         value="{{ request()->input('min_prijs', 0) }}" min="0" max="10000"
                         class="w-1/2 mt-1 p-2 border border-gray-300 rounded-md text-lg" autocomplete="off">
 
-                    <!-- Slider for Min Price -->
+
                     <input type="range" id="min_prijs" name="min_prijs_range" min="0" max="10000"
                         value="{{ request()->input('min_prijs', 0) }}" class="w-1/2 ml-4 accent-blue-500">
                 </div>
 
-                <!-- Max Price -->
                 <div class="flex items-center">
                     <label for="max-prijs-input" class="text-sm font-medium text-gray-700 mr-2">Max:</label>
                     <input type="number" id="max-prijs-input" name="max_prijs"
                         value="{{ request()->input('max_prijs', 10000) }}" min="0" max="10000"
                         class="w-1/2 mt-1 p-2 border border-gray-300 rounded-md text-lg" autocomplete="off">
 
-                    <!-- Slider for Max Price -->
+
                     <input type="range" id="max_prijs" name="max_prijs_range" min="0" max="10000"
                         value="{{ request()->input('max_prijs', 10000) }}" class="w-1/2 ml-4 accent-blue-500">
                 </div>
             </div>
         </div>
 
-        <!-- Location Section (Postcode, Straatnaam, Stad) -->
+
         <div class="border-neutral-30 mt-6 border-b pb-6">
             <div class="font-semibold text-black mb-4">Locatie</div>
 
-            <!-- Postcode -->
+
             <div class="mb-4">
                 <label for="postcode" class="block text-sm font-medium text-gray-700">Postcode</label>
                 <input type="text" id="postcode" name="postcode"
@@ -45,7 +44,7 @@
                     value="{{ request()->input('postcode') }}" autocomplete="off">
             </div>
 
-            <!-- Straatnaam -->
+
             <div class="mb-4">
                 <label for="straatnaam" class="block text-sm font-medium text-gray-700">Straatnaam</label>
                 <input type="text" id="straatnaam" name="straatnaam"
@@ -53,7 +52,7 @@
                     value="{{ request()->input('straatnaam') }}" autocomplete="off">
             </div>
 
-            <!-- Stad -->
+
             <div class="mb-4 relative">
                 <label for="stad" class="block text-sm font-medium text-gray-700">Stad</label>
                 <input type="text" id="stad" name="stad" placeholder="Typ een plaats"
@@ -65,7 +64,6 @@
             </div>
         </div>
 
-        <!-- Voorzieningen Section -->
         <div class="border-neutral-30 mt-6 border-b pb-6">
             <div class="font-semibold text-black mb-4">Voorzieningen</div>
             <div class="flex flex-col space-y-2">

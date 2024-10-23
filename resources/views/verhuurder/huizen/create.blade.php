@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="flex lg:flex-nowrap flex-wrap min-h-screen">
-        <!-- Sidebar -->
+    
         <x-sidebar title="Huizenbeheer" class="lg:min-h-screen">
             <li><a href="{{ route('verhuurder.huizen.index') }}" class="text-gray-700 hover:text-green-600">Mijn
                     Huizen</a></li>
@@ -45,7 +45,6 @@
                     id="create-form">
                     @csrf
 
-                    <!-- General Info Tab -->
                     <div x-show="tab === 'general'" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -78,7 +77,7 @@
                         </div>
                     </div>
 
-                    <!-- Address Tab -->
+
                     <div x-show="tab === 'address'" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="relative">
@@ -119,7 +118,7 @@
                         </div>
                     </div>
 
-                    <!-- Facilities Tab -->
+
                     <div x-show="tab === 'facilities'" class="space-y-4">
                         <label class="block text-sm font-medium text-gray-700">Voorzieningen</label>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -146,14 +145,14 @@
                         </div>
                     </div>
 
-                    <!-- Images Tab -->
+
                     <div x-show="tab === 'images'" class="space-y-4">
                         <label for="fotos" class="block text-sm font-medium text-gray-700">Foto's</label>
                         <input type="file" id="fotos" name="fotos[]" multiple
                             class="w-full mt-1 p-2 border border-gray-300 rounded-md" accept="image/*">
                     </div>
 
-                    <!-- Submit Button -->
+
                     <div class="text-right">
                         <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg mt-4">
                             Vakantiehuis Aanmaken

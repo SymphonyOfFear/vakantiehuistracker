@@ -13,39 +13,31 @@ use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
         $userId = Auth::id();
-        $user = User::find($userId);
+        $user = User::findOrFail($userId);
         if ($user && $user->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         } elseif ($user && $user->hasRole('verhuurder')) {
             return redirect()->route('verhuurder.dashboard');
-        } elseif ($user && $user->hasRole('huurder')) {
-            return redirect()->route('huurder.dashboard');
+        } else {
+            return redirect()->route('home');
         }
-
-        return redirect()->intended(route('home'));
     }
 
-    /**
-     * Destroy an authenticated session (logout).
-     */
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
