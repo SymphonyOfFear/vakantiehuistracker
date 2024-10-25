@@ -8,6 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PermissionRequest extends FormRequest
 {
+
+    // Checken of de gebruiker een admin is
     public function authorize(): bool
     {
         $userID = Auth::id();
@@ -15,7 +17,7 @@ class PermissionRequest extends FormRequest
 
         return Auth::check() && $user->hasRole('admin');
     }
-
+    // Variabelen registreren voor validatie
     public function rules(): array
     {
         return [
@@ -24,7 +26,7 @@ class PermissionRequest extends FormRequest
             'permissions.*' => 'exists:permissions,id',
         ];
     }
-
+    // Permissies ophalen
     protected function prepareForValidation()
     {
         $this->merge([

@@ -8,12 +8,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AdminRequest extends FormRequest
 {
-
+    // Permissie om de pagina weer te geven voor de gebruiker als de gebruiker admin is
     public function authorize(): bool
     {
         $userID = Auth::id();
         $user = User::findOrFail($userID);
-
+        // Als de check true is en de gebruiker een admin is dan is die 'true' anders niet
         return Auth::check() && $user->hasRole('admin');
     }
 
@@ -22,7 +22,7 @@ class AdminRequest extends FormRequest
     {
         return [];
     }
-
+    // Checken op de login of de gebruiker een admin is
     protected function passedValidation()
     {
         $userId = Auth::id();
@@ -35,6 +35,7 @@ class AdminRequest extends FormRequest
             $this->redirect = route('home');
         }
     }
+    // Als de gebruiker geen admin is terug naar de home pagina redirecten
     protected function failedAuthorization()
     {
         abort(redirect()->route('home'));
