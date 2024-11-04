@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
 use App\Models\Image;
 use App\Models\Vakantiehuis;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-use App\Http\Requests\VerhuurderHuisRequest;
-use App\Models\User;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class VerhuurderHuisController extends Controller
 {
@@ -23,23 +21,80 @@ class VerhuurderHuisController extends Controller
         // Geef een view terug voor het dashboard
         return view('verhuurder.dashboard', compact('huisjes'));
     } 
-        return view('verhuurder.dashboard');
-    }
-
     public function index()
     {
-        $huizen = Vakantiehuis::where('verhuurder_id', Auth::id())->with('images')->get();
-        return view('verhuurder.huizen.index', compact('huizen'));
+        // Haal de ID op van de ingelogde verhuurder
+        $verhuurderId = Auth::id();
+
+        // Haal alle vakantiehuizen op die bij de verhuurder horen
+        $mijnHuizen = Vakantiehuis::where('verhuurder_id', $verhuurderId)->with('images')->get();
+
+        // Toon de indexpagina van de vakantiehuizen van de verhuurder
+        return view('verhuurder.huizen.index', compact('mijnHuizen'));
     }
 
+    // Functie om de create-pagina weer te geven voor het toevoegen van een vakantiehuis
     public function create()
     {
-        return view('verhuurder.huizen.create');
+        // Haal locaties op via een externe API (GeoNames)
+        $response = Http::get('http://api.geonames.org/searchJSON', [
+            'formatted' => 'true',
+            'country' => 'NL',
+            'featureClass' => 'P',
+            'maxRows' => 1000,
+            'username' => 'Keiji',
+        ]);
+
+        $locations = $response->json();
+        $locations = $locations['geonames'] ?? [];
+
+        // Toon de create-pagina met de opgehaalde locaties
+        return view('verhuurder.huizen.create', compact('locations'));
     }
 
-    public function store(VerhuurderHuisRequest $request)
+    // Functie om een nieuw vakantiehuis op te slaan
+    public function store(Request $request)
     {
-        // Valideer de invoer en controleer of 'fotos' een array is
+        Vakantiehuis::create([
+            'user_id' => Auth::id(),
+            'naam' => $request->naam,
+            'prijs' => $request->prijs,
+            'locatie' => $request->locatie,
+            'beschikbaarheid' => $request->beschikbaarheid,
+            'slaapkamers' => $request->slaapkamers,
+            'wifi' => $request->has('wifi'),
+            'zwembad' => $request->has('zwembad'),
+            'spa' => $request->has('spa'),
+            'speeltuin' => $request->has('speeltuin'),
+            'fotos' => json_encode($request->fotos),
+        ]);
+
+        return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol toegevoegd!');
+    }
+
+    public function edit($id)
+    {
+        // Haal locaties op via GeoNames API
+        $response = Http::get('http://api.geonames.org/searchJSON', [
+            'formatted' => 'true',
+            'country' => 'NL',
+            'featureClass' => 'P',
+            'maxRows' => 1000,
+            'username' => 'Keiji',
+        ]);
+
+        $locations = $response->json();
+        $locations = $locations['geonames'] ?? [];
+
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        return view('verhuurder.huizen.edit', compact('vakantiehuis', 'locations'));
+    }
+
+    // Functie om een vakantiehuis te updaten
+    public function update(Request $request, $id)
+    {
+        $vakantiehuis = Vakantiehuis::findOrFail($id);
+
         $validatedData = $request->validate([
             'naam' => 'required|string|max:255',
             'prijs' => 'required|numeric',
@@ -49,124 +104,34 @@ class VerhuurderHuisController extends Controller
             'straatnaam' => 'required|string',
             'postcode' => 'required|string',
             'huisnummer' => 'required|string',
-            'fotos' => 'required|array',
-            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        try {
-            // Maak een nieuw vakantiehuis aan
-            $vakantiehuis = Vakantiehuis::create([
-                'verhuurder_id' => Auth::id(),
-                'naam' => $validatedData['naam'],
-                'prijs' => $validatedData['prijs'],
-                'beschrijving' => $validatedData['beschrijving'],
-                'slaapkamers' => $validatedData['slaapkamers'],
-                'stad' => $validatedData['stad'],
-                'straatnaam' => $validatedData['straatnaam'],
-                'postcode' => $validatedData['postcode'],
-                'huisnummer' => $validatedData['huisnummer'],
-                'latitude' => null,
-                'longitude' => null,
-                'wifi' => $request->has('wifi'),
-                'zwembad' => $request->has('zwembad'),
-                'parkeren' => $request->has('parkeren'),
-                'speeltuin' => $request->has('speeltuin'),
-                'beschikbaarheid' => $request->boolean('beschikbaarheid'),
-            ]);
+        Log::info('Vakantiehuis wordt bijgewerkt, ID: ' . $id, $validatedData);
 
-            // Verwerk de geüploade afbeeldingen
-            if ($request->hasFile('fotos')) {
-                foreach ($request->file('fotos') as $foto) {
-                    if ($foto->isValid()) {
-                        $path = $foto->store('public/fotos');
-                        $url = Storage::url($path);
-
-                        // Sla de URL op in de images-tabel
-                        Image::create([
-                            'url' => $url,
-                            'vakantiehuis_id' => $vakantiehuis->id,
-                        ]);
-                    }
-                }
-            }
-
-            // Redirect naar de indexpagina met succesbericht
-            return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol toegevoegd.');
-        } catch (\Exception $e) {
-            // Log fouten
-            Log::error("Fout bij opslaan van vakantiehuis: " . $e->getMessage());
-            return back()->with('error', 'Er is een fout opgetreden bij het opslaan van het vakantiehuis: ' . $e->getMessage());
-        }
-    }
-
-    // Functie om een specifiek vakantiehuis weer te geven
-    public function show($id)
-    {
-        $vakantiehuis = Vakantiehuis::findOrFail($id);
-        return view('verhuurder.huizen.show', compact('vakantiehuis'));
-    }
-
-    // Functie om de edit-pagina van een vakantiehuis weer te geven
-    public function edit($id)
-    {
-        $vakantiehuis = Vakantiehuis::with('images')->findOrFail($id);
-        return view('verhuurder.huizen.edit', compact('vakantiehuis'));
-    }
-
-    public function update(VerhuurderHuisRequest $request, $id)
-    {
-        $validatedData = $request->validated();
-        $vakantiehuis = Vakantiehuis::findOrFail($id);
+        // Update de vakantiehuisgegevens
         $vakantiehuis->update($validatedData);
 
-        if ($request->hasFile('fotos')) {
-            foreach ($vakantiehuis->images as $image) {
-                $imagePath = public_path($image->url);
-                if (File::exists($imagePath)) {
-                    File::delete($imagePath);
-                }
-                $image->delete();
-            }
+        // Update de afbeelding indien aanwezig
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            if ($foto->isValid()) {
+                $path = $foto->store('public/fotos');
+                $url = Storage::url($path);
 
-            foreach ($request->file('fotos') as $foto) {
-                if ($foto->isValid()) {
-                    $fileName = md5(uniqid() . time()) . '.' . $foto->getClientOriginalExtension();
-                    $publicPath = public_path('images/huizen');
-                    if (!File::exists($publicPath)) {
-                        File::makeDirectory($publicPath, 0755, true);
-                    }
-                    $foto->move($publicPath, $fileName);
-                    $url = '/images/huizen/' . $fileName;
-                    Image::create([
-                        'vakantiehuis_id' => $vakantiehuis->id,
-                        'url' => $url,
-                    ]);
-                }
+                Log::info('Geüploade afbeelding URL: ' . $url);
+
+                $image = new Image(['url' => $url]);
+
+                $vakantiehuis->images()->delete(); // Verwijder oude afbeeldingen
+                $vakantiehuis->images()->save($image);
             }
         }
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Vakantiehuis succesvol bijgewerkt.');
     }
 
-    public function deleteImage($id)
-    {
-        $image = Image::findOrFail($id);
-        $imagePath = public_path($image->url);
-
-        if (File::exists($imagePath)) {
-            File::delete($imagePath);
-        }
-
-        $image->delete();
-        return response()->json(['success' => 'Afbeelding succesvol verwijderd.']);
-    }
-
-    public function show($id)
-    {
-        $vakantiehuis = Vakantiehuis::with('images')->findOrFail($id);
-        return view('verhuurder.huizen.show', compact('vakantiehuis'));
-    }
-
+    // Functie om een vakantiehuis te verwijderen
     public function destroy($id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
@@ -174,5 +139,8 @@ class VerhuurderHuisController extends Controller
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol verwijderd!');
     }
-  
+    public function show(Vakantiehuis $huisje)
+    {
+        return view('verhuurder.huizen.show', compact('huisje'));
+    }
 }
