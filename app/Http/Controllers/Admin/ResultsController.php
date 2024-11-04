@@ -12,7 +12,7 @@ class ResultsController extends Controller
 {
     // Index pagina met de totale gebruikers / permissies
     // de request wordt gebruikt om te checken of die een admin is
-    public function index(AdminRequest $request)
+    public function index()
     {
         $users = User::count();
         $permissions = Permission::count();
@@ -21,6 +21,12 @@ class ResultsController extends Controller
     // Checken of de gebruiker toegang heeft tot de pagina
     public function checkAdminAccess(AdminRequest $request)
     {
-        return $request;
+        $users = User::count();
+        $permissions = Permission::count();
+        if ($request->authorize()) {
+            return view('admin.dashboard', compact('users', 'permissions'));  // Or appropriate view for the admin dashboard
+        }
+
+        return redirect()->route('home');
     }
 }
