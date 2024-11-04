@@ -15,9 +15,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('vakantiehuis_id')->constrained('vakantiehuizen')->onDelete('cascade');
-            $table->tinyInteger('rating')->default(1);
-            $table->text('comment')->nullable();
+            $table->tinyInteger('beoordeling')->default(1);
+            $table->string('opmerking');
             $table->timestamps();
+        });
+        Schema::table('recensies', function (Blueprint $table) {
+            $table->foreign('user_id')
+                ->references('user_id')
+                ->on('role_user_verhuurder_huurder_admin')
+                ->where('role_id', function ($query) {
+                    $query->select('id')
+                        ->from('roles')
+                        ->where('name', 'huurder');
+                });
         });
     }
 

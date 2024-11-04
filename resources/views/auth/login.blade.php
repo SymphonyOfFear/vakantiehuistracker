@@ -1,71 +1,54 @@
 <x-app-layout>
-    <!-- Header Component -->
-    <x-header />
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Inloggen</h2>
 
-    <div class="min-h-screen flex items-center justify-center bg-green-100 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full space-y-8">
-            <div>
-                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                    Log in op je account
-                </h2>
-            </div>
+
+            <x-auth-session-status class="mb-4" :status="session('status')" />
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Email Address -->
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div>
-                        <label for="email" class="sr-only">Email adres</label>
-                        <input id="email" name="email" type="email" autocomplete="email" required
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                            placeholder="Email adres">
-                    </div>
 
-                    <!-- Password -->
-                    <div class="mt-4">
-                        <label for="password" class="sr-only">Wachtwoord</label>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                            placeholder="Wachtwoord">
-                    </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+                    <input id="email"
+                        class="block mt-1 w-full border border-gray-300 rounded-md p-2 focus:ring-green-500 focus:border-green-500"
+                        type="email" name="email" :value="old('email')" required autofocus />
+                    @error('email')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between mt-4">
-                    <div class="flex items-center">
-                        <input id="remember_me" name="remember" type="checkbox"
-                            class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-                        <label for="remember_me" class="ml-2 block text-sm text-gray-900">
-                            Onthoud mij
-                        </label>
-                    </div>
-
-                    <div class="text-sm">
-                        <a href="{{ route('password.request') }}"
-                            class="font-medium text-green-600 hover:text-green-500">
-                            Wachtwoord vergeten?
-                        </a>
-                    </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Wachtwoord</label>
+                    <input id="password"
+                        class="block mt-1 w-full border border-gray-300 rounded-md p-2 focus:ring-green-500 focus:border-green-500"
+                        type="password" name="password" required autocomplete="current-password" />
+                    @error('password')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <div class="mt-6">
+
+                <div class="mb-4 flex items-center">
+                    <input id="remember_me" type="checkbox"
+                        class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500" name="remember">
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-900">Onthoudt mij</label>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    @if (Route::has('password.request'))
+                        <a class="text-sm text-green-600 hover:underline"
+                            href="{{ route('password.request') }}">Wachtwoord vergeten?</a>
+                    @endif
+
                     <button type="submit"
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                        Log in
+                        class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+                        Login
                     </button>
-                </div>
-
-                <div class="mt-2 text-sm text-gray-600 text-center">
-                    Heb je nog geen account?
-                    <a href="{{ route('register') }}" class="text-green-600 hover:underline">
-                        Registreer hier
-                    </a>
                 </div>
             </form>
         </div>
     </div>
-
-    <!-- Footer Component -->
-    <x-footer />
 </x-app-layout>

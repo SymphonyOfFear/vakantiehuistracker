@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="min-h-screen bg-green-100 py-16">
         <div class="container mx-auto">
@@ -27,5 +27,5 @@
         </div>
     </div>
 
-    <x-footer />
+
 </x-app-layout>

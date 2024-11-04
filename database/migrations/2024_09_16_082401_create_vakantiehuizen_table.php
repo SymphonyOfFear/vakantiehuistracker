@@ -6,16 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-            // Define foreign key constraint for 'verhuurder_id'
-            $table->foreignId('verhuurder_id')->constrained('users')->onDelete('cascade');
-
+            $table->unsignedBigInteger('verhuurder_id');
+            $table->foreign('verhuurder_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
             $table->string('naam');
             $table->decimal('prijs', 10, 2);
             $table->text('beschrijving')->nullable();
@@ -24,8 +23,8 @@ return new class extends Migration
             $table->string('straatnaam');
             $table->string('postcode');
             $table->string('huisnummer');
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->default(0);
+            $table->decimal('longitude', 10, 7)->default(0);
             $table->boolean('wifi')->default(false);
             $table->boolean('zwembad')->default(false);
             $table->boolean('parkeren')->default(false);
@@ -35,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('vakantiehuizen');

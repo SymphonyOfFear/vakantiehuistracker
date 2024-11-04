@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-header />
+
 
     <div class="min-h-screen bg-green-100 py-16">
         <div class="container mx-auto">
@@ -16,7 +16,7 @@
                 <p class="text-gray-600">Naam: {{ $reservering->huurder->name }}</p>
                 <p class="text-gray-600">Email: {{ $reservering->huurder->email }}</p>
 
-                <!-- Option to cancel reservation if applicable -->
+
                 <form action="{{ route('reserveringen.destroy', $reservering->id) }}" method="POST" class="mt-6">
                     @csrf
                     @method('DELETE')
@@ -29,5 +29,5 @@
         </div>
     </div>
 
-    <x-footer />
+
 </x-app-layout>

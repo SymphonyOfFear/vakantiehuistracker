@@ -2,48 +2,42 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\ValidationException;
 use App\Providers\RouteServiceProvider;
+use App\Http\Requests\Auth\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create()
+
+    public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
+    public function store(LoginRequest $request)
+    {
+        $request->authenticate();
 
         $request->session()->regenerate();
 
-        // Redirect to welcome page after successful login
-        return redirect()->intended(route('welcome'));
+        $userId = Auth::id();
+        $user = User::findOrFail($userId);
+        if ($user && $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user && $user->hasRole('verhuurder')) {
+            return redirect()->route('verhuurder.dashboard');
+        } else {
+            return redirect()->route('home');
+        }
     }
 
-    /**
-     * Destroy an authenticated session (logout).
-     */
+
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
@@ -52,7 +46,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        // Redirect to welcome page after logout
-        return redirect()->route('welcome');
+
+        return redirect('/');
     }
 }

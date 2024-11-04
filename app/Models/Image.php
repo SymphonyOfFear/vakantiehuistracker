@@ -9,15 +9,11 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $table = 'images';
-    protected $fillable = [
-        'url',
-        'vakantiehuis_id',
-    ];
+    protected $fillable = ['vakantiehuis_id', 'url'];
 
-    // Relatie met Vakantiehuis
+    // Relation with Vakantiehuis
     public function vakantiehuis()
     {
-        return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
+        return $this->belongsTo(Vakantiehuis::class);
     }
 }
