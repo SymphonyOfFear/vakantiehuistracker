@@ -15,11 +15,11 @@
         <div class="w-full lg:w-3/4 p-6 bg-white">
             <h1 class="text-2xl font-bold mb-4">Mijn Vakantiehuizen</h1>
 
-            @if ($huizen->isEmpty())
+            @if ($huisjes->isEmpty())
                 <p class="text-gray-600">Je hebt nog geen vakantiehuizen toegevoegd.</p>
             @else
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ($huizen as $huis)
+                    @foreach ($huisjes as $huis)
                         <div class="relative bg-white p-4 rounded-lg shadow">
                             <img src="{{ asset($huis->images->first()->url ?? 'images/placeholder.png') }}"
                                 alt="{{ $huis->naam }}" class="w-full h-48 object-cover rounded-t-lg mb-4">

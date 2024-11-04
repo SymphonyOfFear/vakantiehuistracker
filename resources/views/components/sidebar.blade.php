@@ -10,6 +10,7 @@
     </div>
     <ul class="space-y-4 overflow-y-auto h-full">
 
+        <!-- Admin Section -->
         @if (auth()->user() && auth()->user()->hasRole('admin'))
             <li><a href="{{ route('admin.dashboard') }}"
                     class="{{ Request::is('admin/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
@@ -22,41 +23,45 @@
                     Rollen & Permissies</a></li>
         @endif
 
+        <!-- Huizen Beheer Dropdown -->
+        <li x-data="{ open: false }">
+            <a @click="open = !open"
+                class="cursor-pointer {{ Request::is('verhuurder/huizen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                Huizen Beheer</a>
+            <ul x-show="open" class="pl-4 mt-2 space-y-2">
+                <li><a href="{{ route('verhuurder.huizen.index') }}"
+                        class="{{ Request::is('verhuurder/huizen/index') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
+                        Alle Huizen</a></li>
+                <li><a href="{{ route('verhuurder.huizen.create') }}"
+                        class="{{ Request::is('verhuurder/huizen/create') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
+                        Voeg Huis Toe</a></li>
+            </ul>
+        </li>
+
+        <!-- Verhuurder Section -->
         @if (auth()->user() && auth()->user()->hasRole('verhuurder'))
             <li><a href="{{ route('verhuurder.dashboard') }}"
                     class="{{ Request::is('verhuurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Verhuurder Dashboard</a></li>
-            <li x-data="{ open: false }">
-                <a @click="open = !open"
-                    class="cursor-pointer {{ Request::is('verhuurder/huizen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
-                    Huizenbeheer</a>
-                <ul x-show="open" class="pl-4 mt-2 space-y-2">
-                    <li><a href="{{ route('verhuurder.huizen.index') }}"
-                            class="{{ Request::is('verhuurder/huizen/index') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
-                            Alle Huizen</a></li>
-                    <li><a href="{{ route('verhuurder.huizen.create') }}"
-                            class="{{ Request::is('verhuurder/huizen/create') ? 'text-green-600 font-bold' : 'text-gray-600' }} hover:text-green-600">
-                            Voeg Huis Toe</a></li>
-                </ul>
-            </li>
         @endif
 
-
+        <!-- Huurder Section -->
         @if (auth()->user() && auth()->user()->hasRole('huurder'))
             <li><a href="{{ route('huurder.dashboard') }}"
                     class="{{ Request::is('huurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Huurder Dashboard</a></li>
         @endif
 
+        <!-- Shared Section -->
         <li><a href="{{ route('recensies.index') }}"
-                class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Recensies</a>
-        </li>
+                class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                Recensies</a></li>
         <li><a href="{{ route('reserveringen.index') }}"
-                class="{{ Request::is('reserveringen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Reserveringen</a>
-        </li>
+                class="{{ Request::is('reserveringen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                Reserveringen</a></li>
         <li><a href="{{ route('favorieten.index') }}"
-                class="{{ Request::is('favorieten*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">Favorieten</a>
-        </li>
+                class="{{ Request::is('favorieten*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
+                Favorieten</a></li>
     </ul>
 </div>
 

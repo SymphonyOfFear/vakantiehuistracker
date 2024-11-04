@@ -17,20 +17,20 @@ class VerhuurderHuisController extends Controller
         // Hier kun je alle benodigde data ophalen voor het dashboard
         // Bijvoorbeeld huizen van de verhuurder:
         $huisjes = Vakantiehuis::where('user_id', Auth::id())->get();
-    
+
         // Geef een view terug voor het dashboard
         return view('verhuurder.dashboard', compact('huisjes'));
-    } 
+    }
     public function index()
     {
         // Haal de ID op van de ingelogde verhuurder
         $verhuurderId = Auth::id();
 
         // Haal alle vakantiehuizen op die bij de verhuurder horen
-        $mijnHuizen = Vakantiehuis::where('verhuurder_id', $verhuurderId)->with('images')->get();
+        $huisjes = Vakantiehuis::where('verhuurder_id', $verhuurderId)->with('images')->get();
 
         // Toon de indexpagina van de vakantiehuizen van de verhuurder
-        return view('verhuurder.huizen.index', compact('mijnHuizen'));
+        return view('verhuurder.huizen.index', compact('huisjes'));
     }
 
     // Functie om de create-pagina weer te geven voor het toevoegen van een vakantiehuis
