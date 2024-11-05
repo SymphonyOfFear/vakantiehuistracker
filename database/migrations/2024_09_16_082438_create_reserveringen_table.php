@@ -24,14 +24,11 @@ return new class extends Migration
 
 
         Schema::table('reserveringen', function (Blueprint $table) {
+
             $table->foreign('huurder_id')
                 ->references('user_id')
                 ->on('role_user_verhuurder_huurder_admin')
-                ->where('role_id', function ($query) {
-                    $query->select('id')
-                        ->from('roles')
-                        ->where('name', 'huurder');
-                });
+                ->onDelete('cascade');
         });
     }
 

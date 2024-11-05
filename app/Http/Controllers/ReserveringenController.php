@@ -11,11 +11,12 @@ class ReserveringenController extends Controller
 {
     public function index()
     {
+
         $user = Auth::id();
-        $gehuurdeHuizen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
+        $reserveringen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
             $query->where('huurder_id', $user);
         })->get();
-        return view('reserveringen.index', compact('gehuurdeHuizen'));
+        return view('reserveringen.index', compact('reserveringen'));
     }
 
     public function create()

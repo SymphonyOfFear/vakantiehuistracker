@@ -2,69 +2,85 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class User extends Authenticatable
 {
-    use Notifiable, HasFactory, HasApiTokens;
+    use Notifiable;
 
-    protected $fillable = ['name', 'email', 'password'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
 
-    protected $hidden = ['password', 'remember_token'];
-
-    protected $casts = ['email_verified_at' => 'datetime'];
-
-    // Relation with roles
+    /**
+     * Define a many-to-many relationship with the Role model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_user');
     }
-
-    // Check if user has a specific role
-    public function hasRole($role)
+public function getRedirectRouteName($destination){
+  
+    $user = User::find(Auth::id());
+    if($user->hasRole('admin')){
+        $destination->redirect('admin/dashboard');
+    } elseif ($user->hasRole('verhuurder')) {
+        $destination->redirect('verhuurder/dashboard');
+    } else{
+        $destination->redirect('huurder/dashboard');
+    }
+}
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param  string  $roleName
+     * @return bool
+     */
+    public function hasRole($roleName)
     {
-        return $this->roles()->where('name', $role)->exists();
+        return $this->roles()->where('name', $roleName)->exists();
     }
 
-    // Relation with favorieten
-    public function favorieten()
-    {
-        return $this->hasMany(Favoriet::class);
-    }
-
-    // Relation with reserveringen
-    public function reserveringen()
-    {
-        return $this->hasMany(Reservering::class, 'huurder_id');
-    }
-
-    // Relation with recensies
-    public function recensies()
-    {
-        return $this->hasMany(Recensie::class, 'user_id');
-    }
-
-    // Relation with vakantiehuizen (as a verhuurder)
+    /**
+     * Define a one-to-many relationship with the Vakantiehuis model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function vakantiehuizen()
     {
         return $this->hasMany(Vakantiehuis::class);
     }
 
-    // Redirect route method based on role
-    public function getRedirectRouteName()
+    /**
+     * Define a one-to-many relationship with the Favoriet model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function favorieten()
     {
-        if ($this->hasRole('admin')) {
-            return 'admin.dashboard';
-        } elseif ($this->hasRole('verhuurder')) {
-            return 'verhuurder.dashboard';
-        } elseif ($this->hasRole('huurder')) {
-            return 'huurder.dashboard';
-        }
+        return $this->hasMany(Favoriet::class);
+    }
 
-        return 'home';
+    /**
+     * Get a specific beoordeling (review) for a vakantiehuis.
+     *
+     * @param  int  $vakantiehuisId
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function beoordeling($vakantiehuisId)
+    {
+        return $this->hasOne(Recensie::class)->where('vakantiehuis_id', $vakantiehuisId);
     }
 }

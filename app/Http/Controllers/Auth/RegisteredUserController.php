@@ -39,10 +39,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign the default role 'huurder' (role_id = 3)
-        $role = Role::find(3); // Assuming role_id 3 corresponds to 'huurder'
+        // Assign the default role 'huurder'
+        $role = Role::where('name', 'huurder')->first(); // Assuming 'huurder' is the default role
         if ($role) {
-            $user->roles()->attach($role);
+            $user->roles()->attach($role->id);
         }
 
         event(new Registered($user));
@@ -59,6 +59,6 @@ class RegisteredUserController extends Controller
             return redirect()->route('huurder.dashboard');
         }
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect('/');
     }
 }

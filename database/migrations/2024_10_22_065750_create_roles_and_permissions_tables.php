@@ -9,34 +9,30 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id()->default(3);
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+
         Schema::create('permissions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->timestamps();
         });
-        Schema::create('roles', function (Blueprint $table) {
+
+        Schema::create('permission_role', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->timestamps();
-        });
-        Schema::create('role_user', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-        Schema::create('role_permissions', function (Blueprint $table) {
-            $table->foreignId('permission_id')->constrained();
-            $table->foreignId('role_id')->constrained();
-            $table->timestamps();
+            $table->foreignId('permission_id')->constrained()->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('role_permissions');
-        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('permission_role');
         Schema::dropIfExists('permissions');
         Schema::dropIfExists('roles');
     }

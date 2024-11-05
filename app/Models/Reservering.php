@@ -2,24 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Reservering extends Model
 {
-    use HasFactory;
     protected $table = 'reserveringen';
-    protected $fillable = ['vakantiehuis_id', 'huurder_id', 'reserveringsnummer', 'begindatum', 'einddatum', 'status'];
+    protected $fillable = [
+        'user_id',
+        'vakantiehuis_id',
+        'start_datum',
+        'eind_datum'
+    ];
 
-    // Relation with Vakantiehuis
-    public function vakantiehuis()
+    public function user()
     {
-        return $this->belongsTo(Vakantiehuis::class, 'vakantiehuis_id');
+        return $this->belongsTo(User::class);
     }
 
-    // Relation with Huurder (User model)
-    public function huurder()
+    public function vakantiehuis()
     {
-        return $this->belongsTo(User::class, 'huurder_id');
+        return $this->belongsTo(Vakantiehuis::class);
     }
 }

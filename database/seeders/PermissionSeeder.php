@@ -7,32 +7,17 @@ use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $permissions = [
-            'view admin dashboard',
-            'view verhuurder dashboard',
-            'view huizen',
-            'create huis',
-            'edit huis',
-            'delete huis',
-            'view huurder dashboard',
-            'view reserveringen',
-            'create reserveringen',
-            'edit reserveringen',
-            'delete reserveringen',
-            'create recensies',
-            'edit recensies',
-            'delete recensies',
-            'manage users',
-            'manage roles',
-            'manage permissions',
+            ['name' => 'create_vakantiehuis'],
+            ['name' => 'edit_vakantiehuis'],
+            ['name' => 'delete_vakantiehuis'],
+            ['name' => 'view_vakantiehuis'],
         ];
 
         foreach ($permissions as $permission) {
-            if (!Permission::where('name', $permission)->exists()) {
-                Permission::create(['name' => $permission]);
-            }
+            Permission::create($permission);
         }
     }
 }

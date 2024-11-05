@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::table('recensies', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('user_id')
-                ->on('role_user_verhuurder_huurder_admin')
+                ->on('')
                 ->where('role_id', function ($query) {
                     $query->select('id')
                         ->from('roles')

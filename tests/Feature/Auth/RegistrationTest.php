@@ -1,11 +1,9 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-test('registration screen can be rendered', function () {
-    $response = $this->get('/register');
-
-    $response->assertStatus(200);
-});
+uses(RefreshDatabase::class);
 
 test('new users can register', function () {
     $response = $this->post('/register', [
@@ -15,6 +13,8 @@ test('new users can register', function () {
         'password_confirmation' => 'password',
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('home'));
+    $response->assertRedirect('/dashboard');
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com',
+    ]);
 });

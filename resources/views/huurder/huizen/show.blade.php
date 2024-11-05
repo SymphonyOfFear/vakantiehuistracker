@@ -20,7 +20,7 @@
 
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-3xl font-bold text-gray-800">{{ $vakantiehuis->naam }}</h1>
-                @if (Auth::id() === $vakantiehuis->verhuurder_id)
+                @if (Auth::id() === $vakantiehuis->user_id)
                     <a href="{{ route('verhuurder.huizen.edit', $vakantiehuis->id) }}"
                         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Bewerk</a>
                 @endif
@@ -86,15 +86,15 @@
                     <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                         @csrf
                         <div class="mb-4">
-                            <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
+                            <label for="rating" class="block text-gray-700 font-medium">beoordeling</label>
                             <div id="star-rating" class="flex items-center space-x-1">
                                 @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->Beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                    <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
                                         data-value="{{ $i }}"></i>
                                 @endfor
                             </div>
                             <input type="hidden" name="rating" id="rating-input"
-                                value="{{ $vakantiehuis->Beoordeling(auth()->id()) }}">
+                                value="{{ $vakantiehuis->beoordeling(auth()->id()) }}">
                         </div>
                         <div class="mb-4">
                             <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>

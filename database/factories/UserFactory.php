@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Role;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
 {
@@ -20,6 +21,14 @@ class UserFactory extends Factory
             'password' => Hash::make('password'), // Default password
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function withRole($roleName = 'user')
+    {
+        return $this->afterCreating(function (User $user) use ($roleName) {
+            $role = Role::firstOrCreate(['name' => $roleName]);
+            $user->roles()->attach($role->id);
+        });
     }
 
     public function unverified()

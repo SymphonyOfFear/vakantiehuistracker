@@ -10,11 +10,7 @@ return new class extends Migration
     {
         Schema::create('vakantiehuizen', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('verhuurder_id');
-            $table->foreign('verhuurder_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('naam');
             $table->decimal('prijs', 10, 2);
             $table->text('beschrijving')->nullable();

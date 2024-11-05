@@ -6,31 +6,32 @@ Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
     let kaart;
+
+    // Initialiseer de kaart met de gegeven latitude en longitude
     const initKaart = (lat, lon) => {
         const kaartElement = document.getElementById('map');
         if (!kaartElement) return;
-        if (kaart) kaart.remove();
+        if (kaart) kaart.remove(); // Verwijder bestaande kaart om duplicaten te voorkomen
         kaart = L.map(kaartElement).setView([lat, lon], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors',
         }).addTo(kaart);
-        // Exacte locatie van de map
+        // Voeg marker toe voor de locatie van het vakantiehuis
         L.marker([lat, lon]).addTo(kaart).bindPopup('Vakantiehuis locatie').openPopup();
     };
 
-    // Checken of de map bestaat
+    // Controleer of de kaart element bestaat, en initialiseert met opgeslagen coördinaten
     if (document.getElementById('map')) {
         const lat = document.getElementById('map').getAttribute('data-lat');
         const lon = document.getElementById('map').getAttribute('data-lon');
-        console.log('Latitude:', lat, 'Longitude:', lon);
         if (lat && lon) {
             initKaart(parseFloat(lat), parseFloat(lon));
         } else {
-            console.error('Latitude or Longitude not found or invalid.');
+            console.error('Latitude of Longitude ontbreekt of is ongeldig.');
         }
     }
 
-    // Exacte locatie met de postcode ophalen
+    // Functie om coördinaten op te halen op basis van een postcode
     const haalCoordinaten = (postcode) => {
         const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(postcode)}&countrycodes=NL`;
         return fetch(geocodeUrl)
@@ -42,10 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error('Ongeldige postcode of locatie niet gevonden.');
                 }
             })
-            .catch(() => ({ lat: 52.3676, lon: 4.9041 })); // Standaard cordinaten wat amsterdam is
+            .catch(() => ({ lat: 52.3676, lon: 4.9041 })); // Standaard coördinaten (Amsterdam)
     };
 
-    // De kaart instellen met de standaard coordinaten
+    // Functie om de kaart in te stellen met standaardcoördinaten
     const instelKaart = () => {
         const latField = document.getElementById('latitude');
         const lonField = document.getElementById('longitude');
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Favorieten Toevoegen handlen
+    // Functie om favorieten toe te voegen of te verwijderen
     const beheerFavorieten = () => {
         document.querySelectorAll('.favoriet-form').forEach((form) => {
             form.addEventListener('submit', (e) => {
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Autocomplete voor de stad
+    // Functie voor autocomplete van de stad en straat
     const instelAutocomplete = (invoerId, suggestieId, zoekType, callback) => {
         const invoer = document.getElementById(invoerId);
         const suggestieBox = document.getElementById(suggestieId);
@@ -116,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Standaard instellingen voor de autocomplete voor de stad
+    // Functie om de autocomplete van stad in te stellen
     const instelStadAutocomplete = () => {
         instelAutocomplete('stad', 'stad-suggestions', 'city', (locatie) => {
             const latField = document.getElementById('latitude');
@@ -130,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Postcode autocomplete
+    // Functie om postcode automatisch stad en straatnaam in te vullen
     const instelPostcodeAutocomplete = () => {
         const invoer = document.getElementById('postcode');
         if (invoer) {
@@ -152,13 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Straat ophalen met de juiste coordinaten
+    // Haalt straatnaam en stad op voor gegeven coördinaten
     const haalStraten = (lat, lon) => {
         const straatnaamInput = document.getElementById('straatnaam');
         const stadInput = document.getElementById('stad');
 
         if (!lat || !lon || !straatnaamInput || !stadInput) {
-            console.error('Some input elements are missing');
+            console.error('Sommige invoerelementen ontbreken');
             return;
         }
 
@@ -173,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch((err) => console.error('Fout bij het ophalen van straatnamen en stad:', err));
     };
 
-    // Preview van de geuploaden afbeeldingen
+    // Voorvertoning van geüploade afbeeldingen
     const previewAfbeeldingen = (event) => {
         const previewContainer = document.getElementById('new-image-previews');
         if (!previewContainer) return;
@@ -207,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Prijs sliders
+    // Prijs sliders instellen
     const updatePrijsLabels = () => {
         const minSlider = document.getElementById('min_prijs');
         const maxSlider = document.getElementById('max_prijs');
@@ -226,13 +227,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Checken of de functie op de pagina is zo dat ik niet onnodige foutmeldingen krijg 
+    // Controleer en activeer de functies indien aanwezig op de pagina
     if (document.getElementById('map')) instelKaart();
     if (typeof verwijderAfbeelding === 'function') verwijderAfbeelding();
     if (typeof beheerFavorieten === 'function') beheerFavorieten();
     if (typeof instelStadAutocomplete === 'function') instelStadAutocomplete();
     if (typeof instelPostcodeAutocomplete === 'function') instelPostcodeAutocomplete();
     if (typeof updatePrijsLabels === 'function') updatePrijsLabels();
+
+    // Sidebar toggle-functie
     window.toggleSidebar = function () {
         const sidebar = document.getElementById('sidebar');
         const showSidebarButton = document.getElementById('showSidebarButton');

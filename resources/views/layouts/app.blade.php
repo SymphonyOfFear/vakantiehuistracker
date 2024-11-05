@@ -8,7 +8,7 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-
+    <!-- External Libraries -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -16,20 +16,15 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
 
 <body class="font-sans antialiased">
     <div class="flex flex-col min-h-screen bg-white light:bg-white-900">
-
-
         @include('layouts.header')
-
 
         <main class="flex-grow">
             {{ $slot }}
         </main>
-
 
         <footer class="bg-green-600 text-white py-4">
             <div class="container mx-auto text-center">
@@ -44,10 +39,9 @@
         </footer>
     </div>
 
-
+    <!-- External Scripts -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.0.0/dist/js/tom-select.complete.min.js"></script>
-
 </body>
 
 </html>

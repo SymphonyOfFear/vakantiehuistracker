@@ -6,45 +6,38 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class VerhuurderHuisRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'naam' => 'required|string|max:255',
-            'prijs' => 'required|numeric',
+            'prijs' => 'required|numeric|min:0',
+            'slaapkamers' => 'required|integer|min:1',
             'beschrijving' => 'nullable|string',
-            'slaapkamers' => 'nullable|integer',
+            'wifi' => 'nullable|boolean',
+            'zwembad' => 'nullable|boolean',
+            'speeltuin' => 'nullable|boolean',
             'stad' => 'required|string|max:255',
             'straatnaam' => 'required|string|max:255',
             'postcode' => 'required|string|max:10',
-            'longitude' => 'nullable|numeric',
-            'latitude' => 'nullable|numeric',
             'huisnummer' => 'required|string|max:10',
-            'wifi' => 'boolean',
-            'zwembad' => 'boolean',
-            'parkeren' => 'boolean',
-            'speeltuin' => 'boolean',
-            'beschikbaarheid' => 'boolean',
-            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'fotos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
     }
 
-    public function messages()
+    protected function prepareForValidation()
     {
-        return [
-            'naam.required' => 'De naam is verplicht.',
-            'prijs.required' => 'De prijs is verplicht.',
-            'stad.required' => 'De stad is verplicht.',
-            'straatnaam.required' => 'De straatnaam is verplicht.',
-            'postcode.required' => 'De postcode is verplicht.',
-            'huisnummer.required' => 'Het huisnummer is verplicht.',
-            'fotos.*.image' => 'Elke foto moet een afbeelding zijn.',
-            'fotos.*.mimes' => 'Elke foto moet een geldig bestandstype hebben (jpeg, png, jpg, gif).',
-            'fotos.*.max' => 'Elke foto mag niet groter zijn dan 2 MB.',
-        ];
+        $this->merge([
+            'wifi' => $this->input('wifi', 0),
+            'parkeerplaats' => $this->input('parkeerplaats', 0),
+            'zwembad' => $this->input('zwembad', 0),
+            'speeltuin' => $this->input('speeltuin', 0),
+        ]);
     }
 }
