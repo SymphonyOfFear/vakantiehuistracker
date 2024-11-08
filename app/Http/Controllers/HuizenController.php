@@ -65,21 +65,22 @@ class HuizenController extends Controller
 
         return view('huizen.index', compact('huizen'));
     }
-// Show functie data ophalen van de huis met de juiste id
+
     public function show($id)
     {
         $vakantiehuis = Vakantiehuis::where($id);
         try {
 
             $vakantiehuis = Vakantiehuis::with('images', 'recensies')->findOrFail($id);
+
+
             return view('huizen.show', compact('vakantiehuis'));
         } catch (\Exception $e) {
-// Debug statement
+
             Log::error("Er is een fout opgestreden tijdens het laten zien van deze vakantiehuis met de ID $id: " . $e->getMessage());
             return redirect()->route('huizen.index')->with('error', 'Vakantiehuis niet gevonden of een fout opgetreden.');
         }
     }
-    // Zoek functie op postcode, straat en stad
     public function search(VakantiehuisRequest $request)
     {
         $query = $request->input('location');
@@ -88,7 +89,7 @@ class HuizenController extends Controller
             ->orWhere('straatnaam', 'LIKE', "%{$query}%")
             ->orWhere('postcode', 'LIKE', "%{$query}%")
             ->get();
-// resultaten teruggeven
+
         return view(
             'huizen.index',
             compact('huizen')
