@@ -39,10 +39,11 @@ class VerhuurderHuisController extends Controller
 
         return view('verhuurder.huizen.create', compact('locations'));
     }
+
     public function store(VerhuurderHuisRequest $request)
     {
         $vakantiehuis = Vakantiehuis::create([
-            'user_id' => Auth::id(), // Set user_id from authenticated user
+            'user_id' => Auth::id(),
             'naam' => $request->naam,
             'prijs' => $request->prijs,
             'beschrijving' => $request->beschrijving,
@@ -63,7 +64,7 @@ class VerhuurderHuisController extends Controller
                 if ($foto->isValid()) {
                     $path = $foto->store('public/fotos');
                     $url = Storage::url($path);
-                    $vakantiehuis->images()->create(['url' => $url]);
+                    Image::create(['url' => $url, 'vakantiehuis_id' => $vakantiehuis->id]);
                 }
             }
         }
@@ -111,7 +112,7 @@ class VerhuurderHuisController extends Controller
                 if ($foto->isValid()) {
                     $path = $foto->store('public/fotos');
                     $url = Storage::url($path);
-                    $vakantiehuis->images()->create(['url' => $url]);
+                    Image::create(['url' => $url, 'vakantiehuis_id' => $vakantiehuis->id]);
                 }
             }
         }
@@ -122,14 +123,20 @@ class VerhuurderHuisController extends Controller
     public function destroy($id)
     {
         $vakantiehuis = Vakantiehuis::findOrFail($id);
-        $vakantiehuis->images()->delete();
+
+        foreach ($vakantiehuis->images as $image) {
+            Storage::delete(str_replace('/storage', 'public', $image->url));
+            $image->delete();
+        }
+
         $vakantiehuis->delete();
 
         return redirect()->route('verhuurder.huizen.index')->with('success', 'Huisje succesvol verwijderd!');
     }
 
-    public function show(Vakantiehuis $huisje)
+    public function show(VerhuurderHuisRequest $request, $id)
     {
+$huisje = Vakantiehuis::where($id);
         return view('verhuurder.huizen.show', compact('huisje'));
     }
 }
