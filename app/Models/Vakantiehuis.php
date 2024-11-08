@@ -54,4 +54,8 @@ class Vakantiehuis extends Model
     {
         return $this->hasOne(Reservering::class);
     }
+    public function beoordeling($userId)
+    {
+        return $this->recensies()->where('user_id', $userId)->first()?->rating;
+    }
 }

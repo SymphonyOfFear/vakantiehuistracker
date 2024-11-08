@@ -86,15 +86,15 @@
                     <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                         @csrf
                         <div class="mb-4">
-                            <label for="rating" class="block text-gray-700 font-medium">beoordeling</label>
+                            <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
                             <div id="star-rating" class="flex items-center space-x-1">
                                 @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                    <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->Beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
                                         data-value="{{ $i }}"></i>
                                 @endfor
                             </div>
                             <input type="hidden" name="rating" id="rating-input"
-                                value="{{ $vakantiehuis->beoordeling(auth()->id()) }}">
+                                value="{{ $vakantiehuis->Beoordeling(auth()->id()) }}">
                         </div>
                     @else
                         <div class="mb-6">
@@ -137,10 +137,10 @@
                                 <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                                     @csrf
                                     <div class="mb-4">
-                                        <label for="rating" class="block text-gray-700 font-medium">beoordeling</label>
+                                        <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
                                         <select name="rating" id="rating"
                                             class="w-full mt-1 p-2 border border-gray-300 rounded-md" required>
-                                            <option value="">Selecteer een beoordeling</option>
+                                            <option value="">Selecteer een Beoordeling</option>
                                             <option value="1">1 Ster</option>
                                             <option value="2">2 Sterren</option>
                                             <option value="3">3 Sterren</option>
@@ -163,15 +163,15 @@
                             <form action="{{ route('recensies.store', $vakantiehuis->id) }}" method="POST" class="mt-4">
                                 @csrf
                                 <div class="mb-4">
-                                    <label for="rating" class="block text-gray-700 font-medium">beoordeling</label>
+                                    <label for="rating" class="block text-gray-700 font-medium">Beoordeling</label>
                                     <div id="star-rating" class="flex items-center space-x-1">
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
+                                            <i class="fa fa-star text-gray-300 cursor-pointer {{ $vakantiehuis->Beoordeling(auth()->id()) >= $i ? 'text-yellow-500' : '' }}"
                                                 data-value="{{ $i }}"></i>
                                         @endfor
                                     </div>
                                     <input type="hidden" name="rating" id="rating-input"
-                                        value="{{ $vakantiehuis->beoordeling(auth()->id()) }}">
+                                        value="{{ user->Beoordeling(auth()->id()) }}">
                                 </div>
                                 <div class="mb-4">
                                     <label for="comment" class="block text-gray-700 font-medium">Opmerking</label>

@@ -68,6 +68,7 @@ class HuizenController extends Controller
 // Show functie data ophalen van de huis met de juiste id
     public function show($id)
     {
+        $vakantiehuis = Vakantiehuis::where($id);
         try {
 
             $vakantiehuis = Vakantiehuis::with('images', 'recensies')->findOrFail($id);
