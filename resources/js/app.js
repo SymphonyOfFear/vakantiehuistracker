@@ -213,24 +213,28 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     };
-    // Slideshow functionaliteit
     const slides = document.querySelectorAll("#slideshow .slide");
     let currentSlide = 0;
 
     const showSlide = (index) => {
-        slides[currentSlide]?.classList.remove("active");
-        currentSlide = (index + slides.length) % slides.length;
-        slides[currentSlide]?.classList.add("active");
+        slides.forEach((slide, i) => {
+            slide.style.display = i === index ? "block" : "none";
+        });
     };
 
-    document.getElementById("prev")?.addEventListener('click', () => showSlide(currentSlide - 1));
-    document.getElementById("next")?.addEventListener('click', () => showSlide(currentSlide + 1));
+    document.getElementById("prev")?.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    });
 
-    if (slides.length > 0) {
-        slides[0].classList.add("active"); // Start met de eerste slide zichtbaar
-    }
+    document.getElementById("next")?.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    });
 
-    // Sterbeoordeling
+    showSlide(currentSlide);
+
+    // ster beoordeling functie zodat je sterren kan geven bij de beoordeling / feedback
     const starRating = document.getElementById('star-rating');
     const ratingInput = document.getElementById('rating-input');
 

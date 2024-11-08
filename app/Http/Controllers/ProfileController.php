@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $user->fill($request->validated());
 
         if ($user->isDirty('email')) {
-            $user->email_verified_at = null; // Reset email verification if email is updated
+            $user->email_verified_at = null;
         }
 
         $user->save();

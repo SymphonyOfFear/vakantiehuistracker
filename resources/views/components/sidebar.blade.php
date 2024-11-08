@@ -10,7 +10,7 @@
     </div>
     <ul class="space-y-4 overflow-y-auto h-full">
 
-        <!-- Admin Section -->
+  
         @if (auth()->user() && auth()->user()->hasRole('admin'))
             <li><a href="{{ route('admin.dashboard') }}"
                     class="{{ Request::is('admin/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
@@ -23,7 +23,6 @@
                     Rollen & Permissies</a></li>
 
 
-            <!-- Huizen Beheer Dropdown -->
             <li x-data="{ open: false }">
                 <a @click="open = !open"
                     class="cursor-pointer {{ Request::is('verhuurder/huizen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
@@ -38,21 +37,18 @@
                 </ul>
             </li>
         @endif
-        <!-- Verhuurder Section -->
         @if (auth()->user() && auth()->user()->hasRole('verhuurder'))
             <li><a href="{{ route('verhuurder.dashboard') }}"
                     class="{{ Request::is('verhuurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Verhuurder Dashboard</a></li>
         @endif
 
-        <!-- Huurder Section -->
         @if (auth()->user() && auth()->user()->hasRole('huurder'))
             <li><a href="{{ route('huurder.dashboard') }}"
                     class="{{ Request::is('huurder/dashboard*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                     Huurder Dashboard</a></li>
         @endif
 
-        <!-- Shared Section -->
         <li><a href="{{ route('recensies.index') }}"
                 class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                 Recensies</a></li>

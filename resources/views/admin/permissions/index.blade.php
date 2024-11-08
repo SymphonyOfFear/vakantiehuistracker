@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="flex lg:flex-nowrap flex-wrap min-h-screen">
 
-        <!-- Sidebar -->
+      
         <x-sidebar title="Permissiesbeheer" class="lg:min-h-screen">
             <li><a href="{{ route('admin.dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a></li>
             <li><a href="{{ route('admin.users.index') }}" class="text-gray-700 hover:text-green-600">Gebruikers</a></li>
@@ -9,11 +9,11 @@
             </li>
         </x-sidebar>
 
-        <!-- Content -->
+     
         <div class="w-full lg:w-3/4 p-6 bg-white lg:ml-auto">
             <h1 class="text-2xl font-bold mb-4">Rol en Permissies Beheer</h1>
 
-            <!-- Role Selection -->
+           
             <form action="{{ route('admin.permissions.roles') }}" method="GET">
                 <label for="role" class="block text-gray-700 font-bold mb-2">Selecteer Rol</label>
                 <select id="role" name="role" class="w-full border border-gray-300 rounded p-2 mb-4"

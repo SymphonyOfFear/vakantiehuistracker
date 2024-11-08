@@ -5,7 +5,7 @@
         <div class="container mx-auto">
             <h1 class="text-3xl font-semibold text-gray-700 mb-6">{{ $huisje->naam }}</h1>
 
-            <!-- House details -->
+           
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <img src="{{ $huisje->afbeelding ?? 'https://placehold.co/600x400' }}" alt="{{ $huisje->naam }}"
                     class="w-full h-96 object-cover rounded-lg mb-4">
@@ -13,7 +13,7 @@
                 <p><strong>Prijs:</strong> € {{ $huisje->prijs }}</p>
                 <p><strong>Aantal slaapkamers:</strong> {{ $huisje->slaapkamers }}</p>
 
-                <!-- Amenities -->
+              
                 <h3 class="mt-6 text-xl font-semibold">Voorzieningen</h3>
                 <ul class="list-disc list-inside">
                     @if ($huisje->zwembad)
@@ -38,7 +38,7 @@
                 </p>
             </div>
 
-            <!-- Feedback Section -->
+          
             <div class="mt-10">
                 <button id="feedbackToggle"
                     class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring">
@@ -83,7 +83,7 @@
                                 <p><strong>{{ $feedback->naam }}</strong></p>
                                 <p>{{ $feedback->feedback }}</p>
 
-                                <!-- Zorg ervoor dat de form altijd wordt weergegeven -->
+                                
                                 <form action="{{ route('verhuurder.feedback.destroy', $feedback->id) }}" method="POST"
                                     onsubmit="return confirm('Weet je zeker dat je deze feedback wilt verwijderen?');">
                                     @csrf

@@ -2,16 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\VakantiehuisRequest;
+use App\Models\User;
 use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\VakantiehuisRequest;
 
 class HuizenController extends Controller
 {
+public function welcome(Request $request){
+    $query = $request->input('query', '');
+    
+
+    if (!empty($query)) {
+        session(['last_search' => $query]);
+    }
+
+
+    $huizen = Vakantiehuis::where('stad', 'like', "%{$query}%")
+        ->orWhere('straatnaam', 'like', "%{$query}%")
+        ->orWhere('postcode', 'like', "%{$query}%")
+        ->get();
+
+    return view('welcome', compact('huizen'));
+
+}
+   
+     
 
     public function index(VakantiehuisRequest $request)
     {
@@ -68,19 +88,17 @@ class HuizenController extends Controller
 
     public function show($id)
     {
-        $vakantiehuis = Vakantiehuis::where($id);
+        $user = Auth::user();
+
         try {
-
-            $vakantiehuis = Vakantiehuis::with('images', 'recensies')->findOrFail($id);
-
-
-            return view('huizen.show', compact('vakantiehuis'));
+            $vakantiehuis = Vakantiehuis::with(['images', 'recensies'])->findOrFail($id);
+            return view('huizen.show', compact('vakantiehuis', 'user'));
         } catch (\Exception $e) {
-
-            Log::error("Er is een fout opgestreden tijdens het laten zien van deze vakantiehuis met de ID $id: " . $e->getMessage());
-            return redirect()->route('huizen.index')->with('error', 'Vakantiehuis niet gevonden of een fout opgetreden.');
+            Log::error("Error showing Vakantiehuis with ID $id: " . $e->getMessage());
+            return redirect()->route('huizen.index')->with('error', 'Vakantiehuis not found or an error occurred.');
         }
     }
+
     public function search(VakantiehuisRequest $request)
     {
         $query = $request->input('location');
