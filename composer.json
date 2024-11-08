@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "froiden/sql-generator": "dev-master",
         "intervention/image": "^3.8",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
