@@ -18,9 +18,7 @@ use App\Http\Controllers\Huurder\ResultsController as HuurderResultsController;
 use App\Http\Controllers\Verhuurder\ResultsController as VerhuurderResultsController;
 use App\Http\Controllers\Admin\HuizenController as HuisAdmin;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HuizenController::class, 'welcome'])->name('home');
 
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
 Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');

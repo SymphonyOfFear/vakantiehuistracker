@@ -13,78 +13,81 @@ use App\Http\Requests\VakantiehuisRequest;
 
 class HuizenController extends Controller
 {
-public function welcome(Request $request){
-    $query = $request->input('query', '');
+    public function welcome(Request $request)
+    {
+        $zoekopdracht = $request->input('query', ''); 
     
+        if (!empty($zoekopdracht)) {
+            session(['last_search' => $zoekopdracht]);
+        }
 
-    if (!empty($query)) {
-        session(['last_search' => $query]);
+        $huizen = Vakantiehuis::where(function ($q) use ($zoekopdracht) {
+                $q->where('stad', 'like', '%' . $zoekopdracht . '%')
+                  ->orWhere('straatnaam', 'like', '%' . $zoekopdracht . '%')
+                  ->orWhere('postcode', 'like', '%' . $zoekopdracht . '%');
+            })
+            ->get();
+    
+   
+        return view('welcome', compact('huizen'));
     }
-
-
-    $huizen = Vakantiehuis::where('stad', 'like', "%{$query}%")
-        ->orWhere('straatnaam', 'like', "%{$query}%")
-        ->orWhere('postcode', 'like', "%{$query}%")
-        ->get();
-
-    return view('welcome', compact('huizen'));
-
-}
+    
    
      
 
-    public function index(VakantiehuisRequest $request)
-    {
+public function index(Request $request)
+{
+    $queryParam = $request->input('zoekopdracht', '');
+    
+    $query = Vakantiehuis::query();
 
-        $query = Vakantiehuis::query();
-
-
-        if ($request->filled('stad')) {
-            $query->where('stad', 'like', '%' . $request->input('stad') . '%');
-        }
-
-
-        if ($request->filled('postcode')) {
-            $query->where('postcode', 'like', '%' . $request->input('postcode') . '%');
-        }
-
-
-        if ($request->filled('straatnaam')) {
-            $query->where('straatnaam', 'like', '%' . $request->input('straatnaam') . '%');
-        }
-
-
-        if ($request->filled('huisnummer')) {
-            $query->where('huisnummer', 'like', '%' . $request->input('huisnummer') . '%');
-        }
-
-
-
-
-
-        if ($request->filled('min_prijs') && $request->filled('max_prijs')) {
-            $query->whereBetween('prijs', [(int) $request->input('min_prijs'), (int) $request->input('max_prijs')]);
-        }
-
-        if ($request->filled('wifi')) {
-            $query->where('wifi', true);
-        }
-        if ($request->filled('zwembad')) {
-            $query->where('zwembad', true);
-        }
-        if ($request->filled('parkeren')) {
-            $query->where('parkeren', true);
-        }
-        if ($request->filled('speeltuin')) {
-            $query->where('speeltuin', true);
-        }
-
-
-        $huizen = $query->get();
-
-
-        return view('huizen.index', compact('huizen'));
+    if (!empty($queryParam)) {
+        session(['last_search' => $queryParam]);
+        $query->where(function ($subQuery) use ($queryParam) {
+            $subQuery->where('stad', 'like', '%' . $queryParam . '%')
+                     ->orWhere('straatnaam', 'like', '%' . $queryParam . '%')
+                     ->orWhere('postcode', 'like', '%' . $queryParam . '%');
+        });
     }
+
+    if ($request->filled('stad')) {
+        $query->where('stad', 'like', '%' . $request->input('stad') . '%');
+    }
+
+    if ($request->filled('postcode')) {
+        $query->where('postcode', 'like', '%' . $request->input('postcode') . '%');
+    }
+
+    if ($request->filled('straatnaam')) {
+        $query->where('straatnaam', 'like', '%' . $request->input('straatnaam') . '%');
+    }
+
+    if ($request->filled('huisnummer')) {
+        $query->where('huisnummer', 'like', '%' . $request->input('huisnummer') . '%');
+    }
+
+    if ($request->filled('min_prijs') && $request->filled('max_prijs')) {
+        $query->whereBetween('prijs', [(int) $request->input('min_prijs'), (int) $request->input('max_prijs')]);
+    }
+
+    if ($request->filled('wifi')) {
+        $query->where('wifi', true);
+    }
+    if ($request->filled('zwembad')) {
+        $query->where('zwembad', true);
+    }
+    if ($request->filled('parkeren')) {
+        $query->where('parkeren', true);
+    }
+    if ($request->filled('speeltuin')) {
+        $query->where('speeltuin', true);
+    }
+
+    $huizen = $query->get();
+
+    return view('huizen.index', compact('huizen'));
+}
+
 
     public function show($id)
     {

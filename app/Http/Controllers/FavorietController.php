@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class FavorietController extends Controller
 {
+    // Toont de lijst van favoriete vakantiehuizen van de gebruiker
     public function index()
     {
         $userId = Auth::id();
@@ -19,7 +20,7 @@ class FavorietController extends Controller
         return view('favorieten.index', compact('favorieten'));
     }
 
-
+    // Voegt een vakantiehuis toe aan de favorieten of verwijdert deze uit de favorieten
     public function toggle($vakantiehuisId)
     {
         $userId = Auth::id();
@@ -35,7 +36,6 @@ class FavorietController extends Controller
                 'vakantiehuis_id' => $vakantiehuisId,
             ]);
         }
-
 
         return redirect()->back();
     }
