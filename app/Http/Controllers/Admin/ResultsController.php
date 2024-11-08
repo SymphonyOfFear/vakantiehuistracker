@@ -10,8 +10,11 @@ use App\Http\Controllers\Controller;
 
 class ResultsController extends Controller
 {
-    // Index pagina met de totale gebruikers / permissies
-    // de request wordt gebruikt om te checken of die een admin is
+/** 
+* Index Pagina
+    * Tonen van een overzicht van alle resultaten.
+    * Ophalen van alle resultaten op en retourneert de overzichtspagina.
+*/
     public function index()
     {
         $users = User::count();

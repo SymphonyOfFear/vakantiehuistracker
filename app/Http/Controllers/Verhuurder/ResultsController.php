@@ -7,7 +7,7 @@ use App\Models\Vakantiehuis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-
+// Verhuurder/ResultsController
 class ResultsController extends Controller
 {
     public function index()
