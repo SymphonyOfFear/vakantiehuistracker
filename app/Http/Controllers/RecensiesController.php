@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/RecensiesController.php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecensieRequest;
@@ -7,6 +9,7 @@ use App\Models\Recensie;
 use App\Models\Reservering;
 use App\Models\Vakantiehuis;
 use Illuminate\Support\Facades\Auth;
+use Termwind\Components\Dd;
 
 class RecensiesController extends Controller
 {
@@ -24,25 +27,29 @@ class RecensiesController extends Controller
 
     public function store(RecensieRequest $request, $vakantiehuisId)
     {
-        try {
-            $hasReservation = Reservering::where('huurder_id', Auth::id())
-                ->where('vakantiehuis_id', $vakantiehuisId)
-                ->exists();
+     
+    // Valideren van de input
+    $validated = $request->validated();
 
-            if (!$hasReservation) {
-                return back()->with('error', 'U kunt alleen een recensie schrijven als u een reservering heeft.');
-            }
+    // Haal het vakantiehuis op om te controleren of het bestaat
+    $vakantiehuis = Vakantiehuis::findOrFail($vakantiehuisId);
+    
+    // Maak een nieuwe recensie
+    $recensie = new Recensie();
+    $recensie->user_id = Auth::user()->id; // Huidige gebruiker
+    $recensie->vakantiehuis_id = $vakantiehuis->id; // Koppel aan vakantiehuis
+    $recensie->rating = $validated['rating'];
+    $recensie->comment = $validated['opmerking'];
+    
+    // dd($recensie);
 
-            Recensie::create([
-                'vakantiehuis_id' => $vakantiehuisId,
-                'user_id' => Auth::id(),
-                'rating' => $request->rating,
-                'comment' => $request->comment,
-            ]);
+    // Opslaan in de database
+    $recensie->save();
 
-            return back()->with('success', 'Uw recensie is succesvol geplaatst.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Er is een fout opgetreden bij het plaatsen van uw recensie.');
-        }
+    // Redirect terug naar de vakantiehuispagina met succesbericht
+    return redirect()->route('huizen.show', $vakantiehuis->id)
+                     ->with('success', 'Je recensie is succesvol toegevoegd!');
+
+
     }
 }

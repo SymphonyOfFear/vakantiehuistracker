@@ -9,15 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('vakantiehuis_id')->constrained()->onDelete('cascade');
-            $table->integer('rating')->unsigned();
-            $table->text('comments')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('rating');
+            $table->text('opmerking');
             $table->timestamps();
         });
     }

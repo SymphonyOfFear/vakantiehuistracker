@@ -14,7 +14,7 @@ class RecensieRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'beoordeling' => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|min:1|max:5',
             'opmerking' => 'required|string|max:1000',
         ];
     }

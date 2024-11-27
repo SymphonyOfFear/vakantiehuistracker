@@ -13,22 +13,22 @@ return new class extends Migration
     {
         Schema::create('recensies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('vakantiehuis_id')->constrained('vakantiehuizen')->onDelete('cascade');
-            $table->tinyInteger('beoordeling')->default(1);
-            $table->string('opmerking');
+            $table->unsignedBigInteger('vakantiehuis_id');
+            $table->unsignedBigInteger('user_id');
+            $table->integer('rating')->check('rating >= 1 AND rating <= 5');
+            $table->text('comment');
             $table->timestamps();
         });
-        Schema::table('recensies', function (Blueprint $table) {
-            $table->foreign('user_id')
-                ->references('user_id')
-                ->on('')
-                ->where('role_id', function ($query) {
-                    $query->select('id')
-                        ->from('roles')
-                        ->where('name', 'huurder');
-                });
-        });
+        // Schema::table('recensies', function (Blueprint $table) {
+        //     $table->foreign('user_id')
+        //         ->references('user_id')
+        //         ->on('')
+        //         ->where('role_id', function ($query) {
+        //             $query->select('id')
+        //                 ->from('roles')
+        //                 ->where('name', 'huurder');
+        //         });
+        // });
     }
 
     /**

@@ -65,7 +65,7 @@ Route::prefix('huurder')->group(function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/recensies', [RecensiesController::class, 'index'])->name('recensies.index');
     Route::get('/recensies/create', [RecensiesController::class, 'create'])->name('recensies.create');
-    Route::post('/recensies', [RecensiesController::class, 'store'])->name('recensies.store');
+    Route::post('/recensies/{vakantiehuisId}', [RecensiesController::class, 'store'])->name('recensies.store'); // Aangepast
     Route::get('/recensies/{id}/edit', [RecensiesController::class, 'edit'])->name('recensies.edit');
     Route::put('/recensies/{id}', [RecensiesController::class, 'update'])->name('recensies.update');
     Route::delete('/recensies/{id}', [RecensiesController::class, 'destroy'])->name('recensies.destroy');
