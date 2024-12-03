@@ -25,32 +25,31 @@ class RegisteredUserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // Validate input fields (without role)
+      
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Create a new user
+     
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign the default role 'huurder'
-        $role = Role::where('name', 'huurder')->first(); // Assuming 'huurder' is the default role
+        $role = Role::where('name', 'huurder')->first(); 
         if ($role) {
             $user->roles()->attach($role->id);
         }
 
         event(new Registered($user));
 
-        // Log in the user
+
         Auth::login($user);
 
-        // Redirect based on role
+
         if ($user->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->hasRole('verhuurder')) {

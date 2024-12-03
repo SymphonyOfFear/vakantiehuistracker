@@ -37,6 +37,11 @@ class Vakantiehuis extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function checkVerhuurder($userId)
+    {
+        return $this->verhuurder()->where('id', $userId)->exists();
+    }
+
     public function images()
     {
         return $this->hasMany(Image::class);

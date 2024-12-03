@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HuizenController as AdminHuizenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HuizenController;
 use App\Http\Controllers\ContactController;
@@ -12,12 +13,12 @@ use App\Http\Controllers\VerhuurderHuisController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ResultsController as AdminResultsController;
 use App\Http\Controllers\FeedbackController;
+
 use App\Http\Controllers\Huurder\ResultsController as HuurderResultsController;
 use App\Http\Controllers\Verhuurder\ResultsController as VerhuurderResultsController;
+use App\Http\Controllers\Admin\HuizenController as HuisAdmin;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HuizenController::class, 'welcome'])->name('home');
 
 Route::get('/huizen', [HuizenController::class, 'index'])->name('huizen.index');
 Route::get('/huizen/{id}', [HuizenController::class, 'show'])->name('huizen.show');
@@ -29,7 +30,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminResultsController::class, 'checkAdminAccess'])->name('admin.dashboard');
 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-
+Route::get('/huizen/index', [AdminResultsController::class, 'index'])->name('admin.huizen.overview');
     Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/destroy/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');

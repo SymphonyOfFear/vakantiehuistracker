@@ -4,44 +4,36 @@
         <div class="flex-grow bg-green-100 py-16">
             <div class="container mx-auto text-center">
 
+                <!-- Hero Image -->
                 <div class="mb-8">
                     <img src="{{ asset('images/site/hero-image.png') }}" alt="Vakantiehuis illustratie"
                         class="w-48 lg:w-64 h-auto mx-auto">
                 </div>
 
-
+                <!-- Search Form -->
                 <div class="bg-white p-6 rounded-lg inline-block w-full max-w-2xl">
-                    <form action="{{ route('huizen.index') }}" method="GET"
-                        class="flex items-center space-x-2 relative">
+                    <form action="{{ route('huizen.index') }}" method="GET" class="flex items-center relative space-x-2">
                         <div class="w-full relative">
-
-                            <input type="text" id="location" name="query"
+                            <input type="text" id="location" name="zoekopdracht" 
                                 placeholder="Zoek op plaats, buurt of postcode"
-                                class="w-full px-6 py-4 border border-gray-300 rounded-l-md focus:outline-none focus:border-green-500">
-
-                            <div id="location-suggestions"
-                                class="absolute z-10 w-full bg-white shadow-lg border border-gray-200 mt-1 rounded-md max-h-60 overflow-y-auto hidden">
-                            </div>
+                                class="w-full px-6 py-4 border border-gray-300 rounded-l-md focus:outline-none focus:border-green-500"
+                                value="{{ session('last_search', '') }}">
                         </div>
-
                         <button type="submit"
-                            class="px-8 py-4 bg-green-600 text-white rounded-r-md hover:bg-green-700 transition ease-in-out duration-300">
-                            <i class="fas fa-map-marker-alt"></i>
+                            class="px-8 py-4 bg-green-600 text-white rounded-r-md hover:bg-green-700 transition duration-300">
+                            <i class="fas fa-search"></i>
                         </button>
                     </form>
+
+                    <!-- Last Search Link -->
                     <p class="mt-2 text-sm text-gray-500">Laatste zoekopdracht:
-                        <a href="{{ session('last_search') ? route('huizen.index', ['query' => session('last_search')]) : '#' }}"
+                        <a href="{{ session('last_search') ? route('huizen.index', ['zoekopdracht' => session('last_search')]) : '#' }}"
                             class="text-green-600 hover:underline">
-                            {{ session('last_search', 'Geen zoekopdracht') }} + 0 filter
+                            {{ session('last_search', 'Geen zoekopdracht') }}
                         </a>
                     </p>
                 </div>
             </div>
         </div>
-
-
-
     </div>
-
-
 </x-app-layout>

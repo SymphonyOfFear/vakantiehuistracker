@@ -27,9 +27,11 @@ class ResultsController extends Controller
         $users = User::count();
         $permissions = Permission::count();
         if ($request->authorize()) {
-            return view('admin.dashboard', compact('users', 'permissions'));  // Or appropriate view for the admin dashboard
+            return view('admin.dashboard', compact('users', 'permissions')); 
         }
 
         return redirect()->route('home');
     }
+
+    //  huizen overzicht admin
 }
