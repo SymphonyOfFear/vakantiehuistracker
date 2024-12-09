@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user && $user->hasRole('verhuurder')) {
             return redirect()->route('verhuurder.dashboard');
         } else {
-            return redirect()->route('home');
+            return redirect()->route('huizen');
         }
     }
 

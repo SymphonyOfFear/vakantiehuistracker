@@ -44,7 +44,7 @@ Route::get('/huizen/index', [AdminResultsController::class, 'index'])->name('adm
     Route::put('/permissions/update/{id}', [PermissionController::class, 'update'])->name('admin.permissions.update');
     Route::delete('/permissions/destroy/{id}', [PermissionController::class, 'destroy'])->name('admin.permissions.destroy');
 });
-
+ 
 // Verhuurder
 Route::prefix('verhuurder')->group(function () {
     Route::get('/dashboard', [VerhuurderResultsController::class, 'index'])->name('verhuurder.dashboard');
