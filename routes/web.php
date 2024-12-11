@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/reserveringen', [ReserveringenController::class, 'index'])->name('reserveringen.index');
     Route::get('/reserveringen/create', [ReserveringenController::class, 'create'])->name('reserveringen.create');
-    Route::post('/reserveringen', [ReserveringenController::class, 'store'])->name('reserveringen.store');
+    Route::post('/reserveringen/store', [ReserveringenController::class, 'store'])->name('reserveringen.store');
     Route::get('/reserveringen/{id}', [ReserveringenController::class, 'show'])->name('reserveringen.show');
     Route::get('/reserveringen/{id}/edit', [ReserveringenController::class, 'edit'])->name('reserveringen.edit');
     Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->name('reserveringen.update');

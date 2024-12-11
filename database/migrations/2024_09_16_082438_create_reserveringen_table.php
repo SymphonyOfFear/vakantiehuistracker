@@ -22,14 +22,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
-        Schema::table('reserveringen', function (Blueprint $table) {
-
-            $table->foreign('huurder_id')
-                ->references('user_id')
-                ->on('role_user_verhuurder_huurder_admin')
-                ->onDelete('cascade');
-        });
     }
 
     /**

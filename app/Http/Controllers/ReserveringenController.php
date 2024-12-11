@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReserveringRequest;
 use App\Models\Reservering;
+use App\Models\User;
 use App\Models\Vakantiehuis;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,47 +40,33 @@ class ReserveringenController extends Controller
     {
         // Valideer en haal de formulierdata op
         $requestData = $request->validated();
+        $user = auth()->user();
         
         // Voeg het ID van de ingelogde gebruiker toe als 'huurder_id' aan de reservering
-        $requestData['huurder_id'] = Auth::id();
+        $requestData['huurder_id'] = $user;
+
+        // // Maak een nieuwe reservering aan met de gevalideerde data
+        $validated = $request->validated();
+       
 
         // Maak een nieuwe reservering aan met de gevalideerde data
-        Reservering::create($requestData);
+        $reserveringsnummer = 'RES-' . now()->format('Ymd') . '-' . mt_rand(1000, 9999);
 
-        // Extra validatieregels voor het aanmaken van een reservering
-        $validated = $request->validate([
-            'vakantiehuis_id' => 'required|exists:vakantiehuizen,id', // Het vakantiehuis moet bestaan in de database
-            'startdatum' => 'required|date|after_or_equal:today', // De startdatum moet vandaag of later zijn
-            'einddatum' => 'required|date|after:startdatum', // De einddatum moet na de startdatum liggen
-            'huurder_name' => 'required|string|max:255', // De naam van de huurder moet een string zijn van max. 255 tekens
-            'huurder_email' => 'required|email|max:255', // Het e-mailadres van de huurder moet geldig zijn en max. 255 tekens lang
-        ]);
-
-        // Maak een nieuwe reservering aan met de gevalideerde data
         Reservering::create([
             'vakantiehuis_id' => $validated['vakantiehuis_id'],
-            'startdatum' => $validated['startdatum'],
+            'huurder_id' => auth()->user()->id,
+            'begindatum' => $validated['begindatum'],
             'einddatum' => $validated['einddatum'],
-            'huurder_name' => $validated['huurder_name'],
-            'huurder_email' => $validated['huurder_email'],
+            'reserveringsnummer' => $reserveringsnummer,
+
+
+            // 'huurder_name' => $validated['huurder_name'],
+            // 'huurder_email' => $validated['huurder_email'],
         ]);
 
         // Leid de gebruiker om naar de reserveringen-pagina met een succesbericht
         return redirect()->route('reserveringen.index')->with('success', 'Reservering succesvol aangemaakt.');
-
-
-    // Valideer en haal de formulierdata op
-    $validated = $request->validated();
-    
-    // Voeg het ID van de ingelogde gebruiker toe als 'huurder_id' aan de reservering
-    $validated['huurder_id'] = Auth::id();
-
-    // Maak een nieuwe reservering aan met de gevalideerde data
-    Reservering::create($validated);
-
-    // Leid de gebruiker om naar de reserveringen-pagina met een succesbericht
-    return redirect()->route('reserveringen.index')->with('success', 'Reservering succesvol aangemaakt.');
-
+        
     }
 
     // Toon de details van een specifieke reservering
