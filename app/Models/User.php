@@ -20,7 +20,7 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_user');
+        return $this->belongsToMany(Role::class, 'role_user_verhuurder_huurder_admin');
     }
 public function getRedirectRouteName($destination){
   
