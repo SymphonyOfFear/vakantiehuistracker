@@ -10,8 +10,10 @@ class Reservering extends Model
     protected $fillable = [
         'user_id',
         'vakantiehuis_id',
-        'start_datum',
-        'eind_datum'
+        'begindatum',
+        'einddatum',    
+        'huurder_id',
+        'reserveringsnummer'
     ];
 
     public function user()
