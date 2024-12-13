@@ -11,7 +11,7 @@ class Reservering extends Model
         'user_id',
         'vakantiehuis_id',
         'begindatum',
-        'einddatum',    
+        'einddatum',
         'huurder_id',
         'reserveringsnummer'
     ];
@@ -24,5 +24,9 @@ class Reservering extends Model
     public function vakantiehuis()
     {
         return $this->belongsTo(Vakantiehuis::class);
+    }
+    public function huurder()
+    {
+        return $this->belongsTo(User::class, 'huurder_id');
     }
 }

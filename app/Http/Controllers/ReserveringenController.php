@@ -13,17 +13,15 @@ class ReserveringenController extends Controller
     // Toon een lijst van vakantiehuizen die de ingelogde gebruiker heeft gereserveerd
     public function index()
     {
-        // Haal het ID op van de momenteel ingelogde gebruiker
         $user = Auth::id();
-
-        // Haal de vakantiehuizen op die door de gebruiker zijn gereserveerd
+    
         $gehuurdeHuizen = Vakantiehuis::whereHas('reserveringen', function ($query) use ($user) {
             $query->where('huurder_id', $user);
-        })->get();
-
-        // Geef de 'reserveringen.index'-view terug met de gereserveerde huizen
+        })->with(['reserveringen.huurder'])->get();
+    
         return view('reserveringen.index', compact('gehuurdeHuizen'));
     }
+    
 
     // Toon het formulier om een nieuwe reservering aan te maken
     public function create()

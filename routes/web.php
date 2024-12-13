@@ -88,7 +88,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/reserveringen/{id}', [ReserveringenController::class, 'show'])->name('reserveringen.show');
     Route::get('/reserveringen/{id}/edit', [ReserveringenController::class, 'edit'])->name('reserveringen.edit');
     Route::put('/reserveringen/{id}', [ReserveringenController::class, 'update'])->name('reserveringen.update');
-    Route::delete('/reserveringen/{id}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
+    Route::delete('/reserveringen/{reservering}', [ReserveringenController::class, 'destroy'])->name('reserveringen.destroy');
 });
 
 // Profile

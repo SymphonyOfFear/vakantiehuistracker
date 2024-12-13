@@ -57,7 +57,7 @@
         <!-- Map -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-semibold mb-2">Locatie op de kaart</h2>
-            <div id="map" class="w-full h-64 rounded-lg shadow" data-lat="{{ $vakantiehuis->latitude }}"
+            <div id="map" class="w-full h-64 rounded-lg shadow" data-lat="{{ $vakantiehuis->latitude }} "
                 data-lon="{{ $vakantiehuis->longitude }}"></div>
             <a href="https://www.google.com/maps/search/?api=1&query={{ $vakantiehuis->latitude }},{{ $vakantiehuis->longitude }}"
                 class="text-blue-500 hover:underline mt-2 block">Bekijk op Google Maps</a>
@@ -127,6 +127,15 @@
                 </form>
             @endauth
         </div>
+
+        <!-- Reservering Knop -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-semibold mb-4">Reserveren</h2>
+            <p class="text-gray-700 mb-4">Wil je dit vakantiehuis reserveren? Klik op de onderstaande knop om een reservering te maken.</p>
+            <a href="{{ route('reserveringen.create', $vakantiehuis->id) }}"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Maak een reservering</a>
+        </div>
+
         <!-- Back to overview -->
         <div>
             <a href="{{ route('huizen.index') }}"
