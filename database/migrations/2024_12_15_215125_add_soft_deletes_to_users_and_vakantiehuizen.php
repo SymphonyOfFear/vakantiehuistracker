@@ -9,22 +9,22 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->softDeletes(); // Adds 'deleted_at' column
+            $table->softDeletes();
         });
 
         Schema::table('vakantiehuizen', function (Blueprint $table) {
-            $table->softDeletes(); // Adds 'deleted_at' column
+            $table->softDeletes(); 
         });
     }
 
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropSoftDeletes(); // Removes 'deleted_at' column
+            $table->dropSoftDeletes(); 
         });
 
         Schema::table('vakantiehuizen', function (Blueprint $table) {
-            $table->dropSoftDeletes(); // Removes 'deleted_at' column
+            $table->dropSoftDeletes(); 
         });
     }
 };
