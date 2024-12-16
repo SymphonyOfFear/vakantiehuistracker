@@ -49,9 +49,9 @@
                     Huurder Dashboard</a></li>
         @endif
 
-        <li><a href="{{ route('recensies.index') }}"
+        {{-- <li><a href="{{ route('recensies.index') }}"
                 class="{{ Request::is('recensies*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
-                Recensies</a></li>
+                Recensies</a></li> --}}
         <li><a href="{{ route('reserveringen.index') }}"
                 class="{{ Request::is('reserveringen*') ? 'text-green-600 font-bold' : 'text-gray-700' }} hover:text-green-600">
                 Reserveringen</a></li>

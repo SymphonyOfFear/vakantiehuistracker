@@ -6,12 +6,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
 class User extends Authenticatable
 {
+    protected $table = 'users';
     use Notifiable;
 
-   
     protected $fillable = [
         'name',
         'email',
@@ -22,18 +21,20 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_user_verhuurder_huurder_admin');
     }
-public function getRedirectRouteName($destination){
-  
-    $user = User::find(Auth::id());
-    if($user->hasRole('admin')){
-        $destination->redirect('admin/dashboard');
-    } elseif ($user->hasRole('verhuurder')) {
-        $destination->redirect('verhuurder/dashboard');
-    } else{
-        $destination->redirect('huurder/dashboard');
+
+    public function getRedirectRouteName($destination)
+    {
+
+        $user = User::find(Auth::id());
+        if ($user->hasRole('admin')) {
+            $destination->redirect('admin/dashboard');
+        } elseif ($user->hasRole('verhuurder')) {
+            $destination->redirect('verhuurder/dashboard');
+        } else {
+            $destination->redirect('huurder/dashboard');
+        }
     }
-}
-    
+
     public function hasRole($roleName)
     {
         return $this->roles()->where('name', $roleName)->exists();
@@ -44,12 +45,8 @@ public function getRedirectRouteName($destination){
         return $this->hasMany(Vakantiehuis::class);
     }
 
-
     public function favorieten()
     {
         return $this->hasMany(Favoriet::class);
     }
-
-
-   
 }
