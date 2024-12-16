@@ -25,7 +25,7 @@
                     @if ($gehuurdeHuizen->isEmpty())
                         <div class="text-center py-10">
                             <p class="text-gray-500 text-lg italic">U huurt momenteel geen vakantiehuizen.</p>
-                            <a href="{{ route('reserveringen.create') }}" class="mt-5 inline-block bg-indigo-600 text-white px-6 py-3 rounded-full shadow hover:bg-indigo-700 transition duration-300 ease-in-out">
+                            <a href="{{ route('huizen.index') }}" class="mt-5 inline-block bg-indigo-600 text-white px-6 py-3 rounded-full shadow hover:bg-indigo-700 transition duration-300 ease-in-out">
                                 Start met Huren
                             </a>
                         </div>
