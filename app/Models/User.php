@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,7 @@ class User extends Authenticatable
     protected $table = 'users';
     use Notifiable;
 
+   
     protected $fillable = [
         'name',
         'email',
@@ -42,8 +44,9 @@ class User extends Authenticatable
 
     public function vakantiehuizen()
     {
-        return $this->hasMany(Vakantiehuis::class);
+        return $this->hasMany(Vakantiehuis::class, 'user_id')->withoutGlobalScopes();
     }
+
 
     public function favorieten()
     {

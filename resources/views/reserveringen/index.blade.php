@@ -34,20 +34,29 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-8">
                             @foreach ($gehuurdeHuizen as $huis)
                                 <div class="bg-white rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-2 hover:scale-105 transition-all duration-300">
-                                    <!-- Afbeelding -->
-                                    <img src="{{ $huis->fotos[0] ?? asset('images/default-placeholder.png') }}" alt="{{ $huis->naam }}" class="w-full h-56 object-cover rounded-t-lg transition duration-300 hover:opacity-90">
-
                                     <!-- Huis Informatie -->
                                     <div class="p-6">
                                         <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $huis->naam }}</h3>
-                                        <p class="text-gray-500 mb-3">{{ $huis->adres }}</p>
+                                        <p class="text-gray-500 mb-3">Reserveringsnummer: {{ $huis->reserveringen->first()?->reserveringsnummer ?? 'Niet beschikbaar' }}</p>
+                                        <p class="text-gray-500 mb-3">Begindatum: {{ $huis->reserveringen->first()?->begindatum ?? 'Niet beschikbaar' }}</p>
+                                        <p class="text-gray-500 mb-3">Einddatum: {{ $huis->reserveringen->first()?->einddatum ?? 'Niet beschikbaar' }}</p>
+                                        <p class="text-gray-500 mb-3">stad: {{ $huis->stad }}</p>
+                                        <p class="text-gray-500 mb-3">straat: {{ $huis->straatnaam }}</p>
+                                        <p class="text-gray-500 mb-3">postcode: {{ $huis->postcode }}</p>
+                                        <p class="text-gray-500 mb-3">huisnummer: {{ $huis->huisnummer }}</p>
+                                        <p class="text-gray-500 mb-3">Huurder: {{ $huis->reserveringen->first()?->huurder?->name ?? 'Niet beschikbaar' }}</p>
                                         <p class="text-emerald-600 font-extrabold text-xl mb-4">€{{ number_format($huis->prijs, 2, ',', '.') }}</p>
+                                        <p class="text-gray-500 mb-3">datum van reservatie: {{ $huis->created_at }}</p>
 
-                                        <!-- Bekijk Knop -->
-                                        <div class="mt-5">
-                                            <a href="{{ route('verhuurder.huizen.show', $huis->id) }}" class="inline-block bg-blue-600 text-white font-medium px-5 py-3 rounded-lg shadow hover:bg-blue-700 hover:shadow-lg transition duration-300">
-                                                Bekijk Details
-                                            </a>
+                                        <!-- Verwijder Knop -->
+                                        <div class="mt-5 flex justify-between items-center">
+                                            <form action="{{ route('reserveringen.destroy', $huis->reserveringen->first()?->id) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze reservering wilt verwijderen?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="bg-red-600 text-white font-medium px-5 py-3 rounded-lg shadow hover:bg-red-700 hover:shadow-lg transition duration-300">
+                                                    Verwijder Reservering
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
